@@ -1,7 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import os
 import time
-from selenium.webdriver.common.keys import Keys
 loggedIn = False
 oneQuiz = False
 with open('email.txt', 'r') as myfile:
@@ -38,26 +38,34 @@ def login():
 pageID = (Website ID)
 if oneQuiz == False:
     while True:
-        browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-        browser.find_element_by_id("start").click()
-        terms = browser.find_elements_by_xpath("//a[@data-type='term']")
-        for term in terms:
-            click(term.get_attribute("data-id"))
-        time.sleep(1)
-        if not loggedIn:
-            login()
-            loggedIn = True
-        pageID = pageID + 1
-        time.sleep(2)
+        try:
+            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+            browser.find_element_by_id("start").click()
+            terms = browser.find_elements_by_xpath("//a[@data-type='term']")
+            for term in terms:
+                click(term.get_attribute("data-id"))
+            time.sleep(1)
+            if not loggedIn:
+                login()
+                loggedIn = True
+            pageID = pageID + 1
+            time.sleep(2)
+        except:
+            pass
+            pageID = pageID + 1
 if oneQuiz == True:
     while True:
-        browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-        browser.find_element_by_id("start").click()
-        terms = browser.find_elements_by_xpath("//a[@data-type='term']")
-        for term in terms:
-            click(term.get_attribute("data-id"))
-        time.sleep(1)
-        if not loggedIn:
-            login()
-            loggedIn = True
-        time.sleep(2)
+        try:
+            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+            browser.find_element_by_id("start").click()
+            terms = browser.find_elements_by_xpath("//a[@data-type='term']")
+            for term in terms:
+                click(term.get_attribute("data-id"))
+            time.sleep(1)
+            if not loggedIn:
+                login()
+                loggedIn = True
+            time.sleep(2)
+        except:
+            pass
+            pageID = pageID + 1
