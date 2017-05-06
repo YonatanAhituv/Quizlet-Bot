@@ -11,6 +11,6 @@ Here:
 https://quizlet.com/1000/match
                     ^^^^
                     PageID
-Then, just run the script!
+Then, just go to command prompt and/or terminal, change your current directory to the installation path. Then, type in python main.py.
 # Is that it?
 Yes...that is it.
