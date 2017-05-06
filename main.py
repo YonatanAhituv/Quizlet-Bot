@@ -4,6 +4,8 @@ import os
 import time
 loggedIn = False
 oneQuiz = False
+timesSkipped = 0
+dominationTold = False
 with open('email.txt', 'r') as myfile:
     email=myfile.read().replace('\n', '')
 with open('password.txt', 'r') as myfile:
@@ -38,6 +40,11 @@ def login():
 pageID = (Website ID)
 if oneQuiz == False:
     while True:
+        if timesSkipped > 80:
+            browser.quit()
+            if dominationTold == False:
+                print("Quizlet Domination Complete.")
+                dominationTold = True
         try:
             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
             browser.find_element_by_id("start").click()
