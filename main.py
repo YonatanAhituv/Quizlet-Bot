@@ -44,8 +44,8 @@ if oneQuiz == False:
             terms = browser.find_elements_by_xpath("//a[@data-type='term']")
             for term in terms:
                 click(term.get_attribute("data-id"))
-            time.sleep(1)
             if not loggedIn:
+                time.sleep(1)
                 login()
                 loggedIn = True
             pageID = pageID + 1
@@ -61,7 +61,6 @@ if oneQuiz == True:
             terms = browser.find_elements_by_xpath("//a[@data-type='term']")
             for term in terms:
                 click(term.get_attribute("data-id"))
-            time.sleep(1)
             if not loggedIn:
                 login()
                 loggedIn = True
