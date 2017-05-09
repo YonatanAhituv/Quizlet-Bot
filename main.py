@@ -38,6 +38,10 @@ def login():
 pageID = (Website ID)
 if oneQuiz == False:
     while True:
+        PID = psutil.Process(browser.service.process.pid)
+        timesPIDGot = timesPIDGot + 1
+        if timesPIDGot > 1:
+            sys.exit()
         try:
             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
             browser.find_element_by_id("start").click()
@@ -55,6 +59,10 @@ if oneQuiz == False:
             pageID = pageID + 1
 if oneQuiz == True:
     while True:
+        PID = psutil.Process(browser.service.process.pid)
+        timesPIDGot = timesPIDGot + 1
+        if timesPIDGot > 1:
+            sys.exit()
         try:
             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
             browser.find_element_by_id("start").click()
