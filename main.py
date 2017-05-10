@@ -53,6 +53,8 @@ if oneQuiz == False:
                     if waitPrinted == False:
                         print("Waiting...")
                         waitPrinted = True
+            if loggedIn:
+                sleep.time(0.5)
             pageID = pageID + 1
         except:
             pass
@@ -73,6 +75,8 @@ if oneQuiz == True:
                     if waitPrinted == False:
                         print("Waiting...")
                         waitPrinted = True
+            if loggedIn:
+                sleep.time(0.5)
         except:
             pass
             pageID = pageID + 1
