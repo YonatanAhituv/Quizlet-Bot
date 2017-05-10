@@ -38,7 +38,6 @@ def login():
 pageID = (Website ID)
 if oneQuiz == False:
     while True:
-
         try:
             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
             browser.find_element_by_id("start").click()
@@ -49,19 +48,13 @@ if oneQuiz == False:
                 time.sleep(1)
                 login()
                 loggedIn = True
-                while not browser.current_url == "https://quizlet.com/latest":
-                    if waitPrinted == False:
-                        print("Waiting...")
-                        waitPrinted = True
-            if loggedIn:
-                sleep.time(0.5)
             pageID = pageID + 1
+            time.sleep(2)
         except:
             pass
             pageID = pageID + 1
 if oneQuiz == True:
     while True:
-
         try:
             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
             browser.find_element_by_id("start").click()
@@ -71,12 +64,7 @@ if oneQuiz == True:
             if not loggedIn:
                 login()
                 loggedIn = True
-                while not browser.current_url == "https://quizlet.com/latest":
-                    if waitPrinted == False:
-                        print("Waiting...")
-                        waitPrinted = True
-            if loggedIn:
-                sleep.time(0.5)
+            time.sleep(2)
         except:
             pass
             pageID = pageID + 1
