@@ -31,7 +31,7 @@ if runTypeInput == "1":
     oneQuiz = True
 if runTypeInput == "2":
     oneQuiz = False
-chromedriver = "/usr/local/bin/chromedriver"
+chromedriver = "(Insert chromedriver path here)"
 os.environ["webdriver.chrome.driver"] = chromedriver
 browser = webdriver.Chrome(chromedriver)
 browser.set_window_size(1600, 1000)
