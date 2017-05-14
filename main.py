@@ -332,7 +332,6 @@ if oneQuiz == False:
             failures = failures + 1
             pageID = pageID + 1
         except:
-            print("Failure...")
             pass
 if oneQuiz == True:
     while True:
