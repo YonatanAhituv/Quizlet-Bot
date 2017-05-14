@@ -181,6 +181,7 @@ while runTypeSelected == False:
                 else:
                     passwordhidden = passwordhidden + "•"
                 bulletMaker = bulletMaker + 1
+            bulletMaker = 0
             print("The password is:", passwordhidden)
             passwordprotect = getpass.getpass("Enter the password to unhide the password: ")
             if (passwordprotect == password):
