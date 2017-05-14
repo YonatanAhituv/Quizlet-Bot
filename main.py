@@ -13,6 +13,8 @@ import string
 loggedIn = False
 oneQuiz = False
 osSelected = False
+noJSON = False
+bulletMaker = 0
 osis = 0
 # 0 = Mac, 1 = Windows, 2 = Linux
 directory = os.getcwd()
@@ -23,15 +25,22 @@ if (platform == "win32"):
     osis = 1
 if (platform == "linux" or platform == "linux32"):
     osis = 2
+if not os.path.exists(directory+"/"+"info.json"):
+    f= open("info.json","w+")
+    f.close()
+    noJSON = True
+if noJSON == True:
+    pageID = "ns"
+    successes = 0
+    failures = 0
+    path = "ns"
+    username = "ns"
+    password = "ns"
+    recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "username": "ns", "password": "ns"}
+    with open ('info.json', 'r+') as myfile:
+        recover=myfile.write(json.dumps(recover))
 with open ('info.json', 'r') as myfile:
-        info=json.loads(myfile.read())
-pageID = info["pageID"]
-successes = info["successes"]
-failures = info["failures"]
-path = info["path"]
-username = info["username"]
-password = info["password"]
-checkedforchrome = False
+    info=json.loads(myfile.read())
 def save(info, pageID1, successes1, failures1, path1, username1, password1):
     info["pageID"] = pageID1
     info["successes"] = successes1
@@ -41,21 +50,41 @@ def save(info, pageID1, successes1, failures1, path1, username1, password1):
     info["password"] = password1
     with open ('info.json', 'r+') as myfile:
         info=myfile.write(json.dumps(info))
+pageID = info["pageID"]
+successes = info["successes"]
+failures = info["failures"]
+path = info["path"]
+username = info["username"]
+password = info["password"]
+checkedforchrome = False
+if not os.path.exists(path):
+    path = "ns"
+    save(info, pageID, successes, failures, path, username, password)
+def reset():
+    os.remove("info.json")
+    sys.exit()
+def count_letters(word):
+    return len(word) - word.count(' ')
+if path == "ns":
+    if (osis == 1):
+        my_file = directory+"/"+"chromedriver.exe"
+    else:
+        my_file = directory+"/"+"chromedriver"
+    if os.path.exists(my_file):
+        path = my_file
+        save(info, pageID, successes, failures, path, username, password)
 if (path == "ns"):
     while (checkedforchrome == False):
         checkedforchrome = True
         chromecheck = input('Have you installed ChromeDriver (Y or N)? ')
         if (chromecheck == "y" or chromecheck == "Y"):
-            opentype = input("Is it in the script's directory? ")
-            if (opentype == "n" or opentype == "N"):
-                path = input("The path to chromedriver is: ")
-            if (opentype == "Y" or opentype == "y"):
-                if osis == 0 or osis == 2:
-                    path = directory+"/"+"chromedriver"
-                if osis == 1:
-                    path = directory+"/"+"chromedriver.exe"
-            save(info, pageID, successes, failures, path, username, password)
-            print("Continuing...")
+            path = input("The path to chromedriver is: ")
+            if not os.path.exists(path):
+                print("Invalid Path!")
+                checkedforchrome = False
+            else:
+                save(info, pageID, successes, failures, path, username, password)
+                print("Continuing...")
 
         if (not chromecheck == "Y" and not chromecheck == "y" and not chromecheck == "N" and not chromecheck == "n"):
             print("Invalid Option...Restarting...")
@@ -95,8 +124,8 @@ if (path == "ns"):
 if (username == "ns" and password == "ns"):
         reply = input('Would you like to have the script enter your username and password for you (Y or N)? ')
         if (reply == "n" or reply == "N"):
-            username == "dw"
-            password == "dw"
+            username = "dw"
+            password = "dw"
         if (reply == "Y" or reply == "y"):
             print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
             username = input("Email: ")
@@ -107,7 +136,7 @@ print("INFO: Only close the browser, not the script or terminal")
 runTypeSelected = False
 while runTypeSelected == False:
     runTypeSelected = True
-    print("Type in an option: Start, Reset Data, Quit")
+    print("Type in an option: Start, Read Data, Reset Data, Quit")
     time.sleep(0.1)
     runTypeInput = input("I choose: ")
     time.sleep(0.1)
@@ -115,33 +144,63 @@ while runTypeSelected == False:
     if runTypeInput == "START":
         chooseRunType = input("Would you like to do multiple quizes (Y or N)? ")
         if (chooseRunType == "y" or chooseRunType == "Y"):
+            if pageID == "ns":
+                print("https://quizlet.com/0<---PageID/micromatch")
+                pageID = input("What pageID would you like to start from (Please type in an integer)? ")
+                save(info, pageID, successes, failures, path, username, password)
             oneQuiz = False
         if (chooseRunType == "n" or chooseRunType == "N"):
+            if pageID == "ns":
+                print("https://quizlet.com/0<---PageID/micromatch")
+                pageID = input("What pageID would you like the bot to run on (Please type in an integer)? ")
+                save(info, pageID, successes, failures, path, username, password)
             oneQuiz = True
+    if runTypeInput == "READ DATA":
+        if pageID == "ns":
+            print("PageID has not been set.")
+        else:
+            print("PageID is set to:",str(pageID))
+        print("There have been:",str(failures),"failures.")
+        print("There have been:",str(successes),"successes.")
+        if path == "ns":
+            print("The path to ChromeDriver is not set.")
+        else:
+            print("The path to ChromeDriver is set to:",path)
+        if username == "ns":
+            print("The email is not set.")
+        if username == "dw" and password == "dw":
+            print("You have disabled automatic password and email entering.")
+        if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
+            print("The email is set to:",username)
+        if not username == "dw" and not password == "dw":
+            passwordcount = count_letters(password)
+            passwordhidden = "blank"
+            while(not bulletMaker == passwordcount):
+                if passwordhidden == "blank":
+                    passwordhidden = "•"
+                else:
+                    passwordhidden = passwordhidden + "•"
+                bulletMaker = bulletMaker + 1
+            print("The password is:", passwordhidden)
+            passwordprotect = getpass.getpass("Enter the password to unhide the password: ")
+            if (passwordprotect == password):
+                print("The password is:", password)
+            else:
+                print("Incorrect!")
+        if password == "ns":
+            print("The password is not set.")
+        runTypeSelected = False
     if runTypeInput == "RESET DATA":
         usersure = input("Are you sure (Y or N)? ")
         if (usersure == "y" or usersure == "Y"):
-            # pageID = 0
-            # successes = 0
-            # failures = 0
-            path = "ns"
-            username = "ns"
-            password = "ns"
-            print("Resetting...")
-            time.sleep(0.1)
-            save(info, pageID, successes, failures, path, username, password)
-            pageID = 0
-            successes = 0
-            failures = 0
-            save(info, pageID, successes, failures, path, username, password)
-            sys.exit()
+            reset()
             runTypeSelected = False
         if (usersure == "n" or usersure == "N"):
             runTypeSelected = False
     if runTypeInput == "QUIT":
         print("Goodbye!")
         sys.exit()
-    if not runTypeInput == "START" and not runTypeInput == "RESET DATA" and not runTypeInput == "QUIT":
+    if not runTypeInput == "START" and not runTypeInput == "RESET DATA" and not runTypeInput == "QUIT" and not runTypeInput == "READ DATA":
         runTypeSelected = False
 chromedriver = path
 os.environ["webdriver.chrome.driver"] = chromedriver
