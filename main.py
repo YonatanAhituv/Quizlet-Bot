@@ -137,6 +137,15 @@ print("INFO: Only close the browser, not the script or terminal")
 runTypeSelected = False
 while runTypeSelected == False:
     runTypeSelected = True
+    passwordcount = count_letters(password)
+    passwordhidden = "blank"
+    while(not bulletMaker == passwordcount):
+        if passwordhidden == "blank":
+            passwordhidden = "•"
+        else:
+            passwordhidden = passwordhidden + "•"
+        bulletMaker = bulletMaker + 1
+    bulletMaker = 0
     print("Type in an option: Start, Settings, Read Data, Reset Data, Quit")
     time.sleep(0.1)
     runTypeInput = input("I choose: >>> ")
@@ -219,9 +228,11 @@ while runTypeSelected == False:
                     email = input("I would like to set the email to: >>> ")
                 doneChanging = False
             if whattochange == "PAS":
+                print("The password currently is:", passwordhidden)
                 verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
                 if verifypassword == password:
                     print("Correct!")
+                    print("The password currently is:", password)
                     password = getpass.getpass("I would like to change my password to: >>> ")
                 else:
                     print("Invalid Password!")
@@ -250,17 +261,7 @@ while runTypeSelected == False:
         if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
             print("The email is set to:",username)
         if not username == "dw" and not password == "dw":
-            passwordcount = count_letters(password)
-            passwordhidden = "blank"
-            while(not bulletMaker == passwordcount):
-                if passwordhidden == "blank":
-                    passwordhidden = "•"
-                else:
-                    passwordhidden = passwordhidden + "•"
-                bulletMaker = bulletMaker + 1
-            bulletMaker = 0
             print("The password is:", passwordhidden)
-            sys.stdout.flush()
             passwordprotect = getpass.getpass("Enter the password to unhide the password: ")
             if (passwordprotect == password):
                 sys.stdout.flush()
