@@ -272,7 +272,7 @@ while runTypeSelected == False:
             print("The password is not set.")
         runTypeSelected = False
     if runTypeInput == "RESET DATA":
-        usersure = input("Are you sure (Y or N)? ")
+        usersure = input("Are you sure (Y or N)? >>> ")
         if (usersure == "y" or usersure == "Y"):
             reset()
             runTypeSelected = False
