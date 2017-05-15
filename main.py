@@ -1,3 +1,4 @@
+passwordChoosen = False
 restart = True
 while restart == True:
     restart = False
@@ -24,11 +25,12 @@ while restart == True:
     # 0 = Mac, 1 = Windows, 2 = Linux
     directory = os.getcwd()
     platform = platform.system()
-    if (platform == "darwin"):
+    platform = platform.upper()
+    if (platform == "DARWIN"):
         osis = 0
-    if (platform == "win32"):
+    if (platform == "WIN32"):
         osis = 1
-    if (platform == "linux" or platform == "linux32"):
+    if (platform == "LINUX" or platform == "LINUX32"):
         osis = 2
     if not os.path.exists(directory+"/"+"info.json"):
         f= open("info.json","w+")
@@ -44,8 +46,19 @@ while restart == True:
         recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "username": "ns", "password": "ns"}
         with open ('info.json', 'r+') as myfile:
             recover=myfile.write(json.dumps(recover))
-    with open ('info.json', 'r') as myfile:
-        info=json.loads(myfile.read())
+    try:
+        with open ('info.json', 'r') as myfile:
+            info=json.loads(myfile.read())
+    except:
+        pageID = "ns"
+        successes = 0
+        failures = 0
+        path = "ns"
+        username = "ns"
+        password = "ns"
+        recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "username": "ns", "password": "ns"}
+        with open ('info.json', 'r+') as myfile:
+            recover=myfile.write(json.dumps(recover))
     def save(info, pageID1, successes1, failures1, path1, username1, password1):
         info["pageID"] = pageID1
         info["successes"] = successes1
@@ -100,22 +113,18 @@ while restart == True:
                     while (osSelected == False):
                         osSelected = True
                         print("Downloading...")
-                        if (platform == "win32"):
+                        if (platform == "WIN32"):
                             downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip"
                             file_name = "chromedriver_win32.zip"
-                        if (platform == "darwin"):
+                        if (platform == "DARWIN"):
                             downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_mac64.zip"
                             file_name = "chromedriver_mac64.zip"
-                        if (platform == "linux"):
+                        if (platform == "LINUX"):
                             downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip"
                             file_name = "chromedriver_linux64.zip"
-                        if (useros == "linux32"):
+                        if (platform == "LINUX32"):
                             downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux32.zip"
                             file_name = "chromedriver_linux32.zip"
-                        if (not useros == "w" and not useros == "W" and not useros == "m" and not useros == "M" and not useros == "l64" and not useros == "L64" and not useros == "l32" and not useros == "L32"):
-                            print("Invalid Option. Restarting...")
-                            time.sleep(0.5)
-                            osSelected = False
                         with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
                             shutil.copyfileobj(response, out_file)
                         print("Downloaded! Please unzip the file and restart the script.")
@@ -125,16 +134,23 @@ while restart == True:
                         print("Goodbye!")
                         sys.exit()
     if (username == "ns" and password == "ns"):
-            reply = input('Would you like to have the script enter your username and password for you (Y or N)? >>> ')
-            if (reply == "n" or reply == "N"):
-                username = "dw"
-                password = "dw"
-            if (reply == "Y" or reply == "y"):
+        reply = input('Would you like to have the script enter your username and password for you (Y or N)? >>> ')
+        if (reply == "n" or reply == "N"):
+            username = "dw"
+            password = "dw"
+        if (reply == "Y" or reply == "y"):
+            while passwordChoosen == False:
                 print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
                 username = input("Email: >>> ")
                 password = getpass.getpass("Password: >>> ")
-            save(info, pageID, successes, failures, path, username, password)
-            print("Thank you!")
+                confirmpassword = getpass.getpass("Confirm Password: >>> ")
+                if confirmpassword == password:
+                    print("Thank you!")
+                    save(info, pageID, successes, failures, path, username, password)
+                    passwordChoosen = True
+                else:
+                    print("Passwords do not match!")
+                    passwordChoosen = False
     print("INFO: Only close the browser, not the script or terminal")
     runTypeSelected = False
     while runTypeSelected == False:
@@ -190,11 +206,11 @@ while restart == True:
                 settingsoption = settingsoption.upper()
                 if settingsoption == "ABOUT":
                     if osis == 0:
-                        print("This is OQBRTA, V: 2.4.1.1 and you are running MacOS.")
+                        print("This is OQBRTA, V: 2.5 and you are running MacOS.")
                     if osis == 1:
-                        print("This is OQBRTA, V: 2.4.1.1 and you are running Windows.")
+                        print("This is OQBRTA, V: 2.5 and you are running Windows.")
                     if osis == 2:
-                        print("This is OQBRTA, V: 2.4.1.1 and you are running Linux.")
+                        print("This is OQBRTA, V: 2.5 and you are running Linux.")
                 if settingsoption == "DATA":
                     dataChangeTypeChoosen = False
                     while dataChangeTypeChoosen == False:
@@ -283,27 +299,59 @@ while restart == True:
                                         enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
                                         enableemailandpassword = enableemailandpassword.upper()
                                     if not username == "nw":
-                                        enableemailandpassword = "Y"
+                                        enableemailandpassword = "N"
                                     if not username == "dw":
                                         username = input("I would like to set the email to: >>> ")
                                     if enableemailandpassword == "Y":
-                                        username = input("Email: >>> ")
-                                        password = getpass.getpass("Password: >>> ")
+                                        passwordChoosen = False
+                                        while passwordChoosen == False:
+                                            passwordChoosen = True
+                                            print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
+                                            username = input("Email: >>> ")
+                                            password = getpass.getpass("Password: >>> ")
+                                            confirmpassword = getpass.getpass("Confirm Password: >>> ")
+                                            if confirmpassword == password:
+                                                print("Thank you!")
+                                                save(info, pageID, successes, failures, path, username, password)
+                                            else:
+                                                print("Passwords do not match!")
+                                                passwordChoosen = True
                                     doneChanging = False
                                 if whattochange == "PASSWORD":
                                     if password == "nw":
                                         enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
                                         enableemailandpassword = enableemailandpassword.upper()
+                                    if not password == "nw":
+                                        enableemailandpassword = "N"
                                     if enableemailandpassword == "Y":
-                                        username = input("Email: >>> ")
-                                        password = getpass.getpass("Password: >>> ")
+                                        passwordChoosen = False
+                                        while passwordChoosen == False:
+                                            passwordChoosen = True
+                                            print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
+                                            username = input("Email: >>> ")
+                                            password = getpass.getpass("Password: >>> ")
+                                            confirmpassword = getpass.getpass("Confirm Password: >>> ")
+                                            if confirmpassword == password:
+                                                print("Thank you!")
+                                                save(info, pageID, successes, failures, path, username, password)
+                                            else:
+                                                print("Passwords do not match!")
+                                                passwordChoosen = True
                                     if not password == "dw":
                                         print("The password currently is:", passwordhidden)
                                         verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
                                         if verifypassword == password:
                                             print("Correct!")
                                             print("The password currently is:", password)
-                                            password = getpass.getpass("I would like to change my password to: >>> ")
+                                            passwordChanged = False
+                                            while passwordChanged == False:
+                                                password = getpass.getpass("I would like to change my password to: >>> ")
+                                                confirmpassword = getpass.getpass("Confirm: >>> ")
+                                                if confirmpassword == password:
+                                                    print("Changed!")
+                                                    passwordChanged = True
+                                                else:
+                                                    print("Passwords do not match!")
                                         else:
                                             print("Invalid Password!")
                                     doneChanging = False
