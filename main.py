@@ -190,11 +190,11 @@ while restart == True:
                 settingsoption = settingsoption.upper()
                 if settingsoption == "ABOUT":
                     if osis == 0:
-                        print("This is OQBRTA, V: 2.4.1 and you are running MacOS.")
+                        print("This is OQBRTA, V: 2.4.1.1 and you are running MacOS.")
                     if osis == 1:
-                        print("This is OQBRTA, V: 2.4.1 and you are running Windows.")
+                        print("This is OQBRTA, V: 2.4.1.1 and you are running Windows.")
                     if osis == 2:
-                        print("This is OQBRTA, V: 2.4.1 and you are running Linux.")
+                        print("This is OQBRTA, V: 2.4.1.1 and you are running Linux.")
                 if settingsoption == "DATA":
                     dataChangeTypeChoosen = False
                     while dataChangeTypeChoosen == False:
@@ -284,10 +284,10 @@ while restart == True:
                                         enableemailandpassword = enableemailandpassword.upper()
                                     if not username == "nw":
                                         enableemailandpassword = "Y"
-                                    if not email == "dw":
-                                        email = input("I would like to set the email to: >>> ")
+                                    if not username == "dw":
+                                        username = input("I would like to set the email to: >>> ")
                                     if enableemailandpassword == "Y":
-                                        email = input("Email: >>> ")
+                                        username = input("Email: >>> ")
                                         password = getpass.getpass("Password: >>> ")
                                     doneChanging = False
                                 if whattochange == "PASSWORD":
@@ -295,7 +295,7 @@ while restart == True:
                                         enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
                                         enableemailandpassword = enableemailandpassword.upper()
                                     if enableemailandpassword == "Y":
-                                        email = input("Email: >>> ")
+                                        username = input("Email: >>> ")
                                         password = getpass.getpass("Password: >>> ")
                                     if not password == "dw":
                                         print("The password currently is:", passwordhidden)
