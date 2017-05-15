@@ -146,7 +146,7 @@ while runTypeSelected == False:
             passwordhidden = passwordhidden + "•"
         bulletMaker = bulletMaker + 1
     bulletMaker = 0
-    print("Type in an option: Start, Settings, Read Data, Reset Data, Quit")
+    print("Type in an option: Start, Settings, Quit")
     time.sleep(0.1)
     runTypeInput = input("I choose: >>> ")
     time.sleep(0.1)
@@ -182,106 +182,128 @@ while runTypeSelected == False:
         doneChanging = False
         while doneChanging == False:
             save(info, pageID, successes, failures, path, username, password)
-            whattochange = input("Type P to change the PageID, Type PA to change the path to ChromeDriver, Type E to change the email, Type PAS to change the password, or type Q to exit. >>> ")
-            whattochange = whattochange.upper()
-            if whattochange == "P":
-                if pageID == "ns":
-                    print("PageID has not been set.")
-                else:
-                    print("PageID is set to:", pageID)
-                pageIDChoosen = False
-                while pageIDChoosen == False:
-                    pageIDChoosen = True
-                    pageID = input("What would you like to set the pageID to? >>> ")
-                    try:
-                        pageID = int(pageID)
-                        save(info, pageID, successes, failures, path, username, password)
-                    except ValueError:
-                        pageIDChoosen = False
-                doneChanging = False
-            if whattochange == "PA":
-                if path == "ns":
-                    print("The path to ChromeDriver has not been set.")
-                else:
-                    print("The path to ChromeDriver is set to:", path)
-                    checkedforchrome = False
-                    while (checkedforchrome == False):
-                            checkedforchrome = True
-                            path = input("I would like to set the path to ChromeDriver to: >>> ")
-                            if not os.path.exists(path):
-                                print("Invalid Path!")
-                                checkedforchrome = False
-                    doneChanging = False
-            if whattochange == "E":
-                if username == "ns":
-                    print("The email has not been set.")
-                if username == "nw":
-                    print("You have disabled automatic password and email entering.")
-                if not username == "ns" and not username == "nw":
-                    print("The email is set to:", username)
-                if username == "nw":
-                    enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
-                    enableemailandpassword = enableemailandpassword.upper()
-                if not username == "nw":
-                    enableemailandpassword = "Y"
-                if enableemailandpassword == "Y" or not email == "dw":
-                    email = input("I would like to set the email to: >>> ")
-                doneChanging = False
-            if whattochange == "PAS":
-                print("The password currently is:", passwordhidden)
-                verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
-                if verifypassword == password:
-                    print("Correct!")
-                    print("The password currently is:", password)
-                    password = getpass.getpass("I would like to change my password to: >>> ")
-                else:
-                    print("Invalid Password!")
-                doneChanging = False
-            if whattochange == "Q":
+            settingsoption = input("Type an option: About, Data, Quit: >>> ")
+            settingsoption = settingsoption.upper()
+            if settingsoption == "ABOUT":
+                if osis == 0:
+                    print("This is OQBRTA, V: 2.4.0 and you are running MacOS.")
+                if osis == 1:
+                    print("This is OQBRTA, V: 2.4.0 and you are running Windows.")
+                if osis == 2:
+                    print("This is OQBRTA, V: 2.4.0 and you are running Linux.")
+            if settingsoption == "DATA":
+                dataChangeTypeChoosen = False
+                while dataChangeTypeChoosen == False:
+                    datachangeType = input("Type an option: Edit, View, Reset, Quit: >>> ")
+                    datachangeType = datachangeType.upper()
+                    if not datachangeType == "EDIT" and not datachangeType == "VIEW" and not datachangeType == "RESET" and not datachangeType == "QUIT":
+                        dataChangeTypeChoosen = False
+                    if datachangeType == "QUIT":
+                        dataChangeTypeChoosen = True
+                    if datachangeType == "VIEW":
+                        if pageID == "ns":
+                            print("PageID has not been set.")
+                        else:
+                            print("PageID is set to:",str(pageID))
+                        print("There have been:",str(failures),"failures.")
+                        print("There have been:",str(successes),"successes.")
+                        if path == "ns":
+                            print("The path to ChromeDriver is not set.")
+                        else:
+                            print("The path to ChromeDriver is set to:",path)
+                        if username == "ns":
+                            print("The email is not set.")
+                        if username == "dw" and password == "dw":
+                            print("You have disabled automatic password and email entering.")
+                        if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
+                            print("The email is set to:",username)
+                        if not username == "dw" and not password == "dw":
+                            print("The password is:", passwordhidden)
+                            passwordprotect = getpass.getpass("Enter the password to unhide the password: ")
+                            if (passwordprotect == password):
+                                print("The password is:", password)
+                            else:
+                                print("Incorrect!")
+                        if password == "ns":
+                            print("The password is not set.")
+                    if datachangeType == "RESET":
+                        usersure = input("Are you sure (Y or N)? >>> ")
+                        if (usersure == "y" or usersure == "Y"):
+                            reset()
+                        if (usersure == "n" or usersure == "N"):
+                            dataChangeTypeChoosen = False
+                    if datachangeType == "EDIT":
+                        dataChanged = False
+                        while dataChanged == False:
+                            whattochange = input("Type an option: PageID, ChromeDriver Path, Email, Password, Quit: >>> ")
+                            whattochange = whattochange.upper()
+                            if whattochange == "PAGEID":
+                                if pageID == "ns":
+                                    print("PageID has not been set.")
+                                else:
+                                    print("PageID is set to:", pageID)
+                                pageIDChoosen = False
+                                while pageIDChoosen == False:
+                                    pageIDChoosen = True
+                                    pageID = input("What would you like to set the pageID to? >>> ")
+                                    try:
+                                        pageID = int(pageID)
+                                        save(info, pageID, successes, failures, path, username, password)
+                                    except ValueError:
+                                        pageIDChoosen = False
+                                doneChanging = False
+                            if whattochange == "CHROMEDRIVER PATH":
+                                if path == "ns":
+                                    print("The path to ChromeDriver has not been set.")
+                                else:
+                                    print("The path to ChromeDriver is set to:", path)
+                                    checkedforchrome = False
+                                    while (checkedforchrome == False):
+                                            checkedforchrome = True
+                                            path = input("I would like to set the path to ChromeDriver to: >>> ")
+                                            if not os.path.exists(path):
+                                                print("Invalid Path!")
+                                                checkedforchrome = False
+                                    doneChanging = False
+                            if whattochange == "EMAIL":
+                                if username == "ns":
+                                    print("The email has not been set.")
+                                if username == "nw":
+                                    print("You have disabled automatic password and email entering.")
+                                if not username == "ns" and not username == "nw":
+                                    print("The email is set to:", username)
+                                if username == "nw":
+                                    enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
+                                    enableemailandpassword = enableemailandpassword.upper()
+                                if not username == "nw":
+                                    enableemailandpassword = "Y"
+                                if enableemailandpassword == "Y" or not email == "dw":
+                                    email = input("I would like to set the email to: >>> ")
+                                doneChanging = False
+                            if whattochange == "PASSWORD":
+                                print("The password currently is:", passwordhidden)
+                                verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
+                                if verifypassword == password:
+                                    print("Correct!")
+                                    print("The password currently is:", password)
+                                    password = getpass.getpass("I would like to change my password to: >>> ")
+                                else:
+                                    print("Invalid Password!")
+                                doneChanging = False
+                            if whattochange == "QUIT":
+                                dataChanged = True
+                            if not whattochange == "PAGEID" and not whattochange == "CHROMEDRIVER PATH" and not whattochange == "EMAIL" and not whattochange == "PASSWORD" and not whattochange == "QUIT":
+                                doneChanging = False
+            if settingsoption == "QUIT":
                 print("Leaving...")
                 doneChanging = True
                 runTypeSelected = False
-            if not whattochange == "P" and not whattochange == "PA" and not whattochange == "E" and not whattochange == "PAS" and not whattochange == "Q":
+            if not settingsoption == "ABOUT" and not settingsoption == "DATA" and not settingsoption == "QUIT":
                 doneChanging = False
-    if runTypeInput == "READ DATA":
-        if pageID == "ns":
-            print("PageID has not been set.")
-        else:
-            print("PageID is set to:",str(pageID))
-        print("There have been:",str(failures),"failures.")
-        print("There have been:",str(successes),"successes.")
-        if path == "ns":
-            print("The path to ChromeDriver is not set.")
-        else:
-            print("The path to ChromeDriver is set to:",path)
-        if username == "ns":
-            print("The email is not set.")
-        if username == "dw" and password == "dw":
-            print("You have disabled automatic password and email entering.")
-        if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
-            print("The email is set to:",username)
-        if not username == "dw" and not password == "dw":
-            print("The password is:", passwordhidden)
-            passwordprotect = getpass.getpass("Enter the password to unhide the password: ")
-            if (passwordprotect == password):
-                sys.stdout.flush()
-                print("The password is:", password)
-            else:
-                print("Incorrect!")
-        if password == "ns":
-            print("The password is not set.")
-        runTypeSelected = False
-    if runTypeInput == "RESET DATA":
-        usersure = input("Are you sure (Y or N)? >>> ")
-        if (usersure == "y" or usersure == "Y"):
-            reset()
-            runTypeSelected = False
-        if (usersure == "n" or usersure == "N"):
-            runTypeSelected = False
     if runTypeInput == "QUIT":
         print("Goodbye!")
         sys.exit()
-    if not runTypeInput == "START" and not runTypeInput == "RESET DATA" and not runTypeInput == "QUIT" and not runTypeInput == "READ DATA" and not runTypeInput == "SETTINGS":
+    if not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
         runTypeSelected = False
 chromedriver = path
 os.environ["webdriver.chrome.driver"] = chromedriver
