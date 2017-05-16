@@ -26,9 +26,9 @@ while restart == True:
     directory = os.getcwd()
     platform = platform.system()
     platform = platform.upper()
-    if (platform == "DARWIN"):
+    if (platform == "DARWIN" or platform == "MAC"):
         osis = 0
-    if (platform == "WIN32"):
+    if (platform == "WIN32" or platform == "WINDOWS"):
         osis = 1
     if (platform == "LINUX" or platform == "LINUX32"):
         osis = 2
@@ -113,10 +113,10 @@ while restart == True:
                     while (osSelected == False):
                         osSelected = True
                         print("Downloading...")
-                        if (platform == "WIN32"):
+                        if (platform == "WIN32" or platform == "WINDOWS"):
                             downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip"
                             file_name = "chromedriver_win32.zip"
-                        if (platform == "DARWIN"):
+                        if (platform == "DARWIN" or platform == "MAC"):
                             downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_mac64.zip"
                             file_name = "chromedriver_mac64.zip"
                         if (platform == "LINUX"):
@@ -206,11 +206,13 @@ while restart == True:
                 settingsoption = settingsoption.upper()
                 if settingsoption == "ABOUT":
                     if osis == 0:
-                        print("This is OQBRTA, V: 2.5 and you are running MacOS.")
+                        print("This is OQBRTA, V: 2.5.1 and you are running MacOS.")
                     if osis == 1:
-                        print("This is OQBRTA, V: 2.5 and you are running Windows.")
+                        print("This is OQBRTA, V: 2.5.1 and you are running Windows.")
                     if osis == 2:
-                        print("This is OQBRTA, V: 2.5 and you are running Linux.")
+                        print("This is OQBRTA, V: 2.5.1 and you are running Linux.")
+                    if not osis == 0 and not osis == 1 and not osis == 2:
+                        print("This is OQBRTA, V: 2.5.1 and you are running an unknown OS called:", platform ". Please create an issue on GitHub")
                 if settingsoption == "DATA":
                     dataChangeTypeChoosen = False
                     while dataChangeTypeChoosen == False:
