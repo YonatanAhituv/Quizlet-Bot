@@ -5,6 +5,6 @@ Welcome!
 2. Selenium
 
 # Installation
-Then, just go to command prompt and/or terminal, change your current directory to the installation path. Then, type in python main.py.
+Go to command prompt and/or terminal, change your current directory to the OQBRTA installation path. Then, type in python main.py.
 # Is that it?
 Yes...that is it.
