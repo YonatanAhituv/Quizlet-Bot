@@ -13,15 +13,16 @@ while restart == True:
     import shutil
     import platform
     import getpass
-    import string
+    # from github import Github
     loggedIn = False
     oneQuiz = False
     osSelected = False
     noJSON = False
     pageIDChoosen = False
     started = False
+    timesQuizlet = "ns"
     bulletMaker = 0
-    osis = 0
+    osis = -1
     # 0 = Mac, 1 = Windows, 2 = Linux
     directory = os.getcwd()
     platform = platform.system()
@@ -41,29 +42,57 @@ while restart == True:
         successes = 0
         failures = 0
         path = "ns"
+        timesQuizlet = "ns"
         username = "ns"
         password = "ns"
-        recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "username": "ns", "password": "ns"}
+        recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns"}
         with open ('info.json', 'r+') as myfile:
             recover=myfile.write(json.dumps(recover))
     try:
         with open ('info.json', 'r') as myfile:
             info=json.loads(myfile.read())
     except:
-        pageID = "ns"
-        successes = 0
-        failures = 0
-        path = "ns"
-        username = "ns"
-        password = "ns"
-        recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "username": "ns", "password": "ns"}
-        with open ('info.json', 'r+') as myfile:
-            recover=myfile.write(json.dumps(recover))
-    def save(info, pageID1, successes1, failures1, path1, username1, password1):
+        jsonreset = input("ERROR: COULD NOT LOAD IN JSON, WOULD YOU LIKE TO TRY TO FIX THE JSON? >>> ")
+        jsonreset = jsonreset.upper()
+        if jsonreset == "Y":
+            jsonfix = input("Would you like to reset the JSON or manually repair it? >>> ")
+            jsonfix = jsonfix.upper()
+            if jsonfix == "RESET THE JSON" or jsonfix == "RESET" or jsonfix == "RESET JSON":
+                pageID = "ns"
+                successes = 0
+                failures = 0
+                path = "ns"
+                timesQuizlet = "ns"
+                username = "ns"
+                password = "ns"
+                recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns"}
+                with open ('info.json', 'r+') as myfile:
+                    recover=myfile.write(json.dumps(recover))
+                with open ('info.json', 'r') as myfile:
+                    info=json.loads(myfile.read())
+            else:
+                with open('info.json', 'r') as myfile:
+                    data=myfile.read().replace('\n', '')
+                print("The JSON reads:", data+".")
+                pageID = input("PageID: >>> ")
+                successes = input("Successes: >>> ")
+                failures = input("Failures: >>> ")
+                path = input("Path: >>> ")
+                timesQuizlet = input("TimesQuizlet: >>> ")
+                username = input("Username: >>> ")
+                password = getpass.getpass("Password: >>> ")
+                recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password}
+                with open ('info.json', 'r+') as myfile:
+                    recover=myfile.write(json.dumps(recover))
+                with open ('info.json', 'r') as myfile:
+                    info=json.loads(myfile.read())
+                sys.exit()
+    def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1):
         info["pageID"] = pageID1
         info["successes"] = successes1
         info["failures"] = failures1
         info["path"] = path1
+        info["timesQuizlet"] = timesQuizlet1
         info["username"] = username1
         info["password"] = password1
         with open ('info.json', 'r+') as myfile:
@@ -72,12 +101,13 @@ while restart == True:
     successes = info["successes"]
     failures = info["failures"]
     path = info["path"]
+    timesQuizlet = info["timesQuizlet"]
     username = info["username"]
     password = info["password"]
     checkedforchrome = False
     if not os.path.exists(path):
         path = "ns"
-        save(info, pageID, successes, failures, path, username, password)
+        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
     def reset():
         os.remove("info.json")
     def count_letters(word):
@@ -89,7 +119,7 @@ while restart == True:
             my_file = directory+"/"+"chromedriver"
         if os.path.exists(my_file):
             path = my_file
-            save(info, pageID, successes, failures, path, username, password)
+            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
     if (path == "ns"):
         while (checkedforchrome == False):
             checkedforchrome = True
@@ -100,7 +130,7 @@ while restart == True:
                     print("Invalid Path!")
                     checkedforchrome = False
                 else:
-                    save(info, pageID, successes, failures, path, username, password)
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                     print("Continuing...")
 
             if (not chromecheck == "Y" and not chromecheck == "y" and not chromecheck == "N" and not chromecheck == "n"):
@@ -146,7 +176,7 @@ while restart == True:
                 confirmpassword = getpass.getpass("Confirm Password: >>> ")
                 if confirmpassword == password:
                     print("Thank you!")
-                    save(info, pageID, successes, failures, path, username, password)
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                     passwordChoosen = True
                 else:
                     print("Passwords do not match!")
@@ -170,30 +200,52 @@ while restart == True:
         time.sleep(0.1)
         runTypeInput = runTypeInput.upper()
         if runTypeInput == "START":
-            chooseRunType = input("Would you like to do multiple quizes (Y or N)? >>> ")
-            if (chooseRunType == "y" or chooseRunType == "Y"):
-                if pageID == "ns":
-                    print("https://quizlet.com/0<---PageID/micromatch")
-                    while pageIDChoosen == False:
-                        pageIDChoosen = True
-                        pageID = input("What pageID would you like to start from (Please type in an integer)? >>> ")
-                        try:
-                            pageID = int(pageID)
-                            save(info, pageID, successes, failures, path, username, password)
-                        except ValueError:
-                            pageIDChoosen = False
+            if timesQuizlet == "ns":
+                chooseRunType = input("Would you like to do infinite quizes (Y or N)? >>> ")
+                if (chooseRunType == "y" or chooseRunType == "Y"):
+                    if not timesQuizlet == "nw":
+                        timesQuizlet = "nw"
+                    if pageID == "ns":
+                        print("https://quizlet.com/0<---PageID/micromatch")
+                        while pageIDChoosen == False:
+                            pageIDChoosen = True
+                            pageID = input("What pageID would you like to start from? >>> ")
+                            try:
+                                pageID = int(pageID)
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                            except ValueError:
+                                pageIDChoosen = False
+                    started = True
+                    oneQuiz = False
+                if (chooseRunType == "n" or chooseRunType == "N"):
+                    if timesQuizlet == "ns":
+                        timesChoosen = False
+                        while timesChoosen == False:
+                            timesChoosen = True
+                            timesQuizlet = input("How many quizes would you like to do?")
+                            try:
+                                timesQuizlet = int(timesQuizlet)
+                                if not timesQuizlet < 0:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                            except ValueError:
+                                timesChoosen = False
+                            if timesQuizlet < 0:
+                                timesChoosen = False
+            if timesQuizlet == "nw":
                 started = True
                 oneQuiz = False
-            if (chooseRunType == "n" or chooseRunType == "N"):
+            if not timesQuizlet == "nw" and not timesQuizlet == "ns":
+                started = True
+                oneQuiz = True
                 if pageID == "ns":
                     print("https://quizlet.com/0<---PageID/micromatch")
                     pageIDChoosen = False
                     while pageIDChoosen == False:
                         pageIDChoosen = True
-                        pageID = input("What pageID would you like the bot to run on (Please type in an integer)? >>> ")
+                        pageID = input("What pageID would you like the bot to run on? >>> ")
                         try:
                             pageID = int(pageID)
-                            save(info, pageID, successes, failures, path, username, password)
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                         except ValueError:
                             pageIDChoosen = False
                     started = True
@@ -201,18 +253,30 @@ while restart == True:
         if runTypeInput == "SETTINGS":
             doneChanging = False
             while doneChanging == False:
-                save(info, pageID, successes, failures, path, username, password)
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                 settingsoption = input("Type an option: About, Data, Quit: >>> ")
                 settingsoption = settingsoption.upper()
                 if settingsoption == "ABOUT":
                     if osis == 0:
-                        print("This is OQBRTA, V: 2.5.1.1 and you are running MacOS.")
+                        print("This is OQBRTA, V: 2.6 and you are running MacOS.")
                     if osis == 1:
-                        print("This is OQBRTA, V: 2.5.1.1 and you are running Windows.")
+                        print("This is OQBRTA, V: 2.6 and you are running Windows.")
                     if osis == 2:
-                        print("This is OQBRTA, V: 2.5.1.1 and you are running Linux.")
+                        print("This is OQBRTA, V: 2.6 and you are running Linux.")
                     if not osis == 0 and not osis == 1 and not osis == 2:
-                        print("This is OQBRTA, V: 2.5.1.1 and you are running an unknown OS called:", platform+". Please create an issue on GitHub")
+                        print("This is OQBRTA, V: 2.6 and you are running an unknown OS called:", platform+". Please create an issue on GitHub.")
+                        # createissue = input("Would you like the script to create an issue for you(Y or N)? >>> ")
+                        # if createissue == "y" or createissue == "Y":
+                        #     print("None of this data is transmitted, it is just used to create an issue on GitHub.")
+                        #     gitHubLoggedIn = False
+                        #     while gitHubLoggedIn == False:
+                        #         gitHubLoggedIn = True
+                        #         USERUSERNAME = input("What is your GitHub username? >>> ")
+                        #         USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
+                        #         CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                        #         if not USERPASSWORD == CONFIRMPASS:
+                        #             gitHubLoggedIn = False
+                        #
                 if settingsoption == "DATA":
                     dataChangeTypeChoosen = False
                     while dataChangeTypeChoosen == False:
@@ -233,6 +297,12 @@ while restart == True:
                                 print("The path to ChromeDriver is not set.")
                             else:
                                 print("The path to ChromeDriver is set to:",path)
+                            if timesQuizlet == "nw":
+                                print("You have set OQBRTA to run infinitely.")
+                            if timesQuizlet == "ns":
+                                print("You have not set how many times you want OQBRTA to run.")
+                            if not timesQuizlet == "ns" and not timesQuizlet == "nw":
+                                print("You have set OQBRTA to run:", timesQuizlet, "times.")
                             if username == "ns":
                                 print("The email is not set.")
                             if username == "dw" and password == "dw":
@@ -241,7 +311,7 @@ while restart == True:
                                 print("The email is set to:",username)
                             if not username == "dw" and not password == "dw":
                                 print("The password is:", passwordhidden)
-                                passwordprotect = getpass.getpass("Enter the password to unhide the password: ")
+                                passwordprotect = getpass.getpass("Enter the password to unhide the password: >>> ")
                                 if (passwordprotect == password):
                                     print("The password is:", password)
                                 else:
@@ -260,7 +330,7 @@ while restart == True:
                         if datachangeType == "EDIT":
                             dataChanged = False
                             while dataChanged == False:
-                                whattochange = input("Type an option: PageID, ChromeDriver Path, Email, Password, Quit: >>> ")
+                                whattochange = input("Type an option: PageID, ChromeDriver Path, Times to run OQBRTA, Email, Password, Quit: >>> ")
                                 whattochange = whattochange.upper()
                                 if whattochange == "PAGEID":
                                     if pageID == "ns":
@@ -273,7 +343,7 @@ while restart == True:
                                         pageID = input("What would you like to set the pageID to? >>> ")
                                         try:
                                             pageID = int(pageID)
-                                            save(info, pageID, successes, failures, path, username, password)
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                                         except ValueError:
                                             pageIDChoosen = False
                                     doneChanging = False
@@ -290,6 +360,31 @@ while restart == True:
                                                     print("Invalid Path!")
                                                     checkedforchrome = False
                                         doneChanging = False
+                                if whattochange == "TIMES TO RUN OQBRTA":
+                                    if timesQuizlet == "nw":
+                                        print("You have decided to run OQBRTA infinitely.")
+                                    if not timesQuizlet == "nw" and not timesQuizlet == "ns":
+                                        print("You have decided to run OQBRTA", timesQuizlet, "times.")
+                                    if timesQuizlet == "ns":
+                                        print("You have not set the amount of times you would like to run OQBRTA.")
+                                    chooseRunType = input("Would you like to run OQBRTA infinitely (Y or N)? >>> ")
+                                    chooseRunType = chooseRunType.upper()
+                                    if chooseRunType == "N":
+                                        timesChoosen = False
+                                        while timesChoosen == False:
+                                            timesChoosen = True
+                                            timesQuizlet = input("How many quizes would you like to do? >>> ")
+                                            try:
+                                                timesQuizlet = int(timesQuizlet)
+                                                if not timesQuizlet < 0:
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                            except ValueError:
+                                                timesChoosen = False
+                                            if timesQuizlet < 0:
+                                                timesChoosen = False
+                                    if chooseRunType == "Y":
+                                        if not timesQuizlet == "nw":
+                                            timesQuizlet = "nw"
                                 if whattochange == "EMAIL":
                                     if username == "ns":
                                         print("The email has not been set.")
@@ -302,7 +397,7 @@ while restart == True:
                                         enableemailandpassword = enableemailandpassword.upper()
                                     if not username == "nw":
                                         enableemailandpassword = "N"
-                                    if not username == "dw":
+                                    if not username == "nw":
                                         username = input("I would like to set the email to: >>> ")
                                     if enableemailandpassword == "Y":
                                         passwordChoosen = False
@@ -314,7 +409,7 @@ while restart == True:
                                             confirmpassword = getpass.getpass("Confirm Password: >>> ")
                                             if confirmpassword == password:
                                                 print("Thank you!")
-                                                save(info, pageID, successes, failures, path, username, password)
+                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                                             else:
                                                 print("Passwords do not match!")
                                                 passwordChoosen = True
@@ -323,23 +418,23 @@ while restart == True:
                                     if password == "nw":
                                         enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
                                         enableemailandpassword = enableemailandpassword.upper()
+                                        if enableemailandpassword == "Y":
+                                            passwordChoosen = False
+                                            while passwordChoosen == False:
+                                                passwordChoosen = True
+                                                print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
+                                                username = input("Email: >>> ")
+                                                password = getpass.getpass("Password: >>> ")
+                                                confirmpassword = getpass.getpass("Confirm Password: >>> ")
+                                                if confirmpassword == password:
+                                                    print("Thank you!")
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                else:
+                                                    print("Passwords do not match!")
+                                                    passwordChoosen = True
                                     if not password == "nw":
                                         enableemailandpassword = "N"
-                                    if enableemailandpassword == "Y":
-                                        passwordChoosen = False
-                                        while passwordChoosen == False:
-                                            passwordChoosen = True
-                                            print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
-                                            username = input("Email: >>> ")
-                                            password = getpass.getpass("Password: >>> ")
-                                            confirmpassword = getpass.getpass("Confirm Password: >>> ")
-                                            if confirmpassword == password:
-                                                print("Thank you!")
-                                                save(info, pageID, successes, failures, path, username, password)
-                                            else:
-                                                print("Passwords do not match!")
-                                                passwordChoosen = True
-                                    if not password == "dw":
+                                    if not password == "nw":
                                         print("The password currently is:", passwordhidden)
                                         verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
                                         if verifypassword == password:
@@ -384,12 +479,13 @@ while restart == True:
             except:
                 pass
         def login():
+            time.sleep(1)
             try:
-                browser.find_element_by_xpath("//div[@class='TrophiesModal-loggedOutActions']/div/button").click()
+                browser.find_element_by_xpath("html/body/div[5]/div/div[2]/div/div/div[1]/div[3]/div[1]/button").click()
             except:
                 browser.find_element_by_xpath("//a[@href][2]").click()
             time.sleep(2)
-            browser.find_element_by_xpath("//div[@class='UISocialButton']/a").click()
+            browser.find_element_by_xpath("//a[@href='/google-oauth-redirector?from=%2Fsign-up&customParams=%7B%22signupOrigin%22%3A%22trophies-modal%22%7D']").click()
             try:
                 browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
                 time.sleep(1)
@@ -399,7 +495,7 @@ while restart == True:
 
         if oneQuiz == False:
             while True:
-                save(info, pageID, successes, failures, path, username, password)
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                 try:
                     browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
                     browser.find_element_by_id("start").click()
@@ -424,15 +520,17 @@ while restart == True:
                 except:
                     pass
         if oneQuiz == True:
-            while True:
-                save(info, pageID, successes, failures, path, username, password)
+            timesRan = 0
+            while not timesRan == timesQuizlet:
                 try:
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                     browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
                     browser.find_element_by_id("start").click()
                     terms = browser.find_elements_by_xpath("//a[@data-type='term']")
                     for term in terms:
                         click(term.get_attribute("data-id"))
                     successes = successes + 1
+                    timesRan = timesRan + 1
                     if not loggedIn:
                         login()
                         loggedIn = True
@@ -444,3 +542,11 @@ while restart == True:
                 except NoSuchElementException:
                     failures = failures + 1
                     pageID = pageID + 1
+            if timesRan == timesQuizlet:
+                restartyesorno = input("Complete. Would you like to restart (Y or N)? >>> ")
+                restartyesorno = restartyesorno.upper()
+                if restartyesorno == "Y":
+                    restart = True
+                else:
+                    print("Goodbye!")
+                    sys.exit()
