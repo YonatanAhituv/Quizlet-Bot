@@ -1,4 +1,4 @@
-Welcome! INFO: I won't be committing anything until Quizlet comes back online. Sorry for the inconvenience.
+Welcome!
 # Prerequisites
 1. Python (Obviously)
 
