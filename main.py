@@ -81,6 +81,13 @@ while restart == True:
                 timesQuizlet = input("TimesQuizlet: >>> ")
                 username = input("Username: >>> ")
                 password = getpass.getpass("Password: >>> ")
+                pageID = int(pageID)
+                successes = int(successes)
+                failures = int(failures)
+                try:
+                    timesQuizlet = int(timesQuizlet)
+                except:
+                    pass
                 recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password}
                 with open ('info.json', 'r+') as myfile:
                     recover=myfile.write(json.dumps(recover))
@@ -258,13 +265,13 @@ while restart == True:
                 settingsoption = settingsoption.upper()
                 if settingsoption == "ABOUT":
                     if osis == 0:
-                        print("This is OQBRTA, V: 2.6 and you are running MacOS.")
+                        print("This is OQBRTA, V: 2.6.1 and you are running MacOS.")
                     if osis == 1:
-                        print("This is OQBRTA, V: 2.6 and you are running Windows.")
+                        print("This is OQBRTA, V: 2.6.1 and you are running Windows.")
                     if osis == 2:
-                        print("This is OQBRTA, V: 2.6 and you are running Linux.")
+                        print("This is OQBRTA, V: 2.6.1 and you are running Linux.")
                     if not osis == 0 and not osis == 1 and not osis == 2:
-                        print("This is OQBRTA, V: 2.6 and you are running an unknown OS called:", platform+". Please create an issue on GitHub.")
+                        print("This is OQBRTA, V: 2.6.1 and you are running an unknown OS called:", platform+". Please create an issue on GitHub.")
                         # createissue = input("Would you like the script to create an issue for you(Y or N)? >>> ")
                         # if createissue == "y" or createissue == "Y":
                         #     print("None of this data is transmitted, it is just used to create an issue on GitHub.")
