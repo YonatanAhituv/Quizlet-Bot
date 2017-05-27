@@ -1,6 +1,3 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
 import os
 import time
 import sys
@@ -10,6 +7,26 @@ import shutil
 import platform
 import getpass
 import requests
+import subprocess
+try:
+    from selenium import webdriver
+    from selenium.webdriver.common.keys import Keys
+    from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
+except:
+    userChoose = False
+    while userChoose == False:
+        askforinstall = input("Selenium was not found, would you like the script to install it for you (Y or N)? >>> ")
+        askforinstall = askforinstall.upper()
+        if askforinstall == "Y":
+            pythonversions = input("Do you have Python 2 and Python 3 installed (Y or N)? >>> ")
+            pythonversions = pythonversions.upper()
+            if pythonversions == "Y":
+                os.system("pip3 install selenium")
+            else:
+                os.system("pip install selenium")
+            sys.exit()
+        else:
+            sys.exit()
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     print("An issue has occured titled:", error+".")
     createissue = input("Would you like the script to create an issue for you(Y or N)? >>> ")
@@ -48,7 +65,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         print('Could not create Issue "%s"' % error)
         print('Response:', r.content)
 try:
-    passwordChoosen = Fals
+    passwordChoosen = False
     restart = True
     while restart == True:
         restart = False
@@ -298,13 +315,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 2.7.1 and you are running MacOS.")
+                            print("This is OQBRTA, V: 2.7.2 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 2.7.1 and you are running Windows.")
+                            print("This is OQBRTA, V: 2.7.2 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 2.7.1 and you are running Linux.")
+                            print("This is OQBRTA, V: 2.7.2 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 2.7.1 and you are running an unknown OS called:", platform+".")
+                            print("This is OQBRTA, V: 2.7.2 and you are running an unknown OS called:", platform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
