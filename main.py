@@ -4,7 +4,7 @@ while imported == False:
     import time
     import sys
     import json
-    import urllib.request
+    import urllib
     import shutil
     import platform
     import getpass
@@ -15,7 +15,7 @@ while imported == False:
         from selenium.webdriver.common.keys import Keys
         from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
         imported = True
-    except:
+    except ImportError:
         imported = False
         userChoose = False
         while userChoose == False:
@@ -27,8 +27,14 @@ while imported == False:
                 sys.exit()
             else:
                 sys.exit()
+def internet_on():
+    try:
+        urllib.request.urlopen('http://216.58.192.142', timeout=1)
+        return True
+    except:
+        return False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
-    print("An issue has occured titled:", error+".")
+    print("An error has occured titled:", error+".")
     createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
     if createissue == "y" or createissue == "Y":
         print("None of this data is transmitted, it is just used to create an issue on GitHub.")
@@ -40,31 +46,35 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
             CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
             if not USERPASSWORD == CONFIRMPASS:
                 gitHubLoggedIn = False
+            REPO_OWNER = 'AtomicCoding'
+            REPO_NAME = 'Quizlet-Bot'
+            '''Create an issue on github.com using the given parameters.'''
+            # Our url to create issues via POST
+            url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+            # Create an authenticated session to create the issue
+            session = requests.Session()
+            session.auth = (USERUSERNAME, USERPASSWORD)
+            # Create our issue
+            issue = {'title': error,
+                     'body': body,
+                     'assignee': assignee,
+                     'milestone': milestone,
+                     'labels': labels}
+            # Add the issue to our repository
+            r = session.post(url, json.dumps(issue))
+            if r.status_code == 201:
+                print('Successfully created Issue "%s"' % error)
+                sys.exit()
+            else:
+                print('Could not create Issue "%s"' % error)
+                print('Response:', r.content)
     else:
         sys.exit()
-    REPO_OWNER = 'AtomicCoding'
-    REPO_NAME = 'Quizlet-Bot'
-    '''Create an issue on github.com using the given parameters.'''
-    # Our url to create issues via POST
-    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
-    # Create an authenticated session to create the issue
-    session = requests.Session()
-    session.auth = (USERUSERNAME, USERPASSWORD)
-    # Create our issue
-    issue = {'title': error,
-             'body': body,
-             'assignee': assignee,
-             'milestone': milestone,
-             'labels': labels}
-    # Add the issue to our repository
-    r = session.post(url, json.dumps(issue))
-    if r.status_code == 201:
-        print('Successfully created Issue "%s"' % error)
-        sys.exit()
-    else:
-        print('Could not create Issue "%s"' % error)
-        print('Response:', r.content)
 try:
+    connectedToInternet = internet_on()
+    if connectedToInternet == False:
+        print("You are not connected to the internet, please connect and try again.")
+        sys.exit()
     passwordChoosen = False
     restart = True
     while restart == True:
@@ -174,8 +184,6 @@ try:
             save(info, pageID, successes, failures, path, timesQuizlet, username, password)
         def reset():
             os.remove("info.json")
-        def count_letters(word):
-            return len(word)
         if path == "ns":
             if (osis == 1):
                 my_file = directory+"/"+"chromedriver.exe"
@@ -249,7 +257,6 @@ try:
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
-            passwordcount = count_letters(password)
             passwordhidden = len(password) * "•"
             print("Type in an option: Start, Settings, Quit")
             time.sleep(0.1)
@@ -315,13 +322,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 2.7.3 and you are running MacOS.")
+                            print("This is OQBRTA, V: 2.8 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 2.7.3 and you are running Windows.")
+                            print("This is OQBRTA, V: 2.8 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 2.7.3 and you are running Linux.")
+                            print("This is OQBRTA, V: 2.8 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 2.7.3 and you are running an unknown OS called:", platform+".")
+                            print("This is OQBRTA, V: 2.8 and you are running an unknown OS called:", platform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -375,7 +382,7 @@ try:
                             if datachangeType == "EDIT":
                                 dataChanged = False
                                 while dataChanged == False:
-                                    whattochange = input("Type an option: PageID, ChromeDriver Path, Times to run OQBRTA, Email, Password, Quit: >>> ")
+                                    whattochange = input("Type a variable: PageID, ChromeDriver Path, Times to run OQBRTA, Email and Password, Quit: >>> ")
                                     whattochange = whattochange.upper()
                                     if whattochange == "PAGEID":
                                         if pageID == "ns":
@@ -406,64 +413,43 @@ try:
                                                         checkedforchrome = False
                                             doneChanging = False
                                     if whattochange == "TIMES TO RUN OQBRTA":
-                                        if timesQuizlet == "nw":
-                                            print("You have decided to run OQBRTA infinitely.")
-                                        if not timesQuizlet == "nw" and not timesQuizlet == "ns":
-                                            print("You have decided to run OQBRTA", timesQuizlet, "times.")
-                                        if timesQuizlet == "ns":
-                                            print("You have not set the amount of times you would like to run OQBRTA.")
-                                        chooseRunType = input("Would you like to run OQBRTA infinitely (Y or N)? >>> ")
-                                        chooseRunType = chooseRunType.upper()
-                                        if chooseRunType == "N":
-                                            timesChoosen = False
-                                            while timesChoosen == False:
-                                                timesChoosen = True
-                                                timesQuizlet = input("How many quizes would you like to do? >>> ")
-                                                try:
-                                                    timesQuizlet = int(timesQuizlet)
-                                                    if not timesQuizlet < 0:
-                                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
-                                                except ValueError:
-                                                    timesChoosen = False
-                                                if timesQuizlet < 0:
-                                                    timesChoosen = False
-                                        if chooseRunType == "Y":
-                                            if not timesQuizlet == "nw":
-                                                timesQuizlet = "nw"
-                                    if whattochange == "EMAIL":
-                                        if username == "ns":
-                                            print("The email has not been set.")
-                                        if username == "nw":
-                                            print("You have disabled automatic password and email entering.")
-                                        if not username == "ns" and not username == "nw":
-                                            print("The email is set to:", username)
-                                        if username == "nw":
-                                            enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
-                                            enableemailandpassword = enableemailandpassword.upper()
-                                        if not username == "nw":
-                                            enableemailandpassword = "N"
-                                        if not username == "nw":
-                                            username = input("I would like to set the email to: >>> ")
-                                        if enableemailandpassword == "Y":
-                                            passwordChoosen = False
-                                            while passwordChoosen == False:
-                                                passwordChoosen = True
-                                                print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
-                                                username = input("Email: >>> ")
-                                                password = getpass.getpass("Password: >>> ")
-                                                confirmpassword = getpass.getpass("Confirm Password: >>> ")
-                                                if confirmpassword == password:
-                                                    print("Thank you!")
-                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
-                                                else:
-                                                    print("Passwords do not match!")
-                                                    passwordChoosen = True
-                                        doneChanging = False
-                                    if whattochange == "PASSWORD":
-                                        if password == "nw":
-                                            enableemailandpassword = input("Would you like to enable email and password entering (Y or N)? >>> ")
-                                            enableemailandpassword = enableemailandpassword.upper()
-                                            if enableemailandpassword == "Y":
+                                        while True:
+                                            if timesQuizlet == "nw":
+                                                print("You have decided to run OQBRTA infinitely.")
+                                            if not timesQuizlet == "nw" and not timesQuizlet == "ns":
+                                                print("You have decided to run OQBRTA", timesQuizlet, "times.")
+                                            if timesQuizlet == "ns":
+                                                print("You have not set the amount of times you would like to run OQBRTA.")
+                                            timesQuizletSettings = input("What would you like to do? Run OQBRTA infinitely, Run OQBRTA a specific amount of times or Quit: >>> ")
+                                            timesQuizletSettings = timesQuizletSettings.upper()
+                                            if timesQuizletSettings == "RUN OQBRTA INFINITELY" or timesQuizletSettings == "RUN INFINITELY" or timesQuizletSettings == "INFINITELY":
+                                                if not timesQuizlet == "nw":
+                                                    timesQuizlet = "nw"
+                                            elif timesQuizletSettings == "RUN OQBRTA A SPECIFIC AMOUNT OF TIMES" or timesQuizletSettings == "SPECIFIC AMOUNT" or timesQuizletSettings == "SPECIFIC":
+                                                timesChoosen = False
+                                                while timesChoosen == False:
+                                                    timesChoosen = True
+                                                    timesQuizlet = input("How many quizes would you like to do? >>> ")
+                                                    try:
+                                                        timesQuizlet = int(timesQuizlet)
+                                                        if not timesQuizlet < 0:
+                                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                    except ValueError:
+                                                        timesChoosen = False
+                                                    if timesQuizlet < 0:
+                                                        timesChoosen = False
+                                            elif timesQuizletSettings == "QUIT" or timesQuizletSettings == "EXIT":
+                                                break
+                                            else:
+                                                print("Invalid Option!")
+                                    if whattochange == "EMAIL AND PASSWORD":
+                                        while True:
+                                            if password == "nw" and username == "nw":
+                                                loginSettings = input("What would you like to do? Enable Automatic Login or Quit: >>> ")
+                                            else:
+                                                loginSettings = input("What would you like to do? Change Email, Change Password, Disable Automatic Login or Quit: >>> ")
+                                            loginSettings = loginSettings.upper()
+                                            if password == "nw" and username == "nw" and loginSettings == "ENABLE AUTOMATIC LOGIN":
                                                 passwordChoosen = False
                                                 while passwordChoosen == False:
                                                     passwordChoosen = True
@@ -477,29 +463,44 @@ try:
                                                     else:
                                                         print("Passwords do not match!")
                                                         passwordChoosen = True
-                                        if not password == "nw":
-                                            enableemailandpassword = "N"
-                                        if not password == "nw":
-                                            print("The password currently is:", passwordhidden)
-                                            verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
-                                            if verifypassword == password:
-                                                print("Correct!")
-                                                print("The password currently is:", password)
-                                                passwordChanged = False
-                                                while passwordChanged == False:
-                                                    password = getpass.getpass("I would like to change my password to: >>> ")
-                                                    confirmpassword = getpass.getpass("Confirm: >>> ")
-                                                    if confirmpassword == password:
-                                                        print("Changed!")
-                                                        passwordChanged = True
-                                                    else:
-                                                        print("Passwords do not match!")
-                                            else:
-                                                print("Invalid Password!")
-                                        doneChanging = False
+                                            if not password == "nw" and not username == "nw":
+                                                if loginSettings == "DISABLE AUTOMATIC LOGIN":
+                                                    username = "nw"
+                                                    password = "nw"
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                if loginSettings == "CHANGE PASSWORD":
+                                                    passwordVerified = False
+                                                    while passwordVerified == False:
+                                                        passwordVerified = True
+                                                        print("The password currently is:", passwordhidden)
+                                                        verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
+                                                        if verifypassword == password:
+                                                            print("Correct!")
+                                                            print("The password currently is:", password)
+                                                            passwordChanged = False
+                                                            while passwordChanged == False:
+                                                                password = getpass.getpass("I would like to change my password to: >>> ")
+                                                                confirmpassword = getpass.getpass("Confirm: >>> ")
+                                                                if confirmpassword == password:
+                                                                    print("Changed!")
+                                                                    passwordChanged = True
+                                                                else:
+                                                                    print("Passwords do not match!")
+                                                        else:
+                                                            passwordVerified = False
+                                                            print("Invalid Password!")
+                                                if loginSettings == "CHANGE EMAIL":
+                                                    if username == "ns":
+                                                        print("The email has not been set.")
+                                                    if not username == "ns" and not username == "nw":
+                                                        print("The email is set to:", username)
+                                                    if not username == "nw":
+                                                        username = input("I would like to set the email to: >>> ")
+                                            if loginSettings == "QUIT":
+                                                break
                                     if whattochange == "QUIT":
                                         dataChanged = True
-                                    if not whattochange == "PAGEID" and not whattochange == "CHROMEDRIVER PATH" and not whattochange == "EMAIL" and not whattochange == "PASSWORD" and not whattochange == "QUIT":
+                                    if not whattochange == "PAGEID" and not whattochange == "CHROMEDRIVER PATH" and not whattochange == "EMAIL AND PASSWORD" and not whattochange == "QUIT":
                                         doneChanging = False
                     if settingsoption == "QUIT":
                         print("Leaving...")
@@ -596,9 +597,9 @@ try:
                         print("Goodbye!")
                         sys.exit()
 except Exception as e:
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-    e = str(e)
-    linenumber = str(exc_tb.tb_lineno)
-    ex = e+" on line: "+linenumber
-    complain(str(ex))
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        e = str(e)
+        linenumber = str(exc_tb.tb_lineno)
+        ex = e+" on line: "+linenumber
+        complain(str(ex))
