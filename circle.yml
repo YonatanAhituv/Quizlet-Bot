@@ -23,3 +23,6 @@ dependencies:
 test:
   override:
     - python /home/ubuntu/Quizlet-Bot/main.py
+deployment:
+  production:
+    branch: master
