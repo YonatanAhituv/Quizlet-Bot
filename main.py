@@ -10,8 +10,8 @@ while imported == False:
     import shutil
     import platform
     import getpass
-    import requests
     try:
+        import requests
         from selenium import webdriver
         from selenium.webdriver.common.keys import Keys
         imported = True
@@ -19,11 +19,13 @@ while imported == False:
         imported = False
         userChoose = False
         while userChoose == False:
-            askforinstall = input("Selenium was not found, would you like the script to install it for you (Y or N)? >>> ")
+            askforinstall = input("Some packages were not found, would you like the script to install them for you (Y or N)? >>> ")
             askforinstall = askforinstall.upper()
             if askforinstall == "Y":
                 os.system("pip3 install selenium")
                 os.system("pip install selenium")
+                os.system("pip install requests")
+                os.system("pip3 install requests")
                 sys.exit()
             else:
                 sys.exit()
@@ -324,13 +326,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 2.8.2 and you are running MacOS.")
+                            print("This is OQBRTA, V: 2.8.3 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 2.8.2 and you are running Windows.")
+                            print("This is OQBRTA, V: 2.8.3 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 2.8.2 and you are running Linux.")
+                            print("This is OQBRTA, V: 2.8.3 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 2.8.2 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 2.8.3 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
