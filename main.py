@@ -11,11 +11,9 @@ while imported == False:
     import platform
     import getpass
     import requests
-    import subprocess
     try:
         from selenium import webdriver
         from selenium.webdriver.common.keys import Keys
-        from selenium.common.exceptions import WebDriverException, NoSuchWindowException, NoSuchElementException
         imported = True
     except ImportError:
         imported = False
@@ -326,13 +324,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 2.8.1 and you are running MacOS.")
+                            print("This is OQBRTA, V: 2.8.2 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 2.8.1 and you are running Windows.")
+                            print("This is OQBRTA, V: 2.8.2 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 2.8.1 and you are running Linux.")
+                            print("This is OQBRTA, V: 2.8.2 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 2.8.1 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 2.8.2 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -583,7 +581,7 @@ try:
                         pageID = pageID + 1
                 if timesRan == timesQuizlet:
                     print("Complete.")
-                    sts.exit()
+                    sys.exit()
 except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
