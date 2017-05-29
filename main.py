@@ -90,7 +90,7 @@ try:
         # 0 = Mac, 1 = Windows, 2 = Linux
         directory = os.getcwd()
         userplatform = platform.system()
-        userplatform = platform.upper()
+        userplatform = userplatform.upper()
         if (userplatform == "DARWIN" or userplatform == "MAC"):
             osis = 0
         if (userplatform == "WIN32" or userplatform == "WINDOWS"):
