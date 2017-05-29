@@ -1,0 +1,33 @@
+## Customize the test machine
+machine:
+
+  timezone:
+    America/Los_Angeles # Set the timezone
+
+  # Version of python to use
+  python:
+    version:
+      3.6.0
+
+  # Override /etc/hosts
+  hosts:
+    circlehost: 127.0.0.1
+
+  # Add some environment variables
+  environment:
+    CIRCLE_ENV: test
+
+## Customize checkout
+checkout:
+  post:
+    - git submodule sync
+    - git submodule update --init # use submodules
+
+## Customize dependencies
+dependencies:
+  pre:
+    - pip install selenium
+## Customize deployment commands
+deployment:
+    branch: master
+      appname: OQBRTA
