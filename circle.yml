@@ -1,18 +1,10 @@
 ## Customize the test machine
 machine:
 
-  timezone:
-    America/Los_Angeles # Set the timezone
-
   # Version of python to use
   python:
     version:
       3.6.0
-
-  # Override /etc/hosts
-  hosts:
-    circlehost: 127.0.0.1
-
   # Add some environment variables
   environment:
     CIRCLE_ENV: test
@@ -28,6 +20,6 @@ dependencies:
   pre:
     - pip install selenium
     - pip install requests
-test:
-  override:
-    - python /home/ubuntu/Quizlet-Bot/main.py
+# test:
+#   override:
+#     - python /home/ubuntu/Quizlet-Bot/main.py
