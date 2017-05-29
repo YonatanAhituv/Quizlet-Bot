@@ -27,3 +27,6 @@ checkout:
 dependencies:
   pre:
     - pip install selenium
+test:
+  override:
+    - python main.py
