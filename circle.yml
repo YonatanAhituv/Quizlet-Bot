@@ -29,4 +29,4 @@ dependencies:
     - pip install selenium
 test:
   override:
-    - python main.py
+    - python /home/ubuntu/Quizlet-Bot/main.py
