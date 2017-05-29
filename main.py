@@ -1,3 +1,5 @@
+# TODO: Phase out all bool based while loops, switch to a while true and break model instead
+# TODO: Phase out all giant, if nots, replace with if, elif, and else
 imported = False
 while imported == False:
     import os
@@ -89,13 +91,13 @@ try:
         osis = -1
         # 0 = Mac, 1 = Windows, 2 = Linux
         directory = os.getcwd()
-        platform = platform.system()
-        platform = platform.upper()
-        if (platform == "DARWIN" or platform == "MAC"):
+        userplatform = platform.system()
+        userplatform = platform.upper()
+        if (userplatform == "DARWIN" or userplatform == "MAC"):
             osis = 0
-        if (platform == "WIN32" or platform == "WINDOWS"):
+        if (userplatform == "WIN32" or userplatform == "WINDOWS"):
             osis = 1
-        if (platform == "LINUX" or platform == "LINUX32"):
+        if (userplatform == "LINUX" or userplatform == "LINUX32"):
             osis = 2
         if not os.path.exists(directory+"/"+"info.json"):
             f= open("info.json","w+")
@@ -160,7 +162,7 @@ try:
                         info=json.loads(myfile.read())
                     sys.exit()
         if not osis == 0 and not osis == 1 and not osis == 2:
-            complain("Unknown OS detected called:"+str(platform))
+            complain("Unknown OS detected called:"+str(userplatform))
         def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1):
             info["pageID"] = pageID1
             info["successes"] = successes1
@@ -215,16 +217,16 @@ try:
                         while (osSelected == False):
                             osSelected = True
                             print("Downloading...")
-                            if (platform == "WIN32" or platform == "WINDOWS"):
+                            if (userplatform == "WIN32" or userplatform == "WINDOWS"):
                                 downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip"
                                 file_name = "chromedriver_win32.zip"
-                            if (platform == "DARWIN" or platform == "MAC"):
+                            if (userplatform == "DARWIN" or userplatform == "MAC"):
                                 downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_mac64.zip"
                                 file_name = "chromedriver_mac64.zip"
-                            if (platform == "LINUX"):
+                            if (userplatform == "LINUX"):
                                 downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip"
                                 file_name = "chromedriver_linux64.zip"
-                            if (platform == "LINUX32"):
+                            if (userplatform == "LINUX32"):
                                 downloadurl = "https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux32.zip"
                                 file_name = "chromedriver_linux32.zip"
                             with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
@@ -263,6 +265,8 @@ try:
             runTypeInput = input("I choose: >>> ")
             time.sleep(0.1)
             runTypeInput = runTypeInput.upper()
+            if runTypeInput == "EXPIRMENT":
+                print("Starting GUI...")
             if runTypeInput == "START":
                 if timesQuizlet == "ns":
                     chooseRunType = input("Would you like to do infinite quizes (Y or N)? >>> ")
@@ -322,13 +326,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 2.8 and you are running MacOS.")
+                            print("This is OQBRTA, V: 2.8.1 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 2.8 and you are running Windows.")
+                            print("This is OQBRTA, V: 2.8.1 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 2.8 and you are running Linux.")
+                            print("This is OQBRTA, V: 2.8.1 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 2.8 and you are running an unknown OS called:", platform+".")
+                            print("This is OQBRTA, V: 2.8.1 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -511,7 +515,7 @@ try:
             if runTypeInput == "QUIT":
                 print("Goodbye!")
                 sys.exit()
-            if not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
+            if not runTypeInput == "EXPIRMENT" and not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
                 runTypeSelected = False
         if started == True:
             chromedriver = path
@@ -555,16 +559,9 @@ try:
                             loggedIn = True
                         pageID = pageID + 1
                         time.sleep(2)
-                    except NoSuchWindowException:
-                        sys.exit()
-                    except WebDriverException as e:
-                        failures = failures + 1
-                        pageID = pageID + 1
-                    except NoSuchElementException:
-                        failures = failures + 1
-                        pageID = pageID + 1
                     except:
-                        pass
+                        failures = failures + 1
+                        pageID = pageID + 1
             if oneQuiz == True:
                 timesRan = 0
                 while not timesRan == timesQuizlet:
@@ -581,21 +578,12 @@ try:
                             login()
                             loggedIn = True
                         time.sleep(2)
-                    except NoSuchWindowException:
-                        sys.exit()
-                    except WebDriverException:
-                        sys.exit()
-                    except NoSuchElementException:
+                    except:
                         failures = failures + 1
                         pageID = pageID + 1
                 if timesRan == timesQuizlet:
-                    restartyesorno = input("Complete. Would you like to restart (Y or N)? >>> ")
-                    restartyesorno = restartyesorno.upper()
-                    if restartyesorno == "Y":
-                        restart = True
-                    else:
-                        print("Goodbye!")
-                        sys.exit()
+                    print("Complete.")
+                    sts.exit()
 except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
