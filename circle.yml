@@ -27,7 +27,3 @@ checkout:
 dependencies:
   pre:
     - pip install selenium
-## Customize deployment commands
-deployment:
-    branch: master
-      appname: OQBRTA
