@@ -22,10 +22,18 @@ while imported == False:
             askforinstall = input("Some packages were not found, would you like the script to install them for you (Y or N)? >>> ")
             askforinstall = askforinstall.upper()
             if askforinstall == "Y":
-                os.system("pip3 install selenium")
-                os.system("pip install selenium")
-                os.system("pip install requests")
-                os.system("pip3 install requests")
+                print("Installing...")
+                try:
+                    from selenium import webdriver
+                except ImportError:
+                    os.system("pip3 install selenium -q")
+                    os.system("pip install selenium -q")
+                try:
+                    import requests
+                except ImportError:
+                    os.system("pip install requests -q")
+                    os.system("pip3 install requests -q")
+                print("Installed!")
                 sys.exit()
             else:
                 sys.exit()
@@ -354,13 +362,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.0 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.1 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.0 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.1 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.0 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.1 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.0 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.1 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -580,7 +588,8 @@ try:
                         chromeOpen = False
                     if chromeOpen == False:
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password)
-                        sys.exit()
+                        restart = True
+                        break
                     else:
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                         try:
@@ -609,7 +618,8 @@ try:
                         chromeOpen = False
                     if chromeOpen == False:
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password)
-                        sys.exit()
+                        restart = True
+                        break
                     else:
                         try:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password)
