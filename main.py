@@ -255,7 +255,6 @@ try:
                     else:
                         print("Passwords do not match!")
                         passwordChoosen = False
-        print("INFO: Only close the browser, not the script or terminal")
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
@@ -267,6 +266,35 @@ try:
             runTypeInput = runTypeInput.upper()
             if runTypeInput == "EXPIRMENT":
                 print("Starting GUI...")
+                from PyQt5.QtWidgets import QWidget, QPushButton, QApplication
+                from PyQt5.QtCore import QCoreApplication
+                class Example(QWidget):
+
+                    def __init__(self):
+                        super().__init__()
+
+                        self.initUI()
+
+
+                    def initUI(self):
+                        # sbtn = QPushButton('Start', self)
+                        # sbtn.clicked.connect(print("Hello!"))
+                        # sbtn.resize(qbtn.sizeHint())
+                        # sbtn.move(75, 75)
+                        qbtn = QPushButton('Quit', self)
+                        qbtn.clicked.connect(QCoreApplication.instance().quit)
+                        qbtn.resize(qbtn.sizeHint())
+                        qbtn.move(50, 50)
+                        self.setGeometry(300, 300, 250, 150)
+                        self.setWindowTitle('OQBRTA')
+                        self.show()
+
+
+                if __name__ == '__main__':
+
+                    app = QApplication(sys.argv)
+                    ex = Example()
+                    sys.exit(app.exec_())
             if runTypeInput == "START":
                 if timesQuizlet == "ns":
                     chooseRunType = input("Would you like to do infinite quizes (Y or N)? >>> ")
@@ -326,13 +354,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 2.8.3 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.0 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 2.8.3 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.0 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 2.8.3 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.0 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 2.8.3 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.0 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -545,45 +573,63 @@ try:
                 time.sleep(1)
             if oneQuiz == False:
                 while True:
-                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                     try:
-                        browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-                        browser.find_element_by_id("start").click()
-                        terms = browser.find_elements_by_xpath("//a[@data-type='term']")
-                        for term in terms:
-                            click(term.get_attribute("data-id"))
-                        successes = successes + 1
-                        if not loggedIn:
-                            time.sleep(1)
-                            login()
-                            loggedIn = True
-                        pageID = pageID + 1
-                        time.sleep(2)
+                        checkBrowser = browser.current_url
+                        chromeOpen = True
                     except:
-                        failures = failures + 1
-                        pageID = pageID + 1
+                        chromeOpen = False
+                    if chromeOpen == False:
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        sys.exit()
+                    else:
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        try:
+                            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                            browser.find_element_by_id("start").click()
+                            terms = browser.find_elements_by_xpath("//a[@data-type='term']")
+                            for term in terms:
+                                click(term.get_attribute("data-id"))
+                            successes = successes + 1
+                            if not loggedIn:
+                                time.sleep(1)
+                                login()
+                                loggedIn = True
+                            pageID = pageID + 1
+                            time.sleep(2)
+                        except:
+                            failures = failures + 1
+                            pageID = pageID + 1
             if oneQuiz == True:
                 timesRan = 0
                 while not timesRan == timesQuizlet:
                     try:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
-                        browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-                        browser.find_element_by_id("start").click()
-                        terms = browser.find_elements_by_xpath("//a[@data-type='term']")
-                        for term in terms:
-                            click(term.get_attribute("data-id"))
-                        successes = successes + 1
-                        timesRan = timesRan + 1
-                        if not loggedIn:
-                            login()
-                            loggedIn = True
-                        time.sleep(2)
+                        checkBrowser = browser.current_url
+                        chromeOpen = True
                     except:
-                        failures = failures + 1
-                        pageID = pageID + 1
-                if timesRan == timesQuizlet:
-                    print("Complete.")
-                    sys.exit()
+                        chromeOpen = False
+                    if chromeOpen == False:
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        sys.exit()
+                    else:
+                        try:
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                            browser.find_element_by_id("start").click()
+                            terms = browser.find_elements_by_xpath("//a[@data-type='term']")
+                            for term in terms:
+                                click(term.get_attribute("data-id"))
+                            successes = successes + 1
+                            timesRan = timesRan + 1
+                            if not loggedIn:
+                                login()
+                                loggedIn = True
+                            time.sleep(2)
+                        except:
+                            failures = failures + 1
+                            pageID = pageID + 1
+                    if timesRan == timesQuizlet:
+                        print("Complete.")
+                        sys.exit()
 except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
