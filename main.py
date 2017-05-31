@@ -2,6 +2,7 @@
 # TODO: Phase out all giant, if nots, replace with if, elif, and else
 imported = False
 while imported == False:
+    import inspect
     import os
     import time
     import sys
@@ -24,10 +25,10 @@ while imported == False:
             if askforinstall == "Y":
                 print("Installing...")
                 try:
-                    from selenium import webdriver
+                    from selenium.webdriver.common.keys import Keys
                 except ImportError:
-                    os.system("pip3 install selenium -q")
                     os.system("pip install selenium -q")
+                    os.system("pip3 install selenium -q")
                 try:
                     import requests
                 except ImportError:
@@ -98,7 +99,8 @@ try:
         timesQuizlet = "ns"
         osis = -1
         # 0 = Mac, 1 = Windows, 2 = Linux
-        directory = os.getcwd()
+        directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        os.chdir(directory)
         userplatform = platform.system()
         userplatform = userplatform.upper()
         if (userplatform == "DARWIN" or userplatform == "MAC"):
@@ -362,11 +364,11 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.1 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.2 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.1 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.2 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.1 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.2 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
                             print("This is OQBRTA, V: 3.1 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
