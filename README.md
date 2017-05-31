@@ -7,6 +7,6 @@ Is this your average Quizlet Match? Do you want to become the very best? Then, w
 # Prerequisites
 Python 3
 # Installation
-Go to command prompt and/or terminal, change your current directory to the OQBRTA installation path. Then, type in python main.py.
+Literally, just run the script.
 # Is that it?
 Yes...that is it.
