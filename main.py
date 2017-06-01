@@ -364,13 +364,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.2 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.2.1 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.2 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.2.1 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.2 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.2.1 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.1 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.2.1 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -569,9 +569,9 @@ try:
             def login():
                 time.sleep(2)
                 try:
-                    browser.find_element_by_xpath("html/body/div[5]/div/div[2]/div/div/div[1]/div[3]/div[1]/button").click()
+                    browser.find_element_by_xpath("//button[@class='UIButton UIButton--hero']").click()
                 except:
-                    browser.find_element_by_xpath("//a[@href][2]").click()
+                    browser.find_element_by_xpath("//a[2]").click()
                 time.sleep(2)
                 browser.find_element_by_xpath("//a[@href='/google-oauth-redirector?from=%2Fsign-up&customParams=%7B%22signupOrigin%22%3A%22trophies-modal%22%7D']").click()
                 try:
