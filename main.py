@@ -567,7 +567,7 @@ try:
                 except:
                     pass
             def login():
-                time.sleep(1)
+                time.sleep(2)
                 try:
                     browser.find_element_by_xpath("html/body/div[5]/div/div[2]/div/div/div[1]/div[3]/div[1]/button").click()
                 except:
