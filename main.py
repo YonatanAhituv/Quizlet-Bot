@@ -12,6 +12,7 @@ while imported == False:
     import platform
     import getpass
     try:
+        import tldextract
         import requests
         from selenium import webdriver
         from selenium.webdriver.common.keys import Keys
@@ -29,6 +30,11 @@ while imported == False:
                 except ImportError:
                     os.system("pip install selenium -q")
                     os.system("pip3 install selenium -q")
+                try:
+                    import tldextract
+                except ImportError:
+                    os.system("pip install tldextract -q")
+                    os.system("pip3 install tldextract -q")
                 try:
                     import requests
                 except ImportError:
@@ -309,8 +315,8 @@ try:
                 if timesQuizlet == "ns":
                     chooseRunType = input("Would you like to do infinite quizes (Y or N)? >>> ")
                     if (chooseRunType == "y" or chooseRunType == "Y"):
-                        if not timesQuizlet == "nw":
-                            timesQuizlet = "nw"
+                        if not timesQuizlet == "dw":
+                            timesQuizlet = "dw"
                         if pageID == "ns":
                             print("https://quizlet.com/0<---PageID/micromatch")
                             while pageIDChoosen == False:
@@ -337,10 +343,10 @@ try:
                                     timesChoosen = False
                                 if timesQuizlet < 0:
                                     timesChoosen = False
-                if timesQuizlet == "nw":
+                if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
-                if not timesQuizlet == "nw" and not timesQuizlet == "ns":
+                if not timesQuizlet == "dw" and not timesQuizlet == "ns":
                     started = True
                     oneQuiz = True
                     if pageID == "ns":
@@ -364,13 +370,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.2.1 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.3 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.2.1 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.3 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.2.1 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.3 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.2.1 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.3 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -391,11 +397,11 @@ try:
                                     print("The path to ChromeDriver is not set.")
                                 else:
                                     print("The path to ChromeDriver is set to:",path)
-                                if timesQuizlet == "nw":
+                                if timesQuizlet == "dw":
                                     print("You have set OQBRTA to run infinitely.")
                                 if timesQuizlet == "ns":
                                     print("You have not set how many times you want OQBRTA to run.")
-                                if not timesQuizlet == "ns" and not timesQuizlet == "nw":
+                                if not timesQuizlet == "ns" and not timesQuizlet == "dw":
                                     print("You have set OQBRTA to run:", timesQuizlet, "times.")
                                 if username == "ns":
                                     print("The email is not set.")
@@ -424,7 +430,7 @@ try:
                             if datachangeType == "EDIT":
                                 dataChanged = False
                                 while dataChanged == False:
-                                    whattochange = input("Type a variable: PageID, ChromeDriver Path, Times to run OQBRTA, Email and Password, Quit: >>> ")
+                                    whattochange = input("Type a variable: PageID, ChromeDriver Path, Times to run OQBRTA, Automatic Login, Quit: >>> ")
                                     whattochange = whattochange.upper()
                                     if whattochange == "PAGEID":
                                         if pageID == "ns":
@@ -456,17 +462,17 @@ try:
                                             doneChanging = False
                                     if whattochange == "TIMES TO RUN OQBRTA":
                                         while True:
-                                            if timesQuizlet == "nw":
+                                            if timesQuizlet == "dw":
                                                 print("You have decided to run OQBRTA infinitely.")
-                                            if not timesQuizlet == "nw" and not timesQuizlet == "ns":
+                                            if not timesQuizlet == "dw" and not timesQuizlet == "ns":
                                                 print("You have decided to run OQBRTA", timesQuizlet, "times.")
                                             if timesQuizlet == "ns":
                                                 print("You have not set the amount of times you would like to run OQBRTA.")
                                             timesQuizletSettings = input("What would you like to do? Run OQBRTA infinitely, Run OQBRTA a specific amount of times or Quit: >>> ")
                                             timesQuizletSettings = timesQuizletSettings.upper()
                                             if timesQuizletSettings == "RUN OQBRTA INFINITELY" or timesQuizletSettings == "RUN INFINITELY" or timesQuizletSettings == "INFINITELY":
-                                                if not timesQuizlet == "nw":
-                                                    timesQuizlet = "nw"
+                                                if not timesQuizlet == "dw":
+                                                    timesQuizlet = "dw"
                                             elif timesQuizletSettings == "RUN OQBRTA A SPECIFIC AMOUNT OF TIMES" or timesQuizletSettings == "SPECIFIC AMOUNT" or timesQuizletSettings == "SPECIFIC":
                                                 timesChoosen = False
                                                 while timesChoosen == False:
@@ -484,14 +490,14 @@ try:
                                                 break
                                             else:
                                                 print("Invalid Option!")
-                                    if whattochange == "EMAIL AND PASSWORD":
+                                    if whattochange == "AUTOMATIC LOGIN":
                                         while True:
-                                            if password == "nw" and username == "nw":
+                                            if password == "dw" and username == "dw":
                                                 loginSettings = input("What would you like to do? Enable Automatic Login or Quit: >>> ")
                                             else:
                                                 loginSettings = input("What would you like to do? Change Email, Change Password, Disable Automatic Login or Quit: >>> ")
                                             loginSettings = loginSettings.upper()
-                                            if password == "nw" and username == "nw" and loginSettings == "ENABLE AUTOMATIC LOGIN":
+                                            if password == "dw" and username == "dw" and loginSettings == "ENABLE AUTOMATIC LOGIN":
                                                 passwordChoosen = False
                                                 while passwordChoosen == False:
                                                     passwordChoosen = True
@@ -505,10 +511,10 @@ try:
                                                     else:
                                                         print("Passwords do not match!")
                                                         passwordChoosen = True
-                                            if not password == "nw" and not username == "nw":
+                                            if not password == "dw" and not username == "dw":
                                                 if loginSettings == "DISABLE AUTOMATIC LOGIN":
-                                                    username = "nw"
-                                                    password = "nw"
+                                                    username = "dw"
+                                                    password = "dw"
                                                     save(info, pageID, successes, failures, path, timesQuizlet, username, password)
                                                 if loginSettings == "CHANGE PASSWORD":
                                                     passwordVerified = False
@@ -534,15 +540,15 @@ try:
                                                 if loginSettings == "CHANGE EMAIL":
                                                     if username == "ns":
                                                         print("The email has not been set.")
-                                                    if not username == "ns" and not username == "nw":
+                                                    if not username == "ns" and not username == "dw":
                                                         print("The email is set to:", username)
-                                                    if not username == "nw":
+                                                    if not username == "dw":
                                                         username = input("I would like to set the email to: >>> ")
                                             if loginSettings == "QUIT":
                                                 break
                                     if whattochange == "QUIT":
                                         dataChanged = True
-                                    if not whattochange == "PAGEID" and not whattochange == "CHROMEDRIVER PATH" and not whattochange == "EMAIL AND PASSWORD" and not whattochange == "QUIT":
+                                    if not whattochange == "PAGEID" and not whattochange == "CHROMEDRIVER PATH" and not whattochange == "AUTOMATIC LOGIN" and not whattochange == "QUIT":
                                         doneChanging = False
                     if settingsoption == "QUIT":
                         print("Leaving...")
@@ -569,18 +575,27 @@ try:
             def login():
                 time.sleep(2)
                 try:
-                    browser.find_element_by_xpath("//button[@class='UIButton UIButton--hero']").click()
+                    browser.find_element_by_xpath("html/body/div[5]/div/div[2]/div/div/div[1]/div[3]/div[1]/button").click()
                 except:
-                    browser.find_element_by_xpath("//a[2]").click()
+                    browser.find_element_by_xpath("//a[@href][2]").click()
                 time.sleep(2)
                 browser.find_element_by_xpath("//a[@href='/google-oauth-redirector?from=%2Fsign-up&customParams=%7B%22signupOrigin%22%3A%22trophies-modal%22%7D']").click()
-                try:
+                if not username == "dw" and not password == "dw":
                     browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
                     time.sleep(1)
                     browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                except:
-                    pass
-                time.sleep(1)
+                    time.sleep(1)
+                else:
+                    while True:
+                        printed = False
+                        if printed == False:
+                            print("You can now login.")
+                            printed = True
+                        getBrowserUrl = browser.current_url
+                        simpleURL = tldextract.extract(getBrowserUrl)
+                        simpleURL = simpleURL.domain
+                        if not simpleURL == "google":
+                            break
             if oneQuiz == False:
                 while True:
                     try:
