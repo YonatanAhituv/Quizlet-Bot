@@ -1,6 +1,5 @@
 # TODO: Phase out all bool based while loops, switch to a while true and break model instead
 # TODO: Phase out all giant, if nots, replace with if, elif, and else
-otherThing = True
 imported = False
 while imported == False:
     import inspect
