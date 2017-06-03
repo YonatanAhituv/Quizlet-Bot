@@ -1,5 +1,6 @@
 # TODO: Phase out all bool based while loops, switch to a while true and break model instead
 # TODO: Phase out all giant, if nots, replace with if, elif, and else
+otherThing = True
 imported = False
 while imported == False:
     import inspect
@@ -55,23 +56,23 @@ class Updater:
     def __init__(self):
         pass
     def checkForUpdates(self):
-        reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
-        code = reply.text
-        with open('update.txt', 'w+') as w1:
-            w1.write(code)
+        downloadurl1 = "https://cdn.rawgit.com/AtomicCoding/Quizlet-Bot/3ae31239/main.py"
+        file_name = "update.py"
+        with urllib.request.urlopen(downloadurl1) as response, open(file_name, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
         with open('main.py', 'r') as f1:
             oldcode = f1.read()
-            with open('update.txt', 'r') as f2:
+            with open('update.py', 'r') as f2:
                 newcode = f2.read()
                 if not oldcode == newcode:
                     userupdate = input("New Version Detected on GitHub, would you like to update (Y or N)? >>> ")
                     if userupdate == "Y" or userupdate == "y":
-                        os.remove("update.txt")
+                        os.remove("update.py")
                         with open('main.py', 'w+') as f:
                             f.write(newcode)
                         sys.exit()
 
-        os.remove("update.txt")
+        os.remove("update.py")
 
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     print("An error has occured titled:", error+".")
@@ -395,13 +396,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.4.1 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.4.2 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.4.1 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.4.2 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.4.1 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.4.2 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.4.1 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.4.2 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
