@@ -44,12 +44,34 @@ while imported == False:
                 sys.exit()
             else:
                 sys.exit()
+
 def internet_on():
     try:
         urllib.request.urlopen('http://216.58.192.142', timeout=1)
         return True
     except:
         return False
+class Updater:
+    def __init__(self):
+        pass
+    def checkForUpdates(self):
+        reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+        code = reply.text
+        with open('update.txt', 'w+') as w1:
+            w1.write(code)
+        with open('main.py', 'r') as f1:
+            oldcode = f1.read()
+            with open('update.txt', 'r') as f2:
+                newcode = f2.read()
+                if not oldcode == newcode:
+                    userupdate = input("New Version Detected on GitHub, would you like to update (Y or N)? >>> ")
+                    if userupdate == "Y" or userupdate == "y":
+                        os.remove("update.txt")
+                        with open('main.py', 'w+') as f:
+                            f.write(newcode)
+                        sys.exit()
+                    else:
+                        os.remove("update.txt")
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     print("An error has occured titled:", error+".")
     createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
@@ -274,21 +296,8 @@ try:
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
-            reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
-            code = reply.text
-            with open('update.txt', 'w+') as w1:
-                w1.write(code)
-            with open('main.py', 'rb') as f1:
-                oldcode = f1.read()
-                with open('update.txt', 'rb') as f2:
-                    newcode = f2.read()
-                    if not oldcode == newcode:
-                        userupdate = input("New Version Detected on GitHub, would you like to update (Y or N)? >>> ")
-                        if userupdate == "Y" or userupdate == "y":
-                            os.remove("update.txt")
-                            with open('main.py', 'w+') as f:
-                                f.write(newcode)
-                            sys.exit()
+            update = Updater()
+            update.checkForUpdates()
             passwordhidden = len(password) * "•"
             print("Type in an option: Start, Settings, Quit")
             time.sleep(0.1)
