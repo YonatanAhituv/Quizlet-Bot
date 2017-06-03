@@ -274,6 +274,21 @@ try:
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
+            reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+            code = reply.text
+            with open('update.txt', 'w+') as w1:
+                w1.write(code)
+            with open('main.py', 'rb') as f1:
+                oldcode = f1.read()
+                with open('update.txt', 'rb') as f2:
+                    newcode = f2.read()
+                    if not oldcode == newcode:
+                        userupdate = input("New Version Detected on GitHub, would you like to update (Y or N)? >>> ")
+                        if userupdate == "Y" or userupdate == "y":
+                            os.remove("update.txt")
+                            with open('main.py', 'w+') as f:
+                                f.write(newcode)
+                            sys.exit()
             passwordhidden = len(password) * "•"
             print("Type in an option: Start, Settings, Quit")
             time.sleep(0.1)
@@ -370,13 +385,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.3 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.4 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.3 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.4 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.3 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.4 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.3 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.4 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
