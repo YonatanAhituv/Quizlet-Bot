@@ -1,125 +1,143 @@
-# TODO: Phase out all bool based while loops, switch to a while true and break model instead
-# TODO: Phase out all giant, if nots, replace with if, elif, and else
-imported = False
-while imported == False:
-    import inspect
-    import os
-    import time
-    import sys
-    import json
-    import urllib
-    import shutil
-    import platform
-    import getpass
-    try:
-        import tldextract
-        import requests
-        from selenium import webdriver
-        from selenium.webdriver.common.keys import Keys
-        imported = True
-    except ImportError:
-        imported = False
-        userChoose = False
-        while userChoose == False:
-            askforinstall = input("Some packages were not found, would you like the script to install them for you (Y or N)? >>> ")
-            askforinstall = askforinstall.upper()
-            if askforinstall == "Y":
-                print("Installing...")
-                try:
-                    from selenium.webdriver.common.keys import Keys
-                except ImportError:
-                    os.system("pip install selenium -q")
-                    os.system("pip3 install selenium -q")
-                try:
-                    import tldextract
-                except ImportError:
-                    os.system("pip install tldextract -q")
-                    os.system("pip3 install tldextract -q")
-                try:
-                    import requests
-                except ImportError:
-                    os.system("pip install requests -q")
-                    os.system("pip3 install requests -q")
-                print("Installed!")
-                sys.exit()
-            else:
-                sys.exit()
-
-def internet_on():
-    try:
-        urllib.request.urlopen('http://216.58.192.142', timeout=1)
-        return True
-    except:
-        return False
-class Updater:
-    def __init__(self):
-        pass
-    def checkForUpdates(self):
-        fname = os.path.basename(__file__)
-        reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
-        code = reply.text
-        with open('update.py', 'w+') as w1:
-            w1.write(code)
-        with open(fname, 'r') as f1:
-            oldcode = f1.read()
-            with open('update.py', 'r') as f2:
-                newcode = f2.read()
-                if not oldcode == newcode:
-                    os.remove("update.py")
-                    return True
-                if oldcode == newcode:
-                    os.remove("update.py")
-                    return False
-    def update(self):
-        fname = os.path.basename(__file__)
-        reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
-        code = reply.text
-        with open('update.py', 'w+') as w1:
-            w1.write(code)
-            with open('update.py', 'r') as f2:
-                newcode = f2.read()
-        with open(fname, 'w+') as f:
-            f.write(newcode)
-            os.remove('update.py')
-        sys.exit()
-def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
-    print("An error has occured titled:", error+".")
-    createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
-    if createissue == "y" or createissue == "Y":
-        print("None of this data is transmitted, it is just used to create an issue on GitHub.")
-        gitHubLoggedIn = False
-        while gitHubLoggedIn == False:
-            gitHubLoggedIn = True
-            USERUSERNAME = input("What is your GitHub username? >>> ")
-            USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
-            CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
-            if not USERPASSWORD == CONFIRMPASS:
-                gitHubLoggedIn = False
-            REPO_OWNER = 'AtomicCoding'
-            REPO_NAME = 'Quizlet-Bot'
-            '''Create an issue on github.com using the given parameters.'''
-            # Our url to create issues via POST
-            url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
-            # Create an authenticated session to create the issue
-            session = requests.Session()
-            session.auth = (USERUSERNAME, USERPASSWORD)
-            # Create our issue
-            issue = {'title': error,
-                     'body': body,
-                     'assignee': assignee,
-                     'milestone': milestone,
-                     'labels': labels}
-            # Add the issue to our repository
-            r = session.post(url, json.dumps(issue))
-            if r.status_code == 201:
-                print('Successfully created Issue "%s"' % error)
-                sys.exit()
-            else:
-                print('Could not create Issue "%s"' % error)
-                print('Response:', r.content)
-    else:
-        sys.exit()
 try:
+    # TODO: Phase out all bool based while loops, switch to a while true and break model instead
+    # TODO: Phase out all giant, if nots, replace with if, elif, and else
+    imported = False
+    while imported == False:
+        import inspect
+        import time
+        import sys
+        import json
+        import urllib
+        import shutil
+        import platform
+        import getpass
+        import os
+        import pip
+        def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
+            print("An error has occured titled:", error+".")
+            createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
+            if createissue == "y" or createissue == "Y":
+                print("None of this data is transmitted, it is just used to create an issue on GitHub.")
+                gitHubLoggedIn = False
+                while gitHubLoggedIn == False:
+                    gitHubLoggedIn = True
+                    USERUSERNAME = input("What is your GitHub username? >>> ")
+                    USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
+                    CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                    if not USERPASSWORD == CONFIRMPASS:
+                        gitHubLoggedIn = False
+                    REPO_OWNER = 'AtomicCoding'
+                    REPO_NAME = 'Quizlet-Bot'
+                    '''Create an issue on github.com using the given parameters.'''
+                    # Our url to create issues via POST
+                    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+                    # Create an authenticated session to create the issue
+                    session = requests.Session()
+                    session.auth = (USERUSERNAME, USERPASSWORD)
+                    # Create our issue
+                    issue = {'title': error,
+                             'body': body,
+                             'assignee': assignee,
+                             'milestone': milestone,
+                             'labels': labels}
+                    # Add the issue to our repository
+                    r = session.post(url, json.dumps(issue))
+                    if r.status_code == 201:
+                        print('Successfully created Issue "%s"' % error)
+                        sys.exit()
+                    else:
+                        print('Could not create Issue "%s"' % error)
+                        print('Response:', r.content)
+            else:
+                sys.exit()
+        def install(package):
+            pip.main(['install', package])
+        osis = -1
+        # 0 = Mac, 1 = Windows, 2 = Linux
+        directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+        os.chdir(directory)
+        userplatform = platform.system()
+        userplatform = userplatform.upper()
+        if (userplatform == "DARWIN" or userplatform == "MAC"):
+            osis = 0
+        if (userplatform == "WIN32" or userplatform == "WINDOWS"):
+            osis = 1
+        if (userplatform == "LINUX" or userplatform == "LINUX32"):
+            osis = 2
+        try:
+            import tldextract
+            import requests
+            from selenium import webdriver
+            from selenium.webdriver.common.keys import Keys
+            imported = True
+        except ImportError:
+            imported = False
+            userChoose = False
+            while userChoose == False:
+                askforinstall = input("Some packages were not found, would you like the script to install them for you (Y or N)? >>> ")
+                askforinstall = askforinstall.upper()
+                if askforinstall == "Y":
+                    print("Installing...")
+                    try:
+                        from selenium.webdriver.common.keys import Keys
+                    except ImportError:
+                        install('selenium')
+                    try:
+                        import tldextract
+                    except ImportError:
+                        install('tldextract')
+                    try:
+                        import requests
+                    except ImportError:
+                        install('requests')
+                    print("Installed!")
+                    sys.exit()
+                else:
+                    sys.exit()
+
+    def internet_on():
+        try:
+            urllib.request.urlopen('http://216.58.192.142', timeout=1)
+            return True
+        except:
+            return False
+    class Updater:
+        def __init__(self):
+            pass
+        def checkForUpdates(self):
+            fname = os.path.basename(__file__)
+            reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+            code = reply.text
+            with open('update.py', 'w+') as w1:
+                w1.write(code)
+            with open(fname, 'r') as f1:
+                oldcode = f1.read()
+                with open('update.py', 'r') as f2:
+                    newcode = f2.read()
+                    if not oldcode == newcode:
+                        f2.close()
+                        w1.close()
+                        os.remove("update.py")
+                        return True
+                    if oldcode == newcode:
+                        f2.close()
+                        w1.close()
+                        os.remove("update.py")
+                        return False
+        def update(self):
+            fname = os.path.basename(__file__)
+            reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+            code = reply.text
+            with open('update.py', 'w+') as w1:
+                w1.write(code)
+                with open('update.py', 'r') as f2:
+                    newcode = f2.read()
+            with open(fname, 'w+') as f:
+                f.write(newcode)
+                f2.close()
+                w1.close()
+                os.remove('update.py')
+            sys.exit()
     connectedToInternet = internet_on()
     if connectedToInternet == False:
         print("You are not connected to the internet, please connect and try again.")
@@ -135,18 +153,6 @@ try:
         pageIDChoosen = False
         started = False
         timesQuizlet = "ns"
-        osis = -1
-        # 0 = Mac, 1 = Windows, 2 = Linux
-        directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-        os.chdir(directory)
-        userplatform = platform.system()
-        userplatform = userplatform.upper()
-        if (userplatform == "DARWIN" or userplatform == "MAC"):
-            osis = 0
-        if (userplatform == "WIN32" or userplatform == "WINDOWS"):
-            osis = 1
-        if (userplatform == "LINUX" or userplatform == "LINUX32"):
-            osis = 2
         if not os.path.exists(directory+"/"+"info.json"):
             f= open("info.json","w+")
             f.close()
