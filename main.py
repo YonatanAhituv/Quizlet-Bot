@@ -423,13 +423,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.6 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.6.1 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.6 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.6.1 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.6 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.6.1 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.6 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.6.1 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -462,13 +462,16 @@ try:
                                     print("You have disabled automatic password and email entering.")
                                 if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
                                     print("The email is set to:",username)
-                                if not username == "dw" and not password == "dw":
+                                if not password == "ns" and not username == "dw" and not password == "dw" and not username == "ns":
                                     print("The password is:", passwordhidden)
-                                    passwordprotect = getpass.getpass("Enter the password to unhide the password: >>> ")
-                                    if (passwordprotect == password):
-                                        print("The password is:", password)
-                                    else:
-                                        print("Incorrect!")
+                                    seePassword = input("Would you like to see the password (Y or N)? >>> ")
+                                    seePassword = seePassword.upper()
+                                    if seePassword == "Y":
+                                        passwordprotect = getpass.getpass("Enter the password to unhide the password: >>> ")
+                                        if (passwordprotect == password):
+                                            print("The password is:", password)
+                                        else:
+                                            print("Incorrect!")
                                 if password == "ns":
                                     print("The password is not set.")
                             if datachangeType == "RESET":
@@ -577,7 +580,12 @@ try:
                                                         verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
                                                         if verifypassword == password:
                                                             print("Correct!")
-                                                            print("The password currently is:", password)
+                                                            seePassword = input("Would you like to see the password (Y or N)? >>> ")
+                                                            seePassword = seePassword.upper()
+                                                            if seePassword == "Y":
+                                                                print("The password currently is:", password)
+                                                            else:
+                                                                print("The password currently is:", passwordhidden)
                                                             passwordChanged = False
                                                             while passwordChanged == False:
                                                                 password = getpass.getpass("I would like to change my password to: >>> ")
@@ -588,7 +596,7 @@ try:
                                                                 else:
                                                                     print("Passwords do not match!")
                                                         else:
-                                                            passwordVerified = False
+                                                            passwordVerified = True
                                                             print("Invalid Password!")
                                                 if loginSettings == "CHANGE EMAIL":
                                                     if username == "ns":
