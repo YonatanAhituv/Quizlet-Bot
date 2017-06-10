@@ -7,4 +7,4 @@ install:
   - "pip install tldextract"
   - "pip install pylama"
   - "pip install pytest"
-script: pytest
+script: pytest main.py
