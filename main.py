@@ -1,3 +1,72 @@
+issueRead = False
+def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
+    if issueRead == False:
+        print("An error has occured titled:", error+".")
+    if issueRead == True:
+        print("An error was read titled:", error+".")
+    try:
+        import requests
+        cantWork = False
+    except:
+        cantWork = True
+    if cantWork == False:
+        try:
+            import urllib
+            urllib.request.urlopen('http://216.58.192.142', timeout=1)
+            cantWork = False
+        except:
+            cantWork = True
+    if cantWork == True:
+        errorIssue = input("ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
+        errorIssue = errorIssue.upper()
+        if errorIssue == "Y":
+            import os, inspect
+            directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+            os.chdir(directory)
+            try:
+                with open('issue.txt', 'w+') as w1:
+                    w1.write(error)
+                print("Created File Successfully!")
+            except:
+                print("Failed to create file. ):")
+            print("Exiting...")
+            sys.exit()
+    else:
+        createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
+        if createissue == "y" or createissue == "Y":
+            print("None of this data is transmitted, it is just used to create an issue on GitHub.")
+            gitHubLoggedIn = False
+            while gitHubLoggedIn == False:
+                gitHubLoggedIn = True
+                USERUSERNAME = input("What is your GitHub username? >>> ")
+                USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
+                CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                if not USERPASSWORD == CONFIRMPASS:
+                    gitHubLoggedIn = False
+                REPO_OWNER = 'AtomicCoding'
+                REPO_NAME = 'Quizlet-Bot'
+                '''Create an issue on github.com using the given parameters.'''
+                # Our url to create issues via POST
+                url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+                # Create an authenticated session to create the issue
+                session = requests.Session()
+                session.auth = (USERUSERNAME, USERPASSWORD)
+                # Create our issue
+                issue = {'title': error,
+                         'body': body,
+                         'assignee': assignee,
+                         'milestone': milestone,
+                         'labels': labels}
+                # Add the issue to our repository
+                r = session.post(url, json.dumps(issue))
+                if r.status_code == 201:
+                    print('Successfully created Issue "%s"' % error)
+                    sys.exit()
+                else:
+                    print('Could not create Issue "%s"' % error)
+                    print('Response:', r.content)
+        else:
+            sys.exit()
 try:
     # TODO: Phase out all bool based while loops, switch to a while true and break model instead
     # TODO: Phase out all giant, if nots, replace with if, elif, and else
@@ -12,44 +81,6 @@ try:
         import platform
         import getpass
         import os
-        import pip
-        def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
-            print("An error has occured titled:", error+".")
-            createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
-            if createissue == "y" or createissue == "Y":
-                print("None of this data is transmitted, it is just used to create an issue on GitHub.")
-                gitHubLoggedIn = False
-                while gitHubLoggedIn == False:
-                    gitHubLoggedIn = True
-                    USERUSERNAME = input("What is your GitHub username? >>> ")
-                    USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
-                    CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
-                    if not USERPASSWORD == CONFIRMPASS:
-                        gitHubLoggedIn = False
-                    REPO_OWNER = 'AtomicCoding'
-                    REPO_NAME = 'Quizlet-Bot'
-                    '''Create an issue on github.com using the given parameters.'''
-                    # Our url to create issues via POST
-                    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
-                    # Create an authenticated session to create the issue
-                    session = requests.Session()
-                    session.auth = (USERUSERNAME, USERPASSWORD)
-                    # Create our issue
-                    issue = {'title': error,
-                             'body': body,
-                             'assignee': assignee,
-                             'milestone': milestone,
-                             'labels': labels}
-                    # Add the issue to our repository
-                    r = session.post(url, json.dumps(issue))
-                    if r.status_code == 201:
-                        print('Successfully created Issue "%s"' % error)
-                        sys.exit()
-                    else:
-                        print('Could not create Issue "%s"' % error)
-                        print('Response:', r.content)
-            else:
-                sys.exit()
         def install(package):
             pip.main(['install', package])
         osis = -1
@@ -71,6 +102,7 @@ try:
             from selenium.webdriver.common.keys import Keys
             imported = True
         except ImportError:
+            import pip
             imported = False
             userChoose = False
             while userChoose == False:
@@ -126,6 +158,9 @@ try:
                         return False
         def update(self):
             fname = os.path.basename(__file__)
+            titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+            title = titleget.text
+            print("Updating to:",title+"...")
             reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
             code = reply.text
             with open('update.py', 'w+') as w1:
@@ -138,6 +173,15 @@ try:
                 w1.close()
                 os.remove('update.py')
             sys.exit()
+    try:
+        with open('issue.txt', 'r') as myfile:
+            data=myfile.read().replace('\n', '')
+            myfile.close()
+            os.remove('issue.txt')
+            issueRead = True
+            complain(data)
+    except:
+        pass
     connectedToInternet = internet_on()
     if connectedToInternet == False:
         print("You are not connected to the internet, please connect and try again.")
@@ -423,13 +467,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.6.1 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.7 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.6.1 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.7 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.6.1 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.7 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.6.1 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.7 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -723,6 +767,7 @@ try:
                         print("Complete.")
                         sys.exit()
 except Exception as e:
+        import sys, os
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         e = str(e)
