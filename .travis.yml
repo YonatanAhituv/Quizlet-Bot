@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.6.1"
+install:
+  - "pip install requests"
+  - "pip install selenium"
+  - "pip install tldextract"
+  - "pip install pylama"
+  - "pip install pytest"
+script: pytest
