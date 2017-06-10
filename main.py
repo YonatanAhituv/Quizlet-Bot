@@ -30,6 +30,8 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
             except:
                 print("Failed to create file. ):")
             print("Exiting...")
+            import time
+            time.sleep(1)
             sys.exit()
     else:
         createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
@@ -61,11 +63,14 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 r = session.post(url, json.dumps(issue))
                 if r.status_code == 201:
                     print('Successfully created Issue "%s"' % error)
+                    time.sleep(1)
                     sys.exit()
                 else:
                     print('Could not create Issue "%s"' % error)
                     print('Response:', r.content)
         else:
+            import time
+            time.sleep(1)
             sys.exit()
 try:
     # TODO: Phase out all bool based while loops, switch to a while true and break model instead
@@ -123,8 +128,10 @@ try:
                     except ImportError:
                         install('requests')
                     print("Installed!")
+                    time.sleep(1)
                     sys.exit()
                 else:
+                    time.sleep(1)
                     sys.exit()
 
     def internet_on():
@@ -185,6 +192,7 @@ try:
     connectedToInternet = internet_on()
     if connectedToInternet == False:
         print("You are not connected to the internet, please connect and try again.")
+        time.sleep(1)
         sys.exit()
     passwordChoosen = False
     restart = True
@@ -217,7 +225,7 @@ try:
             with open ('info.json', 'r') as myfile:
                 info=json.loads(myfile.read())
         except:
-            jsonreset = input("ERROR: COULD NOT LOAD IN JSON, WOULD YOU LIKE TO TRY TO FIX THE JSON? >>> ")
+            jsonreset = input("ERROR: COULD NOT LOAD IN JSON, WOULD YOU LIKE TO TRY TO FIX THE JSON (Y or N)? >>> ")
             jsonreset = jsonreset.upper()
             if jsonreset == "Y":
                 jsonfix = input("Would you like to reset the JSON or manually repair it? >>> ")
@@ -233,8 +241,7 @@ try:
                     recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns"}
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
-                    with open ('info.json', 'r') as myfile:
-                        info=json.loads(myfile.read())
+                    sys.exit()
                 else:
                     with open('info.json', 'r') as myfile:
                         data=myfile.read().replace('\n', '')
@@ -256,8 +263,6 @@ try:
                     recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password}
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
-                    with open ('info.json', 'r') as myfile:
-                        info=json.loads(myfile.read())
                     sys.exit()
         if not osis == 0 and not osis == 1 and not osis == 2:
             complain("Unknown OS detected called:"+str(userplatform))
@@ -341,6 +346,7 @@ try:
                             sys.exit()
                     if (chromeinstalled == "n" or chromeinstalled == "N"):
                             print("Goodbye!")
+                            time.sleep(1)
                             sys.exit()
         if (username == "ns" and password == "ns"):
             reply = input('Would you like to have the script enter your username and password for you (Y or N)? >>> ')
@@ -467,13 +473,13 @@ try:
                     settingsoption = settingsoption.upper()
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.7 and you are running MacOS.")
+                            print("This is OQBRTA, V: 3.7.1 and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.7 and you are running Windows.")
+                            print("This is OQBRTA, V: 3.7.1 and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.7 and you are running Linux.")
+                            print("This is OQBRTA, V: 3.7.1 and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.7 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V: 3.7.1 and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
@@ -663,6 +669,7 @@ try:
                         doneChanging = False
             if runTypeInput == "QUIT":
                 print("Goodbye!")
+                time.sleep(1)
                 sys.exit()
             if updateNeeded == True:
                 if not runTypeInput == "UPDATE" and not runTypeInput == "EXPIRMENT" and not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
@@ -765,7 +772,8 @@ try:
                             pageID = pageID + 1
                     if timesRan == timesQuizlet:
                         print("Complete.")
-                        sys.exit()
+                        browser.quit()
+                        restart = True
 except Exception as e:
         import sys, os
         exc_type, exc_obj, exc_tb = sys.exc_info()
