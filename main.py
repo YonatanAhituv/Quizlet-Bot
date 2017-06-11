@@ -415,57 +415,58 @@ try:
                     ex = Example()
                     sys.exit(app.exec_())
             if runTypeInput == "UPLOAD":
-                checkCode = input("What is the passcode? >>> ")
-                if checkCode == "54321":
-                    checked = True
-                else:
-                    checked = False
-                if checked == True:
-                    fname = os.path.basename(__file__)
-                    with open(fname, 'r') as f1:
-                        updatedcode = f1.read()
-                    titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
-                    title = titleget.text
-                    titlenumber = len(title)
-                    updateName = input("What would you like to name the update? >>> ")
-                    chromedriver = path
-                    os.environ["webdriver.chrome.driver"] = chromedriver
-                    browser = webdriver.Chrome(chromedriver)
-                    browser.get("https://pastebin.com/login")
-                    time.sleep(1)
-                    browser.find_element_by_xpath('//div[@onclick][3]').click()
-                    time.sleep(1)
-                    browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                    time.sleep(1)
-                    browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                    time.sleep(1)
-                    browser.get('https://pastebin.com/edit/hHLndhTS')
-                    time.sleep(1)
-                    browser.find_element_by_xpath('//textarea').click()
-                    time.sleep(1)
-                    timesRanDelete = 0
-                    while not timesRanDelete == titlenumber:
-                        browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE)
-                        timesRanDelete = timesRanDelete + 1
-                    time.sleep(1)
-                    browser.find_element_by_xpath('//textarea').send_keys(updateName)
-                    time.sleep(1)
-                    browser.find_element_by_name('submit').click()
-                    time.sleep(1)
-                    browser.quit()
-                    gitdir = directory+"/Git"
-                    os.chdir(gitdir)
-                    try:
-                        os.remove('main.py')
-                    except:
-                        pass
-                    src = directory+"/"+fname
-                    dst = directory+"/Git/main.py"
-                    shutil.copyfile(src, dst)
-                    os.system("git commit main.py -m '"+updateName+"'")
-                    os.system('git push')
-                else:
-                    runTypeSelected = False
+                if updateNeeded == True:
+                    checkCode = input("What is the passcode? >>> ")
+                    if checkCode == "54321":
+                        checked = True
+                    else:
+                        checked = False
+                    if checked == True:
+                        fname = os.path.basename(__file__)
+                        with open(fname, 'r') as f1:
+                            updatedcode = f1.read()
+                        titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+                        title = titleget.text
+                        titlenumber = len(title)
+                        updateName = input("What would you like to name the update? >>> ")
+                        chromedriver = path
+                        os.environ["webdriver.chrome.driver"] = chromedriver
+                        browser = webdriver.Chrome(chromedriver)
+                        browser.get("https://pastebin.com/login")
+                        time.sleep(1)
+                        browser.find_element_by_xpath('//div[@onclick][3]').click()
+                        time.sleep(1)
+                        browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
+                        time.sleep(1)
+                        browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
+                        time.sleep(1)
+                        browser.get('https://pastebin.com/edit/hHLndhTS')
+                        time.sleep(1)
+                        browser.find_element_by_xpath('//textarea').click()
+                        time.sleep(1)
+                        timesRanDelete = 0
+                        while not timesRanDelete == titlenumber:
+                            browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE)
+                            timesRanDelete = timesRanDelete + 1
+                        time.sleep(1)
+                        browser.find_element_by_xpath('//textarea').send_keys(updateName)
+                        time.sleep(1)
+                        browser.find_element_by_name('submit').click()
+                        time.sleep(1)
+                        browser.quit()
+                        gitdir = directory+"/Git"
+                        os.chdir(gitdir)
+                        try:
+                            os.remove('main.py')
+                        except:
+                            pass
+                        src = directory+"/"+fname
+                        dst = directory+"/Git/main.py"
+                        shutil.copyfile(src, dst)
+                        os.system("git commit main.py -m '"+updateName+"'")
+                        os.system('git push')
+                    else:
+                        runTypeSelected = False
             if runTypeInput == "START":
                 if timesQuizlet == "ns":
                     chooseRunType = input("Would you like to do infinite quizes (Y or N)? >>> ")
