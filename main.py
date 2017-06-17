@@ -1,4 +1,4 @@
-version = 4.0
+version = 4.01
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     try:
@@ -164,28 +164,28 @@ try:
             pasteV = titleget.text
             pasteV = float(pasteV)
             if pasteV > version:
-                return True
+                fname = os.path.basename(__file__)
+                reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+                code = reply.text
+                with open('update.py', 'w+') as w1:
+                    w1.write(code)
+                with open(fname, 'r') as f1:
+                    oldcode = f1.read()
+                    with open('update.py', 'r') as f2:
+                        newcode = f2.read()
+                        if not oldcode == newcode:
+                            f2.close()
+                            w1.close()
+                            os.remove("update.py")
+                            return True
+                        if oldcode == newcode:
+                            f2.close()
+                            w1.close()
+                            os.remove("update.py")
+                            return False
             else:
                 return False
-            # fname = os.path.basename(__file__)
-            # reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
-            # code = reply.text
-            # with open('update.py', 'w+') as w1:
-            #     w1.write(code)
-            # with open(fname, 'r') as f1:
-            #     oldcode = f1.read()
-            #     with open('update.py', 'r') as f2:
-            #         newcode = f2.read()
-            #         if not oldcode == newcode:
-            #             f2.close()
-            #             w1.close()
-            #             os.remove("update.py")
-            #             return True
-            #         if oldcode == newcode:
-            #             f2.close()
-            #             w1.close()
-            #             os.remove("update.py")
-            #             return False
+
         def update(self):
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
@@ -395,6 +395,16 @@ try:
             update = Updater()
             updateNeeded = update.checkForUpdates()
             passwordhidden = len(password) * "•"
+            if dev == True:
+                titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+                pasteV = titleget.text
+                pasteV = float(pasteV)
+                if pasteV < version:
+                    uploadable = True
+                else:
+                    uploadable = False
+            else:
+                uploadable = False
             if updateNeeded == True:
                 if dev == False:
                     print("Type in an option: Start, Settings, Update, Quit")
@@ -402,7 +412,10 @@ try:
                     print("Type in an option: Start, Settings, Update, Expirment, Quit")
             else:
                 if dev == True:
-                    print("Type in an option: Start, Settings, Upload, Expirment, Quit")
+                    if uploadable == True:
+                        print("Type in an option: Start, Settings, Upload, Expirment, Quit")
+                    else:
+                        print("Type in an option: Start, Settings, Expirment, Quit")
                 else:
                     print("Type in an option: Start, Settings, Quit")
             time.sleep(0.1)
@@ -443,7 +456,7 @@ try:
                     app = QApplication(sys.argv)
                     ex = Example()
                     sys.exit(app.exec_())
-            if dev == True and runTypeInput == "UPLOAD":
+            if uploadable == True and dev == True and runTypeInput == "UPLOAD":
                 titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
                 pasteV = titleget.text
                 pasteV = float(pasteV)
@@ -460,7 +473,7 @@ try:
                         titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
                         title = titleget.text
                         titlenumber = len(title)
-                        updateName = input("What would you like to name the update? >>> ")
+                        updateName = input("What should the commit name be? >>> ")
                         chromedriver = path
                         os.environ["webdriver.chrome.driver"] = chromedriver
                         browser = webdriver.Chrome(chromedriver)
