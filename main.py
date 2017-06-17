@@ -1,4 +1,4 @@
-version = 4.04
+version = 4.1
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     try:
@@ -11,6 +11,10 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         time.sleep(1)
         sys.exit()
     else:
+        with open ('info.json', 'r') as myfile:
+            info=json.loads(myfile.read())
+        USERUSERNAME = info["USERUSERNAME"]
+        USERPASSWORD = info["USERPASSWORD"]
         if issueRead == False:
             print("An error has occured titled:", error+".")
         if issueRead == True:
@@ -47,38 +51,50 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         else:
             createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
             if createissue == "y" or createissue == "Y":
-                print("None of this data is transmitted, it is just used to create an issue on GitHub.")
-                gitHubLoggedIn = False
-                while gitHubLoggedIn == False:
+                if USERUSERNAME == "dw" and USERPASSWORD == "dw":
+                    gitHubLoggedIn = False
+                elif USERUSERNAME == "ns" and USERPASSWORD == "ns":
+                    gitHubLoggedIn = False
+                else:
                     gitHubLoggedIn = True
-                    USERUSERNAME = input("What is your GitHub username? >>> ")
-                    USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
-                    CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                while gitHubLoggedIn == False:
+                    print("None of this data is transmitted, it is just used to create an issue on GitHub.")
+                    gitHubLoggedIn = True
+                    if USERUSERNAME == "dw" and USERPASSWORD == "dw":
+                        print("This is not saved, it's just used to report the issue.")
+                        USERUSERNAME = input("What is your GitHub username? >>> ")
+                        USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
+                        CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                    if USERUSERNAME == "ns" and USERPASSWORD == "ns":
+                        print("This is not saved, it's just used to report the issue.")
+                        USERUSERNAME = input("What is your GitHub username? >>> ")
+                        USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
+                        CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
                     if not USERPASSWORD == CONFIRMPASS:
                         gitHubLoggedIn = False
-                    REPO_OWNER = 'AtomicCoding'
-                    REPO_NAME = 'Quizlet-Bot'
-                    '''Create an issue on github.com using the given parameters.'''
-                    # Our url to create issues via POST
-                    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
-                    # Create an authenticated session to create the issue
-                    session = requests.Session()
-                    session.auth = (USERUSERNAME, USERPASSWORD)
-                    # Create our issue
-                    issue = {'title': error,
-                             'body': body,
-                             'assignee': assignee,
-                             'milestone': milestone,
-                             'labels': labels}
-                    # Add the issue to our repository
-                    r = session.post(url, json.dumps(issue))
-                    if r.status_code == 201:
-                        print('Successfully created Issue "%s"' % error)
-                        time.sleep(1)
-                        sys.exit()
-                    else:
-                        print('Could not create Issue "%s"' % error)
-                        print('Response:', r.content)
+                REPO_OWNER = 'AtomicCoding'
+                REPO_NAME = 'Quizlet-Bot'
+                '''Create an issue on github.com using the given parameters.'''
+                # Our url to create issues via POST
+                url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+                # Create an authenticated session to create the issue
+                session = requests.Session()
+                session.auth = (USERUSERNAME, USERPASSWORD)
+                # Create our issue
+                issue = {'title': error,
+                         'body': body,
+                         'assignee': assignee,
+                         'milestone': milestone,
+                         'labels': labels}
+                # Add the issue to our repository
+                r = session.post(url, json.dumps(issue))
+                if r.status_code == 201:
+                    print('Successfully created Issue "%s"' % error)
+                    time.sleep(1)
+                    sys.exit()
+                else:
+                    print('Could not create Issue "%s"' % error)
+                    print('Response:', r.content)
             else:
                 import time, sys
                 time.sleep(1)
@@ -185,7 +201,6 @@ try:
                             return False
             else:
                 return False
-
         def update(self):
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
@@ -240,10 +255,11 @@ try:
             timesQuizlet = "ns"
             username = "ns"
             password = "ns"
-            recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns"}
+            USERUSERNAME = "ns"
+            USERPASSWORD = "ns"
+            recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns", "USERUSERNAME": "ns", "USERPASSWORD": "ns"}
             with open ('info.json', 'r+') as myfile:
                 recover=myfile.write(json.dumps(recover))
-
         try:
             with open ('info.json', 'r') as myfile:
                 info=json.loads(myfile.read())
@@ -261,7 +277,9 @@ try:
                     timesQuizlet = "ns"
                     username = "ns"
                     password = "ns"
-                    recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns"}
+                    USERUSERNAME = "ns"
+                    USERPASSWORD = "ns"
+                    recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns", "USERUSERNAME": "ns", "USERPASSWORD": "ns"}
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
                     sys.exit()
@@ -276,6 +294,8 @@ try:
                     timesQuizlet = input("TimesQuizlet: >>> ")
                     username = input("Username: >>> ")
                     password = getpass.getpass("Password: >>> ")
+                    USERUSERNAME = input("GitHub Username: >>> ")
+                    USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
                     pageID = int(pageID)
                     successes = int(successes)
                     failures = int(failures)
@@ -283,7 +303,7 @@ try:
                         timesQuizlet = int(timesQuizlet)
                     except:
                         pass
-                    recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password}
+                    recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD}
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
                     sys.exit()
@@ -291,7 +311,7 @@ try:
                 sys.exit()
         if not osis == 0 and not osis == 1 and not osis == 2:
             complain("Unknown OS detected called:"+str(userplatform))
-        def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1):
+        def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1, USERUSERNAME1, USERPASSWORD1):
             info["pageID"] = pageID1
             info["successes"] = successes1
             info["failures"] = failures1
@@ -299,6 +319,8 @@ try:
             info["timesQuizlet"] = timesQuizlet1
             info["username"] = username1
             info["password"] = password1
+            info["USERUSERNAME"] = USERUSERNAME1
+            info["USERPASSWORD"] = USERPASSWORD1
             with open ('info.json', 'r+') as myfile:
                 info=myfile.write(json.dumps(info))
         pageID = info["pageID"]
@@ -308,17 +330,19 @@ try:
         timesQuizlet = info["timesQuizlet"]
         username = info["username"]
         password = info["password"]
+        USERUSERNAME = info["USERUSERNAME"]
+        USERPASSWORD = info["USERPASSWORD"]
         if timesQuizlet == "nw":
             timesQuizlet = "dw"
         if username == "nw":
             username = "dw"
         if password == "nw":
             password = "dw"
-        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
         checkedforchrome = False
         if not os.path.exists(path):
             path = "ns"
-            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
         def reset():
             os.remove("info.json")
         if path == "ns":
@@ -328,7 +352,7 @@ try:
                 my_file = directory+"/"+"chromedriver"
             if os.path.exists(my_file):
                 path = my_file
-                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
         if (path == "ns"):
             while (checkedforchrome == False):
                 checkedforchrome = True
@@ -339,13 +363,11 @@ try:
                         print("Invalid Path!")
                         checkedforchrome = False
                     else:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                         print("Continuing...")
-
                 if (not chromecheck == "Y" and not chromecheck == "y" and not chromecheck == "N" and not chromecheck == "n"):
                     print("Invalid Option...Restarting...")
                     checkedforchrome = False
-
                 if (chromecheck == "n" or chromecheck == "N"):
                     chromeinstalled = input("Would you like the script to install it for you (Y or N)? >>> ")
                     if (chromeinstalled == "y" or chromeinstalled == "Y"):
@@ -386,16 +408,33 @@ try:
                     confirmpassword = getpass.getpass("Confirm Password: >>> ")
                     if confirmpassword == password:
                         print("Thank you!")
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                         passwordChoosen = True
                     else:
                         print("Passwords do not match!")
                         passwordChoosen = False
+        if USERUSERNAME == "ns" and USERPASSWORD == "ns":
+            reply = input("Would you like the script to integrate with your GitHub account (Y or N)? >>> ")
+            reply = reply.upper()
+            if reply == "Y":
+                while True:
+                    print("None of this data is transmitted to anything other then GitHub for Issue Reporting.")
+                    USERUSERNAME = input("GitHub Username: >>> ")
+                    USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
+                    CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
+                    if USERPASSWORD == CONFIRMPASS:
+                        print("Thank you!")
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
+                        break
+            else:
+                USERUSERNAME = "dw"
+                USERPASSWORD = "dw"
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
             update = Updater()
             updateNeeded = update.checkForUpdates()
+            gitPassword = len(USERPASSWORD) * "•"
             passwordhidden = len(password) * "•"
             if dev == True:
                 titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
@@ -527,7 +566,7 @@ try:
                                 pageID = input("What pageID would you like to start from? >>> ")
                                 try:
                                     pageID = int(pageID)
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                                 except ValueError:
                                     pageIDChoosen = False
                         started = True
@@ -541,7 +580,7 @@ try:
                                 try:
                                     timesQuizlet = int(timesQuizlet)
                                     if not timesQuizlet < 0:
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                                 except ValueError:
                                     timesChoosen = False
                                 if timesQuizlet < 0:
@@ -560,7 +599,7 @@ try:
                             pageID = input("What pageID would you like the bot to run on? >>> ")
                             try:
                                 pageID = int(pageID)
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                             except ValueError:
                                 pageIDChoosen = False
                         started = True
@@ -568,7 +607,7 @@ try:
             if runTypeInput == "SETTINGS":
                 doneChanging = False
                 while doneChanging == False:
-                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                     if dev == False:
                         settingsoption = input("Type an option: About, Data, Quit: >>> ")
                     else:
@@ -646,6 +685,24 @@ try:
                                             print("Incorrect!")
                                 if password == "ns":
                                     print("The password is not set.")
+                                if USERUSERNAME == "ns":
+                                    print("The GitHub Username is not set.")
+                                if USERPASSWORD == "ns":
+                                    print("The GitHub Password is not set.")
+                                if USERUSERNAME == "dw" and USERPASSWORD == "dw":
+                                    print("You have disabled GitHub Integration.")
+                                if not USERUSERNAME == "dw" and not USERUSERNAME == "ns":
+                                    print("Your GitHub username is set to:", USERUSERNAME+".")
+                                if not USERPASSWORD == "dw" and not USERPASSWORD == "ns":
+                                    print("The password is:", gitPassword)
+                                    seePassword = input("Would you like to see the GitHub password (Y or N)? >>> ")
+                                    seePassword = seePassword.upper()
+                                    if seePassword == "Y":
+                                        passwordprotect = getpass.getpass("Enter the password to unhide the password: >>> ")
+                                        if (passwordprotect == USERPASSWORD):
+                                            print("The password is:", USERPASSWORD+".")
+                                        else:
+                                            print("Incorrect!")
                             if datachangeType == "RESET":
                                 usersure = input("Are you sure (Y or N)? >>> ")
                                 if (usersure == "y" or usersure == "Y"):
@@ -658,8 +715,56 @@ try:
                             if datachangeType == "EDIT":
                                 dataChanged = False
                                 while dataChanged == False:
-                                    whattochange = input("Type a variable: PageID, ChromeDriver Path, Times to run OQBRTA, Automatic Login, Quit: >>> ")
+                                    whattochange = input("Type a variable: PageID, ChromeDriver Path, Times to run OQBRTA, Automatic Login, GitHub Integration, Quit: >>> ")
                                     whattochange = whattochange.upper()
+                                    if whattochange == "GITHUB INTEGRATION":
+                                        while True:
+                                            if USERUSERNAME == "dw" and USERUSERNAME == "dw":
+                                                gitSettings = input("What would you like to do? Enable GitHub Integration, Quit: >>> ")
+                                                disabled = True
+                                            else:
+                                                gitSettings = input("What would you like to do? Change Username, Change Password, Disable GitHub Integration, Quit: >>> ")
+                                                disabled = False
+                                            gitSettings = gitSettings.upper()
+                                            if gitSettings == "ENABLE GITHUB INTEGRATION" and disabled == True:
+                                                while True:
+                                                    print("None of this data is transmitted to anything other then GitHub for Issue Reporting.")
+                                                    USERUSERNAME = input("GitHub Username: >>> ")
+                                                    USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
+                                                    CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
+                                                    if USERPASSWORD == CONFIRMPASS:
+                                                        print("Thank you!")
+                                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
+                                                        break
+                                            if disabled == False:
+                                                if gitSettings == "CHANGE USERNAME":
+                                                    print("The GitHub Username is currently set to:", USERUSERNAME+".")
+                                                    USERUSERNAME = input("I would like to change the GitHub Username to: >>> ")
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
+                                                if gitSettings == "CHANGE PASSWORD":
+                                                    print("The GitHub password is set to:", gitPassword+".")
+                                                    passwordProtect = getpass.getpass("Enter your GitHub Password First: >>> ")
+                                                    if passwordProtect == USERPASSWORD:
+                                                        showPass = input("Would you like to see the GitHub password (Y or N)? >>> ")
+                                                        showPass = showPass.upper()
+                                                        if showPass == "Y":
+                                                            if passwordProtect == USERPASSWORD:
+                                                                print("The GitHub password is set to:", USERPASSWORD+".")
+                                                        while True:
+                                                            USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
+                                                            CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
+                                                            if USERPASSWORD == CONFIRMPASS:
+                                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
+                                                                break
+                                                    else:
+                                                        print("Incorrect Password!")
+                                                if gitSettings == "DISABLE GITHUB INTEGRATION":
+                                                    USERUSERNAME = "dw"
+                                                    USERPASSWORD = "dw"
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
+                                                    disabled = True
+                                            if gitSettings == "QUIT":
+                                                break
                                     if whattochange == "PAGEID":
                                         if pageID == "ns":
                                             print("PageID has not been set.")
@@ -671,7 +776,7 @@ try:
                                             pageID = input("What would you like to set the pageID to? >>> ")
                                             try:
                                                 pageID = int(pageID)
-                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                                             except ValueError:
                                                 pageIDChoosen = False
                                         doneChanging = False
@@ -709,7 +814,7 @@ try:
                                                     try:
                                                         timesQuizlet = int(timesQuizlet)
                                                         if not timesQuizlet < 0:
-                                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                                                     except ValueError:
                                                         timesChoosen = False
                                                     if timesQuizlet < 0:
@@ -735,7 +840,7 @@ try:
                                                     confirmpassword = getpass.getpass("Confirm Password: >>> ")
                                                     if confirmpassword == password:
                                                         print("Thank you!")
-                                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                                                     else:
                                                         print("Passwords do not match!")
                                                         passwordChoosen = True
@@ -743,7 +848,7 @@ try:
                                                 if loginSettings == "DISABLE AUTOMATIC LOGIN":
                                                     username = "dw"
                                                     password = "dw"
-                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                                                 if loginSettings == "CHANGE PASSWORD":
                                                     passwordVerified = False
                                                     while passwordVerified == False:
@@ -842,11 +947,11 @@ try:
                     except:
                         chromeOpen = False
                     if chromeOpen == False:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                         restart = True
                         break
                     else:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                         try:
                             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
                             browser.find_element_by_id("start").click()
@@ -872,12 +977,12 @@ try:
                     except:
                         chromeOpen = False
                     if chromeOpen == False:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                         restart = True
                         break
                     else:
                         try:
-                            save(info, pageID, successes, failures, path, timesQuizlet, username, password)
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD)
                             browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
                             browser.find_element_by_id("start").click()
                             terms = browser.find_elements_by_xpath("//a[@data-type='term']")
