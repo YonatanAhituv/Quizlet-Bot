@@ -1,4 +1,4 @@
-version = 4.01
+version = 4.02
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     try:
@@ -510,6 +510,7 @@ try:
                         shutil.copyfile(src, dst)
                         os.system("git commit main.py -m '"+updateName+"'")
                         os.system('git push')
+                        os.chdir(directory)
                     else:
                         print("ERROR: Pastebin Version is Newer.")
                         runTypeSelected = False
