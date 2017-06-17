@@ -1,77 +1,88 @@
+version = 4.0
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
-    if issueRead == False:
-        print("An error has occured titled:", error+".")
-    if issueRead == True:
-        print("An error was read titled:", error+".")
     try:
-        import requests
-        cantWork = False
+        updateNeeded = update.checkForUpdates()
     except:
-        cantWork = True
-    if cantWork == False:
+        updateNeeded = False
+    if updateNeeded == True:
+        print("ERROR: Cannot report issue due to outdated version, sorry.")
+        import sys, time
+        time.sleep(1)
+        sys.exit()
+    else:
+        if issueRead == False:
+            print("An error has occured titled:", error+".")
+        if issueRead == True:
+            print("An error was read titled:", error+".")
         try:
-            import urllib
-            urllib.request.urlopen('http://216.58.192.142', timeout=1)
+            import requests
             cantWork = False
         except:
             cantWork = True
-    if cantWork == True:
-        errorIssue = input("ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
-        errorIssue = errorIssue.upper()
-        if errorIssue == "Y":
-            import os, inspect
-            directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-            os.chdir(directory)
+        if cantWork == False:
             try:
-                with open('issue.txt', 'w+') as w1:
-                    w1.write(error)
-                print("Created File Successfully!")
+                import urllib
+                urllib.request.urlopen('http://216.58.192.142', timeout=1)
+                cantWork = False
             except:
-                print("Failed to create file. ):")
-            print("Exiting...")
-            import time
-            time.sleep(1)
-            sys.exit()
-    else:
-        createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
-        if createissue == "y" or createissue == "Y":
-            print("None of this data is transmitted, it is just used to create an issue on GitHub.")
-            gitHubLoggedIn = False
-            while gitHubLoggedIn == False:
-                gitHubLoggedIn = True
-                USERUSERNAME = input("What is your GitHub username? >>> ")
-                USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
-                CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
-                if not USERPASSWORD == CONFIRMPASS:
-                    gitHubLoggedIn = False
-                REPO_OWNER = 'AtomicCoding'
-                REPO_NAME = 'Quizlet-Bot'
-                '''Create an issue on github.com using the given parameters.'''
-                # Our url to create issues via POST
-                url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
-                # Create an authenticated session to create the issue
-                session = requests.Session()
-                session.auth = (USERUSERNAME, USERPASSWORD)
-                # Create our issue
-                issue = {'title': error,
-                         'body': body,
-                         'assignee': assignee,
-                         'milestone': milestone,
-                         'labels': labels}
-                # Add the issue to our repository
-                r = session.post(url, json.dumps(issue))
-                if r.status_code == 201:
-                    print('Successfully created Issue "%s"' % error)
-                    time.sleep(1)
-                    sys.exit()
-                else:
-                    print('Could not create Issue "%s"' % error)
-                    print('Response:', r.content)
+                cantWork = True
+        if cantWork == True:
+            errorIssue = input("ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
+            errorIssue = errorIssue.upper()
+            if errorIssue == "Y":
+                import os, inspect
+                directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+                os.chdir(directory)
+                try:
+                    with open('issue.txt', 'w+') as w1:
+                        w1.write(error)
+                    print("Created File Successfully!")
+                except:
+                    print("Failed to create file. ):")
+                print("Exiting...")
+                import time
+                time.sleep(1)
+                sys.exit()
         else:
-            import time
-            time.sleep(1)
-            sys.exit()
+            createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
+            if createissue == "y" or createissue == "Y":
+                print("None of this data is transmitted, it is just used to create an issue on GitHub.")
+                gitHubLoggedIn = False
+                while gitHubLoggedIn == False:
+                    gitHubLoggedIn = True
+                    USERUSERNAME = input("What is your GitHub username? >>> ")
+                    USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
+                    CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                    if not USERPASSWORD == CONFIRMPASS:
+                        gitHubLoggedIn = False
+                    REPO_OWNER = 'AtomicCoding'
+                    REPO_NAME = 'Quizlet-Bot'
+                    '''Create an issue on github.com using the given parameters.'''
+                    # Our url to create issues via POST
+                    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+                    # Create an authenticated session to create the issue
+                    session = requests.Session()
+                    session.auth = (USERUSERNAME, USERPASSWORD)
+                    # Create our issue
+                    issue = {'title': error,
+                             'body': body,
+                             'assignee': assignee,
+                             'milestone': milestone,
+                             'labels': labels}
+                    # Add the issue to our repository
+                    r = session.post(url, json.dumps(issue))
+                    if r.status_code == 201:
+                        print('Successfully created Issue "%s"' % error)
+                        time.sleep(1)
+                        sys.exit()
+                    else:
+                        print('Could not create Issue "%s"' % error)
+                        print('Response:', r.content)
+            else:
+                import time, sys
+                time.sleep(1)
+                sys.exit()
 try:
     # TODO: Phase out all bool based while loops, switch to a while true and break model instead
     # TODO: Phase out all giant, if nots, replace with if, elif, and else
@@ -84,6 +95,11 @@ try:
         import urllib
         import shutil
         import platform
+        computerName = platform.node()
+        if computerName == "AtomicSystem.lan":
+            dev = True
+        else:
+            dev = False
         import getpass
         import os
         def install(package):
@@ -144,30 +160,37 @@ try:
         def __init__(self):
             pass
         def checkForUpdates(self):
-            fname = os.path.basename(__file__)
-            reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
-            code = reply.text
-            with open('update.py', 'w+') as w1:
-                w1.write(code)
-            with open(fname, 'r') as f1:
-                oldcode = f1.read()
-                with open('update.py', 'r') as f2:
-                    newcode = f2.read()
-                    if not oldcode == newcode:
-                        f2.close()
-                        w1.close()
-                        os.remove("update.py")
-                        return True
-                    if oldcode == newcode:
-                        f2.close()
-                        w1.close()
-                        os.remove("update.py")
-                        return False
+            titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+            pasteV = titleget.text
+            pasteV = float(pasteV)
+            if pasteV > version:
+                return True
+            else:
+                return False
+            # fname = os.path.basename(__file__)
+            # reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+            # code = reply.text
+            # with open('update.py', 'w+') as w1:
+            #     w1.write(code)
+            # with open(fname, 'r') as f1:
+            #     oldcode = f1.read()
+            #     with open('update.py', 'r') as f2:
+            #         newcode = f2.read()
+            #         if not oldcode == newcode:
+            #             f2.close()
+            #             w1.close()
+            #             os.remove("update.py")
+            #             return True
+            #         if oldcode == newcode:
+            #             f2.close()
+            #             w1.close()
+            #             os.remove("update.py")
+            #             return False
         def update(self):
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
             title = titleget.text
-            print("Updating to:",title+"...")
+            print("Updating to V.",title+"...")
             reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
             code = reply.text
             with open('update.py', 'w+') as w1:
@@ -373,9 +396,15 @@ try:
             updateNeeded = update.checkForUpdates()
             passwordhidden = len(password) * "•"
             if updateNeeded == True:
-                print("Type in an option: Start, Settings, Update, Quit")
+                if dev == False:
+                    print("Type in an option: Start, Settings, Update, Quit")
+                if dev == True:
+                    print("Type in an option: Start, Settings, Update, Expirment, Quit")
             else:
-                print("Type in an option: Start, Settings, Quit")
+                if dev == True:
+                    print("Type in an option: Start, Settings, Upload, Expirment, Quit")
+                else:
+                    print("Type in an option: Start, Settings, Quit")
             time.sleep(0.1)
             runTypeInput = input("I choose: >>> ")
             time.sleep(0.1)
@@ -414,13 +443,16 @@ try:
                     app = QApplication(sys.argv)
                     ex = Example()
                     sys.exit(app.exec_())
-            if runTypeInput == "UPLOAD":
-                if updateNeeded == True:
-                    checkCode = input("What is the passcode? >>> ")
-                    if checkCode == "54321":
-                        checked = True
-                    else:
-                        checked = False
+            if dev == True and runTypeInput == "UPLOAD":
+                titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+                pasteV = titleget.text
+                pasteV = float(pasteV)
+                if pasteV < version:
+                    uploadable = True
+                else:
+                    uploadable = False
+                if uploadable == True:
+                    checked = True
                     if checked == True:
                         fname = os.path.basename(__file__)
                         with open(fname, 'r') as f1:
@@ -449,7 +481,7 @@ try:
                             browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE)
                             timesRanDelete = timesRanDelete + 1
                         time.sleep(1)
-                        browser.find_element_by_xpath('//textarea').send_keys(updateName)
+                        browser.find_element_by_xpath('//textarea').send_keys(str(version))
                         time.sleep(1)
                         browser.find_element_by_name('submit').click()
                         time.sleep(1)
@@ -466,6 +498,7 @@ try:
                         os.system("git commit main.py -m '"+updateName+"'")
                         os.system('git push')
                     else:
+                        print("ERROR: Pastebin Version is Newer.")
                         runTypeSelected = False
             if runTypeInput == "START":
                 if timesQuizlet == "ns":
@@ -522,17 +555,39 @@ try:
                 doneChanging = False
                 while doneChanging == False:
                     save(info, pageID, successes, failures, path, timesQuizlet, username, password)
-                    settingsoption = input("Type an option: About, Data, Quit: >>> ")
+                    if dev == False:
+                        settingsoption = input("Type an option: About, Data, Quit: >>> ")
+                    else:
+                        settingsoption = input("Type an option: About, Dev, Data, Quit: >>> ")
                     settingsoption = settingsoption.upper()
+                    if dev == True and settingsoption == "DEV":
+                        while True:
+                            devOption = input("Type an option: Create Issue, Print Info, Run Code, Quit: >>> ")
+                            devOption = devOption.upper()
+                            if devOption == "CREATE ISSUE":
+                                issueName = input("What would you like to name the issue? >>> ")
+                                complain(issueName)
+                            elif devOption == "PRINT INFO":
+                                with open('info.json', 'r') as myfile:
+                                    data=myfile.read().replace('\n', '')
+                                print('Info reads:', data)
+                            elif devOption == "RUN CODE":
+                                codeRun = input("What would you like to run? >>> ")
+                                try:
+                                    exec(codeRun)
+                                except Exception as e:
+                                    print("Welp...your code failed, this is what happened:", e)
+                            elif devOption == "QUIT":
+                                break
                     if settingsoption == "ABOUT":
                         if osis == 0:
-                            print("This is OQBRTA, V: 3.8 and you are running MacOS.")
+                            print("This is OQBRTA, V.", version, "and you are running MacOS.")
                         if osis == 1:
-                            print("This is OQBRTA, V: 3.8 and you are running Windows.")
+                            print("This is OQBRTA, V.", version, "and you are running Windows.")
                         if osis == 2:
-                            print("This is OQBRTA, V: 3.8 and you are running Linux.")
+                            print("This is OQBRTA, V.", version, "and you are running Linux.")
                         if not osis == 0 and not osis == 1 and not osis == 2:
-                            print("This is OQBRTA, V: 3.8 and you are running an unknown OS called:", userplatform+".")
+                            print("This is OQBRTA, V.", version, "and you are running an unknown OS called:", userplatform+".")
                     if settingsoption == "DATA":
                         dataChangeTypeChoosen = False
                         while dataChangeTypeChoosen == False:
