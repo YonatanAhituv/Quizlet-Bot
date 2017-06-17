@@ -1,4 +1,4 @@
-version = 4.02
+version = 4.03
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     try:
@@ -287,6 +287,8 @@ try:
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
                     sys.exit()
+            else:
+                sys.exit()
         if not osis == 0 and not osis == 1 and not osis == 2:
             complain("Unknown OS detected called:"+str(userplatform))
         def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1):
@@ -364,7 +366,7 @@ try:
                                 file_name = "chromedriver_linux32.zip"
                             with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
                                 shutil.copyfileobj(response, out_file)
-                            print("Downloaded! Please unzip the file and restart the script.")
+                            print("Downloaded! Please extract the file to the script's directory and restart the script.")
                             time.sleep(1)
                             sys.exit()
                     if (chromeinstalled == "n" or chromeinstalled == "N"):
@@ -902,5 +904,5 @@ except Exception as e:
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         e = str(e)
         linenumber = str(exc_tb.tb_lineno)
-        ex = e+" on line: "+linenumber
+        ex = e+" on line: "+linenumber+" on V. "+str(version)
         complain(str(ex))
