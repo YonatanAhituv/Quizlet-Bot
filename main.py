@@ -1,4 +1,4 @@
-version = 4.03
+version = 4.04
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     try:
@@ -420,9 +420,7 @@ try:
                         print("Type in an option: Start, Settings, Expirment, Quit")
                 else:
                     print("Type in an option: Start, Settings, Quit")
-            time.sleep(0.1)
             runTypeInput = input("I choose: >>> ")
-            time.sleep(0.1)
             runTypeInput = runTypeInput.upper()
             if updateNeeded == True:
                 if runTypeInput == "UPDATE":
