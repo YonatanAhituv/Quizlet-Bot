@@ -1,4 +1,4 @@
-version = 4.1
+version = 4.2
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     try:
@@ -294,8 +294,9 @@ try:
                     timesQuizlet = input("TimesQuizlet: >>> ")
                     username = input("Username: >>> ")
                     password = getpass.getpass("Password: >>> ")
-                    USERUSERNAME = input("GitHub Username: >>> ")
-                    USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
+                    print("If you don't see any refrences to USERUSERNAME and PASSWORD, then just type in 'ns'.")
+                    USERUSERNAME = input("USERUSERNAME: >>> ")
+                    USERPASSWORD = getpass.getpass("USERPASSWORD: >>> ")
                     pageID = int(pageID)
                     successes = int(successes)
                     failures = int(failures)
@@ -330,8 +331,14 @@ try:
         timesQuizlet = info["timesQuizlet"]
         username = info["username"]
         password = info["password"]
-        USERUSERNAME = info["USERUSERNAME"]
-        USERPASSWORD = info["USERPASSWORD"]
+        try:
+            USERUSERNAME = info["USERUSERNAME"]
+            USERPASSWORD = info["USERPASSWORD"]
+        except:
+            recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": "ns", "USERPASSWORD": "ns"}
+            with open ('info.json', 'r+') as myfile:
+                info=myfile.write(json.dumps(recover))
+            sys.exit()
         if timesQuizlet == "nw":
             timesQuizlet = "dw"
         if username == "nw":
