@@ -8,6 +8,8 @@ Is this your average Quizlet Match? Do you want to become the very best? Then, w
 ![](http://i.imgur.com/FPI6qtY.gif)
 # Prerequisites
 Python 3
+
+Google Chrome or Chromium
 # Installation
 Literally, just run the script.
 # Is that it?
