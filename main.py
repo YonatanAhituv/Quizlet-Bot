@@ -1,6 +1,7 @@
-version = 4.3
+version = 4.4
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
+    import time, sys
     try:
         updateNeeded = update.checkForUpdates()
     except:
@@ -11,6 +12,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         time.sleep(1)
         sys.exit()
     else:
+        import json
         with open ('info.json', 'r') as myfile:
             info=json.loads(myfile.read())
         USERUSERNAME = info["USERUSERNAME"]
@@ -95,6 +97,8 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 else:
                     print('Could not create Issue "%s"' % error)
                     print('Response:', r.content)
+                    time.sleep(1)
+                    sys.exit()
             else:
                 import time, sys
                 time.sleep(1)
@@ -112,7 +116,7 @@ try:
         import shutil
         import platform
         computerName = platform.node()
-        if computerName == "AtomicSystem.lan":
+        if computerName == "atomicsystem.lan":
             dev = True
         else:
             dev = False
