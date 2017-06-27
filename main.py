@@ -1,4 +1,4 @@
-version = 4.4
+version = 4.41
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     import time, sys
@@ -8,7 +8,6 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         updateNeeded = False
     if updateNeeded == True:
         print("ERROR: Cannot report issue due to outdated version, sorry.")
-        import sys, time
         time.sleep(1)
         sys.exit()
     else:
