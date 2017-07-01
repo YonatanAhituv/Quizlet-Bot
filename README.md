@@ -1,16 +1,2 @@
-[![Requirements Status](https://requires.io/github/AtomicCoding/Quizlet-Bot/requirements.svg?tag=3.6)](https://requires.io/github/AtomicCoding/Quizlet-Bot/requirements/?tag=3.6)
-![](https://travis-ci.org/AtomicCoding/Quizlet-Bot.svg?branch=master)
-# OQBRTA (One Quizlet Bot to Rule them All)
-![](http://i.imgur.com/Hx4O16u.gif)
 
-Is this your average Quizlet Match? Do you want to become the very best? Then, we've got the thing for you, it's called One Quizlet Bot to Rule them All or OQBRTA for short. Marvel at it's beautiful bot powers.
-
-![](http://i.imgur.com/FPI6qtY.gif)
-# Prerequisites
-Python 3
-
-Google Chrome or Chromium
-# Installation
-Literally, just run the script.
-# Is that it?
-Yes...that is it.
+This sadly means that the bot must change as well, and with that, the bot will most likely be slower, and will have brand new sets of bugs. Development will continue and is continuing, the bot will be fixed when 5.0 comes out, around next Friday. Sorry.
