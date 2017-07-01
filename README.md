@@ -1,4 +1,4 @@
-# Quizlet has changed their Micromatch, the bot must change too, sorry for the inconvience.
+# Quizlet has changed their Micromatch, the bot must change too, because it's no longer functional, sorry for the inconvience.
 [![Requirements Status](https://requires.io/github/AtomicCoding/Quizlet-Bot/requirements.svg?tag=3.6)](https://requires.io/github/AtomicCoding/Quizlet-Bot/requirements/?tag=3.6)
 ![](https://travis-ci.org/AtomicCoding/Quizlet-Bot.svg?branch=master)
 # OQBRTA (One Quizlet Bot to Rule them All)
