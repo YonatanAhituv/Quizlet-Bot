@@ -1,4 +1,4 @@
-version = 5.0
+version = 5.1
 issueRead = False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     import sys
@@ -1080,6 +1080,7 @@ try:
                 if not runTypeInput == "EXPIRMENT" and not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
                     runTypeSelected = False
         if started == True:
+            problem = False
             chromedriver = path
             os.environ["webdriver.chrome.driver"] = chromedriver
             browser = webdriver.Chrome(chromedriver)
@@ -1222,9 +1223,16 @@ try:
                                             found = False
                                     answer = ''
                                     while True:
-                                        asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
+                                        try:
+                                            asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
+                                        except:
+                                            print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                            problem = True
+                                            break
                                         if asteroidText != '':
                                             break
+                                    if problem == True:
+                                        break
                                     if asteroidText in ans:
                                         index = ans.index(asteroidText)
                                         answer = rep[index]
@@ -1317,6 +1325,9 @@ try:
             if oneQuiz == True:
                 timesRan = 0
                 while not timesRan == timesQuizlet:
+                    if not timesQuizlet == 1:
+                        if not timesRan == 0:
+                            pageID = pageID + 1
                     save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                     try:
                         checkBrowser = browser.current_url
@@ -1329,7 +1340,7 @@ try:
                         break
                     else:
                         extracted = False
-                        if option == 2 or 0:
+                        if option == 2 or option == 0:
                             try:
                                 browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                 sleep(1)
@@ -1423,10 +1434,16 @@ try:
                                             found = False
                                     answer = ''
                                     while True:
-                                        asteroidText = asteroid.find_element_by_css_selector('.TermText.notranslate.qWord').text
-                                        # asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en qWord']").text
+                                        try:
+                                            asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
+                                        except:
+                                            print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                            problem = True
+                                            break
                                         if asteroidText != '':
                                             break
+                                    if problem == True:
+                                        break
                                     if asteroidText in ans:
                                         index = ans.index(asteroidText)
                                         answer = rep[index]
@@ -1434,44 +1451,50 @@ try:
                                         index = rep.index(asteroidText)
                                         answer = ans[index]
                                     browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
-                                    getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
-                                    score = getScore.text
-                                    score = score.replace(",", "")
-                                    score = int(score)
-                                    if not maxScore > score:
-                                        break
                                     # except:
                                     #     print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
                                     #     break
                                 if restart == True:
                                     break
-                                if not maxScore > score:
+                                if maxScore <= score:
                                     failed = False
                                     successesG = successesG + 1
                         if option == 2 or option == 1:
                             try:
                                 if option == 1:
                                     if not loggedIn:
-                                        browser.find_element_by_xpath('//button[1]/span').click()
-                                        sleep(0.1)
-                                        browser.find_element_by_xpath('//div[@class="UIRow"][1]/div/a').click()
+                                        browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                                        sleep(0.3)
+                                        browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
+                                        sleep(0.3)
+                                        browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
+                                        sleep(1)
                                         if not username == "dw" and not password == "dw":
                                             browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
                                             sleep(1)
                                             browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                                             sleep(1)
-                                    failed = False
+                                        loggedIn = True
+
+                                    browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                                    sleep(0.5)
+                                    try:
+                                        browser.find_element_by_xpath('//span[@class="ModeControls-backText"]/span').click()
+                                        failed = False
+                                    except:
+                                        failed = True
+                                    if failed == False:
+                                        sleep(0.5)
+                                        elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
+                                        ans = []
+                                        rep = []
+                                        for element in elements1:
+                                            pair = element.find_elements_by_tag_name('span')
+                                            ans.append(pair[0].text)
+                                            rep.append(pair[1].text)
+                                        failed = False
                                 if failed == True:
                                     failures = failures + 1
-                                if extracted == False:
-                                    elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
-                                    ans = []
-                                    rep = []
-                                    for element in elements1:
-                                        pair = element.find_elements_by_tag_name('span')
-                                        ans.append(pair[0].text)
-                                        rep.append(pair[1].text)
-                                    extracted = True
                                 if failed == False:
                                     save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                     browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
@@ -1480,6 +1503,7 @@ try:
                                     sleep(0.2)
                                     tileNumber = 0
                                     while len(tiles) > 0:
+                                        sleep(0.01)
                                         currentTerm = tiles[0].text
                                         tiles[0].click()
                                         if currentTerm in ans:
@@ -1507,6 +1531,7 @@ try:
                                     successes = successes + 1
                             except:
                                 failures = failures + 1
+                        extracted = False
                         timesRan = timesRan + 1
                         if not timesRan == timesQuizlet:
                             pageID = pageID + 1
