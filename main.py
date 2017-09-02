@@ -1,12 +1,39 @@
-version = 5.1
+version = 5.2
 issueRead = False
+def checkForUpdatesC(self):
+    import requests, os
+    titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+    pasteV = titleget.text
+    pasteV = float(pasteV)
+    if pasteV > version:
+        fname = os.path.basename(__file__)
+        reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
+        code = reply.text
+        with open(fname, 'r') as f1:
+            oldcode = f1.read()
+        if not oldcode == code:
+            return True
+        if oldcode == code:
+            return False
+    else:
+        return False
 def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     import sys
     from time import sleep
     try:
-        updateNeeded = update.checkForUpdates()
+        updateNeeded = update.checkForUpdatesC()
     except:
         updateNeeded = False
+    import platform
+    computerName = platform.node()
+    if computerName == "atomicsystem.lan":
+        dev = True
+    else:
+        dev = False
+    if dev == True:
+        if updateNeeded == True:
+            updateNeeded = False
+            print("You are on an outdated version. Overriding...")
     if updateNeeded == True:
         print("ERROR: Cannot report issue due to outdated version, sorry.")
         sleep(1)
@@ -199,14 +226,25 @@ try:
             else:
                 return False
         def update(self):
+            import codecs
+            userplatform = platform.system()
+            userplatform = userplatform.upper()
+            if (userplatform == "DARWIN" or userplatform == "MAC"):
+                osis = 0
+            if (userplatform == "WIN32" or userplatform == "WINDOWS"):
+                osis = 1
+            if (userplatform == "LINUX" or userplatform == "LINUX32"):
+                osis = 2
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
             title = titleget.text
             print("Updating to V.",title+"...")
             reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
             code = reply.text
-            with open(fname, 'w+') as f:
+            with codecs.open(fname, "w", "utf-8-sig") as f:
                 f.write(code)
+            # with open(fname, 'w+') as f:
+            #     f.write(code)
             sys.exit()
     try:
         with open('issue.txt', 'r') as myfile:
@@ -604,7 +642,7 @@ try:
                             break
                         else:
                             print("Invalid Option!")
-                if option == 2 or option == 1:
+                if option == 2 or option == 0:
                     if diff == "ns":
                         while True:
                             print("Choose a difficulty for the Gravity Bot: Easy, Medium, Hard")
@@ -1085,36 +1123,6 @@ try:
             os.environ["webdriver.chrome.driver"] = chromedriver
             browser = webdriver.Chrome(chromedriver)
             browser.set_window_size(1600, 1000)
-            def click(id):
-                try:
-                    browser.find_element_by_id("definition-"+id).click()
-                    browser.find_element_by_id("term-"+id).click()
-                except:
-                    pass
-            def login():
-                sleep(2)
-                try:
-                    browser.find_element_by_xpath("html/body/div[5]/div/div[2]/div/div/div[1]/div[3]/div[1]/button").click()
-                except:
-                    browser.find_element_by_xpath("//a[@href][2]").click()
-                sleep(2)
-                browser.find_element_by_xpath("//a[@href='/google-oauth-redirector?from=%2Fsign-up&customParams=%7B%22signupOrigin%22%3A%22trophies-modal%22%7D']").click()
-                if not username == "dw" and not password == "dw":
-                    browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                    sleep(1)
-                    browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                    sleep(1)
-                else:
-                    printed = False
-                    while True:
-                        if printed == False:
-                            print("You can now login.")
-                            printed = True
-                        getBrowserUrl = browser.current_url
-                        simpleURL = tldextract.extract(getBrowserUrl)
-                        simpleURL = simpleURL.domain
-                        if not simpleURL == "google":
-                            break
             if oneQuiz == False:
                 while True:
                     save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
@@ -1158,7 +1166,7 @@ try:
                                             sleep(1)
                                             browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                                             sleep(1)
-                                        else:
+                                        if username == "dw" and password == "dw":
                                             printed = False
                                             while True:
                                                 if printed == False:
@@ -1263,8 +1271,18 @@ try:
                                             sleep(1)
                                             browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                                             sleep(1)
+                                        if username == "dw" and password == "dw":
+                                            printed = False
+                                            while True:
+                                                if printed == False:
+                                                    print("You can now login.")
+                                                    printed = True
+                                                getBrowserUrl = browser.current_url
+                                                simpleURL = tldextract.extract(getBrowserUrl)
+                                                simpleURL = simpleURL.domain
+                                                if not simpleURL == "google":
+                                                    break
                                         loggedIn = True
-
                                     browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                     sleep(0.5)
                                     try:
@@ -1369,7 +1387,7 @@ try:
                                             sleep(1)
                                             browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                                             sleep(1)
-                                        else:
+                                        if username == "dw" and password == "dw":
                                             printed = False
                                             while True:
                                                 if printed == False:
@@ -1474,6 +1492,17 @@ try:
                                             sleep(1)
                                             browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                                             sleep(1)
+                                        if username == "dw" and password == "dw":
+                                            printed = False
+                                            while True:
+                                                if printed == False:
+                                                    print("You can now login.")
+                                                    printed = True
+                                                getBrowserUrl = browser.current_url
+                                                simpleURL = tldextract.extract(getBrowserUrl)
+                                                simpleURL = simpleURL.domain
+                                                if not simpleURL == "google":
+                                                    break
                                         loggedIn = True
 
                                     browser.get("https://quizlet.com/"+str(pageID)+"/learn")
