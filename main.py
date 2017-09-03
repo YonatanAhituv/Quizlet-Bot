@@ -1,4 +1,4 @@
-version = 5.2
+version = 5.3
 issueRead = False
 def checkForUpdatesC(self):
     import requests, os
@@ -227,14 +227,6 @@ try:
                 return False
         def update(self):
             import codecs
-            userplatform = platform.system()
-            userplatform = userplatform.upper()
-            if (userplatform == "DARWIN" or userplatform == "MAC"):
-                osis = 0
-            if (userplatform == "WIN32" or userplatform == "WINDOWS"):
-                osis = 1
-            if (userplatform == "LINUX" or userplatform == "LINUX32"):
-                osis = 2
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
             title = titleget.text
@@ -243,8 +235,6 @@ try:
             code = reply.text
             with codecs.open(fname, "w", "utf-8-sig") as f:
                 f.write(code)
-            # with open(fname, 'w+') as f:
-            #     f.write(code)
             sys.exit()
     try:
         with open('issue.txt', 'r') as myfile:
