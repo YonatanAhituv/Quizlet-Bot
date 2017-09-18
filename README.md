@@ -1,4 +1,3 @@
-[![Requirements Status](https://requires.io/github/AtomicCoding/Quizlet-Bot/requirements.svg?tag=3.6)](https://requires.io/github/AtomicCoding/Quizlet-Bot/requirements/?tag=3.6)
 ![](https://travis-ci.org/AtomicCoding/Quizlet-Bot.svg?branch=master)
 # OQBRTA (One Quizlet Bot to Rule them All)
 ![](http://i.imgur.com/Hx4O16u.gif)
