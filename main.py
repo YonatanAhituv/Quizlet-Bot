@@ -675,36 +675,39 @@ try:
                             except:
                                 print("Enter a number please.")
                 if timesQuizlet == "ns":
-                    chooseRunType = input("Would you like to run the bot infinitely (Y or N)? >>> ")
-                    if (chooseRunType == "y" or chooseRunType == "Y"):
-                        if not timesQuizlet == "dw":
-                            timesQuizlet = "dw"
-                        if pageID == "ns":
-                            print("https://quizlet.com/0<---PageID/micromatch")
-                            while pageIDChoosen == False:
-                                pageIDChoosen = True
-                                pageID = input("What pageID would you like to start from? >>> ")
-                                try:
-                                    pageID = int(pageID)
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                except ValueError:
-                                    pageIDChoosen = False
+                    while True:
+                        chooseRunType = input("Would you like to run the bot infinitely (Y or N)? >>> ")
+                        if (chooseRunType == "y" or chooseRunType == "Y"):
+                            if not timesQuizlet == "dw":
+                                timesQuizlet = "dw"
+                                break
+                        if (chooseRunType == "n" or chooseRunType == "N"):
+                            if timesQuizlet == "ns":
+                                timesChoosen = False
+                                while timesChoosen == False:
+                                    timesChoosen = True
+                                    timesQuizlet = input("How many quizes would you like to do? >>> ")
+                                    try:
+                                        timesQuizlet = int(timesQuizlet)
+                                        if not timesQuizlet < 0:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                    except ValueError:
+                                        timesChoosen = False
+                                    if timesQuizlet < 0:
+                                        timesChoosen = False
+                                break
+                if pageID == "ns":
+                    print("https://quizlet.com/0<---PageID/micromatch")
+                    while pageIDChoosen == False:
+                        pageIDChoosen = True
+                        pageID = input("What pageID would you like to start from? >>> ")
+                        try:
+                            pageID = int(pageID)
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                        except ValueError:
+                            pageIDChoosen = False
                         started = True
                         oneQuiz = False
-                    if (chooseRunType == "n" or chooseRunType == "N"):
-                        if timesQuizlet == "ns":
-                            timesChoosen = False
-                            while timesChoosen == False:
-                                timesChoosen = True
-                                timesQuizlet = input("How many quizes would you like to do? >>> ")
-                                try:
-                                    timesQuizlet = int(timesQuizlet)
-                                    if not timesQuizlet < 0:
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                except ValueError:
-                                    timesChoosen = False
-                                if timesQuizlet < 0:
-                                    timesChoosen = False
                 if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
