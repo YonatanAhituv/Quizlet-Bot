@@ -1,4 +1,3 @@
-version = 5.3
 issueRead = False
 def checkForUpdatesC(self):
     import requests, os
@@ -61,22 +60,29 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
             except:
                 cantWork = True
         if cantWork == True:
-            errorIssue = input("ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
-            errorIssue = errorIssue.upper()
-            if errorIssue == "Y":
-                import os, inspect
-                directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-                os.chdir(directory)
-                try:
-                    with open('issue.txt', 'w+') as w1:
-                        w1.write(error)
-                    print("Created File Successfully!")
-                except:
-                    print("Failed to create file. ):")
-                print("Exiting...")
-                from time import sleep
-                sleep(1)
-                sys.exit()
+            while True:
+                errorIssue = input("ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
+                errorIssue = errorIssue.upper()
+                if errorIssue == "Y":
+                    import os, inspect
+                    directory = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+                    os.chdir(directory)
+                    try:
+                        with open('issue.txt', 'w+') as w1:
+                            w1.write(error)
+                        print("Created File Successfully!")
+                        print("Exiting...")
+                        break
+                    except:
+                        print("Failed to create file. ):")
+                        print("Exiting...")
+                        break
+                elif errorIssue == "N":
+                    break
+            from time import sleep
+            from sys import exit
+            sleep(1)
+            exit()
         else:
             createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
             if createissue == "y" or createissue == "Y":
@@ -132,9 +138,13 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    # TODO: Fix updating to Wait for Update version
-    # TODO: Phase out all bool based while loops, switch to a while true and break model instead
-    # TODO: Phase out all giant, if nots, replace with if, elif, and else
+    version = 5.4
+    def scan(scanType, lookFor, action):
+        while True:
+            try:
+                return scanType(lookFor)
+            except:
+                pass
     imported = False
     while imported == False:
         import inspect
@@ -500,8 +510,8 @@ try:
             runTypeSelected = True
             update = Updater()
             updateNeeded = update.checkForUpdates()
-            gitPassword = len(USERPASSWORD) * "•"
-            passwordhidden = len(password) * "•"
+            gitPassword = len(USERPASSWORD) * "*"
+            passwordhidden = len(password) * ""
             if dev == True:
                 titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
                 pasteV = titleget.text
@@ -1131,7 +1141,8 @@ try:
                             try:
                                 browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                 sleep(1)
-                                browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a').click()
+                                button = scan(browser.find_element_by_xpath, '//div[@class="ModeControls-back"]/a')
+                                button.click()
                                 failed = False
                             except:
                                 failuresG = failuresG + 1
