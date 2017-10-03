@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.4
+    version = 5.5
     def scan(scanType, lookFor, action):
         while True:
             try:
@@ -511,7 +511,7 @@ try:
             update = Updater()
             updateNeeded = update.checkForUpdates()
             gitPassword = len(USERPASSWORD) * "*"
-            passwordhidden = len(password) * ""
+            passwordhidden = len(password) * "*"
             if dev == True:
                 titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
                 pasteV = titleget.text
@@ -576,6 +576,12 @@ try:
                     uploadable = True
                 else:
                     uploadable = False
+                codeGood = os.system('pyflakes main.py')
+                if codeGood == 0:
+                    uploadable = True
+                else:
+                    print("Pyflakes returned an error!")
+                    uploadable = False
                 if uploadable == True:
                     checked = True
                     if checked == True:
@@ -594,7 +600,7 @@ try:
                         browser.find_element_by_xpath('//div[@onclick][3]').click()
                         sleep(1)
                         browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                        sleep(1)
+                        sleep(1.5)
                         browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                         sleep(1)
                         browser.get('https://pastebin.com/edit/hHLndhTS')
@@ -675,39 +681,36 @@ try:
                             except:
                                 print("Enter a number please.")
                 if timesQuizlet == "ns":
-                    while True:
-                        chooseRunType = input("Would you like to run the bot infinitely (Y or N)? >>> ")
-                        if (chooseRunType == "y" or chooseRunType == "Y"):
-                            if not timesQuizlet == "dw":
-                                timesQuizlet = "dw"
-                                break
-                        if (chooseRunType == "n" or chooseRunType == "N"):
-                            if timesQuizlet == "ns":
-                                timesChoosen = False
-                                while timesChoosen == False:
-                                    timesChoosen = True
-                                    timesQuizlet = input("How many quizes would you like to do? >>> ")
-                                    try:
-                                        timesQuizlet = int(timesQuizlet)
-                                        if not timesQuizlet < 0:
-                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                    except ValueError:
-                                        timesChoosen = False
-                                    if timesQuizlet < 0:
-                                        timesChoosen = False
-                                break
-                if pageID == "ns":
-                    print("https://quizlet.com/0<---PageID/micromatch")
-                    while pageIDChoosen == False:
-                        pageIDChoosen = True
-                        pageID = input("What pageID would you like to start from? >>> ")
-                        try:
-                            pageID = int(pageID)
-                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                        except ValueError:
-                            pageIDChoosen = False
+                    chooseRunType = input("Would you like to run the bot infinitely (Y or N)? >>> ")
+                    if (chooseRunType == "y" or chooseRunType == "Y"):
+                        if not timesQuizlet == "dw":
+                            timesQuizlet = "dw"
+                        if pageID == "ns":
+                            print("https://quizlet.com/0<---PageID/micromatch")
+                            while pageIDChoosen == False:
+                                pageIDChoosen = True
+                                pageID = input("What pageID would you like to start from? >>> ")
+                                try:
+                                    pageID = int(pageID)
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                except ValueError:
+                                    pageIDChoosen = False
                         started = True
                         oneQuiz = False
+                    if (chooseRunType == "n" or chooseRunType == "N"):
+                        if timesQuizlet == "ns":
+                            timesChoosen = False
+                            while timesChoosen == False:
+                                timesChoosen = True
+                                timesQuizlet = input("How many quizes would you like to do? >>> ")
+                                try:
+                                    timesQuizlet = int(timesQuizlet)
+                                    if not timesQuizlet < 0:
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                except ValueError:
+                                    timesChoosen = False
+                                if timesQuizlet < 0:
+                                    timesChoosen = False
                 if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
