@@ -138,13 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.5
-    def scan(scanType, lookFor, action):
-        while True:
-            try:
-                return scanType(lookFor)
-            except:
-                pass
+    version = 5.6
     imported = False
     while imported == False:
         import inspect
@@ -1147,7 +1141,7 @@ try:
                             try:
                                 browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                 sleep(1)
-                                button = scan(browser.find_element_by_xpath, '//div[@class="ModeControls-back"]/a')
+                                button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
                                 button.click()
                                 failed = False
                             except:
@@ -1195,11 +1189,11 @@ try:
                                         browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
                                     if diff == 2:
                                         browser.find_element_by_xpath('//input[@value="EXPERT"]')
+                                    failedDropDown = 0
                                     try:
                                         select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
                                     except:
-                                        pass
-                                    failedDropDown = 0
+                                        failedDropDown = failedDropDown + 1
                                     try:
                                         select.select_by_visible_text('Definition')
                                     except:
@@ -1268,7 +1262,7 @@ try:
                                 if option == 1:
                                     if not loggedIn:
                                         browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                        sleep(0.3)
+                                        sleep(1)
                                         browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
                                         sleep(0.3)
                                         browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
@@ -1416,11 +1410,11 @@ try:
                                         browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
                                     if diff == 2:
                                         browser.find_element_by_xpath('//input[@value="EXPERT"]')
+                                    failedDropDown = 0
                                     try:
                                         select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
                                     except:
-                                        pass
-                                    failedDropDown = 0
+                                        failedDropDown = failedDropDown + 1
                                     try:
                                         select.select_by_visible_text('Definition')
                                     except:
