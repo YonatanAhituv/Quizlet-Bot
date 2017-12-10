@@ -445,16 +445,16 @@ try:
                             osSelected = True
                             print("Downloading...")
                             if (userplatform == "WIN32" or userplatform == "WINDOWS"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.30/chromedriver_win32.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_win32.zip"
                                 file_name = "chromedriver_win32.zip"
                             if (userplatform == "DARWIN" or userplatform == "MAC"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.30/chromedriver_mac64.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_mac64.zip"
                                 file_name = "chromedriver_mac64.zip"
                             if (userplatform == "LINUX"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
                                 file_name = "chromedriver_linux64.zip"
                             if (userplatform == "LINUX32"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.30/chromedriver_linux32.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux32.zip"
                                 file_name = "chromedriver_linux32.zip"
                             with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
                                 shutil.copyfileobj(response, out_file)
