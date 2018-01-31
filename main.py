@@ -32,9 +32,9 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     if dev == True:
         if updateNeeded == True:
             updateNeeded = False
-            print("You are on an outdated version. Overriding...")
+            print(Style.RESET_ALL+"You are on an outdated version. Overriding...")
     if updateNeeded == True:
-        print("ERROR: Cannot report issue due to outdated version, sorry.")
+        print(Style.RESET_ALL+"ERROR: Cannot report issue due to outdated version, sorry.")
         sleep(1)
         sys.exit()
     else:
@@ -44,9 +44,9 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         USERUSERNAME = info["USERUSERNAME"]
         USERPASSWORD = info["USERPASSWORD"]
         if issueRead == False:
-            print("An error has occured titled:", error+".")
+            print(Style.RESET_ALL+"An error has occured titled:", error+".")
         if issueRead == True:
-            print("An error was read titled:", error+".")
+            print(Style.RESET_ALL+"An error was read titled:", error+".")
         try:
             import requests
             cantWork = False
@@ -61,7 +61,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 cantWork = True
         if cantWork == True:
             while True:
-                errorIssue = input("ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
+                errorIssue = input(Style.RESET_ALL+"ERROR: COULD NOT IMPORT REQUESTS OR CONNECT TO THE INTERNET, WOULD YOU LIKE THE BOT TO SAVE THE ISSUE TO A FILE AND REPORT IT LATER (Y OR N)? >>> ")
                 errorIssue = errorIssue.upper()
                 if errorIssue == "Y":
                     import os, inspect
@@ -70,12 +70,12 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                     try:
                         with open('issue.txt', 'w+') as w1:
                             w1.write(error)
-                        print("Created File Successfully!")
-                        print("Exiting...")
+                        print(Style.RESET_ALL+"Created File Successfully!")
+                        print(Style.RESET_ALL+"Exiting...")
                         break
                     except:
-                        print("Failed to create file. ):")
-                        print("Exiting...")
+                        print(Style.RESET_ALL+"Failed to create file. ):")
+                        print(Style.RESET_ALL+"Exiting...")
                         break
                 elif errorIssue == "N":
                     break
@@ -84,7 +84,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
             sleep(1)
             exit()
         else:
-            createissue = input("Would you like the script to create an issue for you (Y or N)? >>> ")
+            createissue = input(Style.RESET_ALL+"Would you like the script to create an issue for you (Y or N)? >>> ")
             if createissue == "y" or createissue == "Y":
                 if USERUSERNAME == "dw" and USERPASSWORD == "dw":
                     gitHubLoggedIn = False
@@ -93,18 +93,18 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 else:
                     gitHubLoggedIn = True
                 while gitHubLoggedIn == False:
-                    print("None of this data is transmitted, it is just used to create an issue on GitHub.")
+                    print(Style.RESET_ALL+"None of this data is transmitted, it is just used to create an issue on GitHub.")
                     gitHubLoggedIn = True
                     if USERUSERNAME == "dw" and USERPASSWORD == "dw":
-                        print("This is not saved, it's just used to report the issue.")
-                        USERUSERNAME = input("What is your GitHub username? >>> ")
-                        USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
-                        CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                        print(Style.RESET_ALL+"This is not saved, it's just used to report the issue.")
+                        USERUSERNAME = input(Style.RESET_ALL+"What is your GitHub username? >>> ")
+                        USERPASSWORD = getpass.getpass(Style.RESET_ALL+"What is your GitHub password? >>> ")
+                        CONFIRMPASS = getpass.getpass(Style.RESET_ALL+"Confirm your password: >>> ")
                     if USERUSERNAME == "ns" and USERPASSWORD == "ns":
-                        print("This is not saved, it's just used to report the issue.")
-                        USERUSERNAME = input("What is your GitHub username? >>> ")
-                        USERPASSWORD = getpass.getpass("What is your GitHub password? >>> ")
-                        CONFIRMPASS = getpass.getpass("Confirm your password: >>> ")
+                        print(Style.RESET_ALL+"This is not saved, it's just used to report the issue.")
+                        USERUSERNAME = input(Style.RESET_ALL+"What is your GitHub username? >>> ")
+                        USERPASSWORD = getpass.getpass(Style.RESET_ALL+"What is your GitHub password? >>> ")
+                        CONFIRMPASS = getpass.getpass(Style.RESET_ALL+"Confirm your password: >>> ")
                     if not USERPASSWORD == CONFIRMPASS:
                         gitHubLoggedIn = False
                 REPO_OWNER = 'AtomicCoding'
@@ -124,12 +124,12 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 # Add the issue to our repository
                 r = session.post(url, json.dumps(issue))
                 if r.status_code == 201:
-                    print('Successfully created Issue "%s"' % error)
+                    print(Style.RESET_ALL+'Successfully created Issue "%s"' % error)
                     sleep(1)
                     sys.exit()
                 else:
-                    print('Could not create Issue "%s"' % error)
-                    print('Response:', r.content)
+                    print(Style.RESET_ALL+'Could not create Issue "%s"' % error)
+                    print(Style.RESET_ALL+'Response:', r.content)
                     sleep(1)
                     sys.exit()
             else:
@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.6
+    version = 5.7
     imported = False
     while imported == False:
         import inspect
@@ -175,20 +175,26 @@ try:
             from selenium import webdriver
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.support.ui import Select
+            from colorama import Fore, Style, init
+            init(autoreset=True)
             imported = True
         except ImportError:
             import pip
             imported = False
             userChoose = False
             while userChoose == False:
-                askforinstall = input("Some packages were not found, would you like the script to install them for you (Y or N)? >>> ")
+                askforinstall = input(Style.RESET_ALL+"Some packages were not found, would you like the script to install them for you (Y or N)? >>> ")
                 askforinstall = askforinstall.upper()
                 if askforinstall == "Y":
-                    print("Installing...")
+                    print(Style.RESET_ALL+"Installing...")
                     try:
                         from selenium.webdriver.common.keys import Keys
                     except ImportError:
                         install('selenium')
+                    try:
+                        from colorama import Style
+                    except ImportError:
+                        install('colorama')
                     try:
                         import tldextract
                     except ImportError:
@@ -197,7 +203,7 @@ try:
                         import requests
                     except ImportError:
                         install('requests')
-                    print("Installed!")
+                    print(Style.RESET_ALL+"Installed!")
                     sleep(1)
                     sys.exit()
                 else:
@@ -234,7 +240,7 @@ try:
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
             title = titleget.text
-            print("Updating to V.",title+"...")
+            print(Style.RESET_ALL+Style.BRIGHT+Fore.Green+"Updating to V.",title+"...")
             reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
             code = reply.text
             with codecs.open(fname, "w", "utf-8-sig") as f:
@@ -251,7 +257,7 @@ try:
         pass
     connectedToInternet = internet_on()
     if connectedToInternet == False:
-        print("You are not connected to the internet, please connect and try again.")
+        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"You are not connected to the internet, please connect and try again.")
         sleep(1)
         sys.exit()
     passwordChoosen = False
@@ -291,10 +297,10 @@ try:
             with open ('info.json', 'r') as myfile:
                 info=json.loads(myfile.read())
         except:
-            jsonreset = input("ERROR: COULD NOT LOAD IN JSON, WOULD YOU LIKE TO TRY TO FIX THE JSON (Y or N)? >>> ")
+            jsonreset = input(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"ERROR: COULD NOT LOAD IN JSON, WOULD YOU LIKE TO TRY TO FIX THE JSON (Y or N)? >>> ")
             jsonreset = jsonreset.upper()
             if jsonreset == "Y":
-                jsonfix = input("Would you like to reset the JSON or manually repair it? >>> ")
+                jsonfix = input(Style.RESET_ALL+Fore.YELLOW+Style.BRIGHT+"Would you like to reset the JSON or manually repair it? >>> ")
                 jsonfix = jsonfix.upper()
                 if jsonfix == "RESET THE JSON" or jsonfix == "RESET" or jsonfix == "RESET JSON":
                     pageID = "ns"
@@ -318,23 +324,23 @@ try:
                 else:
                     with open('info.json', 'r') as myfile:
                         data=myfile.read().replace('\n', '')
-                    print("The JSON reads:", data+".")
-                    pageID = input("PageID: >>> ")
-                    successes = input("Successes: >>> ")
-                    failures = input("Failures: >>> ")
-                    path = input("Path: >>> ")
-                    timesQuizlet = input("TimesQuizlet: >>> ")
-                    username = input("Username: >>> ")
-                    password = getpass.getpass("Password: >>> ")
-                    print("If you don't see any refrences to USERUSERNAME and PASSWORD, then just type in 'ns' for all of them.")
-                    USERUSERNAME = input("USERUSERNAME: >>> ")
-                    USERPASSWORD = getpass.getpass("USERPASSWORD: >>> ")
-                    print("If you don't see any refrences to maxScore, successesG, Option, Diff, and failuresG, then just type in 'ns' for all of them.")
-                    maxScore = input("MaxScore: >>> ")
-                    successesG = input("SuccessesG: >>> ")
-                    failuresG = input("FailuresG: >>> ")
-                    option = input("Option: >>> ")
-                    diff = input("Diff: >>> ")
+                    print(Style.RESET_ALL+Fore.YELLOW+"The JSON reads:", data+".")
+                    pageID = input(Style.RESET_ALL+Fore.YELLOW+"PageID: >>> ")
+                    successes = input(Style.RESET_ALL+Fore.YELLOW+"Successes: >>> ")
+                    failures = input(Style.RESET_ALL+Fore.YELLOW+"Failures: >>> ")
+                    path = input(Style.RESET_ALL+Fore.YELLOW+"Path: >>> ")
+                    timesQuizlet = input(Style.RESET_ALL+Fore.YELLOW+"TimesQuizlet: >>> ")
+                    username = input(Style.RESET_ALL+Fore.YELLOW+"Username: >>> ")
+                    password = getpass.getpass(Style.RESET_ALL+Fore.YELLOW+"Password: >>> ")
+                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"If you don't see any refrences to USERUSERNAME and PASSWORD, then just type in 'ns' for all of them.")
+                    USERUSERNAME = input(Style.RESET_ALL+Fore.YELLOW+"USERUSERNAME: >>> ")
+                    USERPASSWORD = getpass.getpass(Style.RESET_ALL+Fore.YELLOW+"USERPASSWORD: >>> ")
+                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"If you don't see any refrences to maxScore, successesG, Option, Diff, and failuresG, then just type in 'ns' for all of them.")
+                    maxScore = input(Style.RESET_ALL+Fore.YELLOW+"MaxScore: >>> ")
+                    successesG = input(Style.RESET_ALL+Fore.YELLOW+"SuccessesG: >>> ")
+                    failuresG = input(Style.RESET_ALL+Fore.YELLOW+"FailuresG: >>> ")
+                    option = input(Style.RESET_ALL+Fore.YELLOW+"Option: >>> ")
+                    diff = input(Style.RESET_ALL+Fore.YELLOW+"Diff: >>> ")
                     successesG = int(successesG)
                     failuresG = int(failuresG)
                     pageID = int(pageID)
@@ -386,7 +392,7 @@ try:
             recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": "ns", "USERPASSWORD": "ns", "maxScore": "ns", "successesG": 0, "failuresG": 0}
             with open ('info.json', 'r+') as myfile:
                 info=myfile.write(json.dumps(recover))
-            print("Updated JSON to include GitHub Integration! Please restart the script!")
+            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Updated JSON to include GitHub Integration! Please restart the script!")
             sleep(1)
             sys.exit()
         try:
@@ -399,7 +405,7 @@ try:
             recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": "ns", "successesG": 0, "failuresG": 0, "option": "ns", "diff": "ns"}
             with open ('info.json', 'r+') as myfile:
                 info=myfile.write(json.dumps(recover))
-            print("Updated JSON to include a Gravity Bot! Please restart the script!")
+            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Updated JSON to include a Gravity Bot! Please restart the script!")
             sleep(1)
             sys.exit()
         if timesQuizlet == "nw":
@@ -426,24 +432,24 @@ try:
         if (path == "ns"):
             while (checkedforchrome == False):
                 checkedforchrome = True
-                chromecheck = input('Have you installed ChromeDriver (Y or N)? >>> ')
+                chromecheck = input(Style.RESET_ALL+Fore.BLUE+'Have you installed ChromeDriver (Y or N)? >>> ')
                 if (chromecheck == "y" or chromecheck == "Y"):
-                    path = input("The path to chromedriver is: >>> ")
+                    path = input(Style.RESET_ALL+Fore.BLUE+"The path to chromedriver is: >>> ")
                     if not os.path.exists(path):
-                        print("Invalid Path!")
+                        print(Style.RESET_ALL+Fore.RED+"Invalid Path!")
                         checkedforchrome = False
                     else:
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                        print("Continuing...")
+                        print(Style.RESET_ALL+Fore.GREEN+"Continuing...")
                 if (not chromecheck == "Y" and not chromecheck == "y" and not chromecheck == "N" and not chromecheck == "n"):
-                    print("Invalid Option...Restarting...")
+                    print(Style.RESET_ALL+Fore.RED+"Invalid Option...Restarting...")
                     checkedforchrome = False
                 if (chromecheck == "n" or chromecheck == "N"):
-                    chromeinstalled = input("Would you like the script to install it for you (Y or N)? >>> ")
+                    chromeinstalled = input(Style.RESET_ALL+Fore.BLUE+"Would you like the script to install it for you (Y or N)? >>> ")
                     if (chromeinstalled == "y" or chromeinstalled == "Y"):
                         while (osSelected == False):
                             osSelected = True
-                            print("Downloading...")
+                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Downloading...")
                             if (userplatform == "WIN32" or userplatform == "WINDOWS"):
                                 downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_win32.zip"
                                 file_name = "chromedriver_win32.zip"
@@ -458,42 +464,40 @@ try:
                                 file_name = "chromedriver_linux32.zip"
                             with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
                                 shutil.copyfileobj(response, out_file)
-                            print("Downloaded! Please extract the file to the script's directory and restart the script.")
+                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Downloaded! Please extract the file to the script's directory and restart the script.")
                             sleep(1)
                             sys.exit()
                     if (chromeinstalled == "n" or chromeinstalled == "N"):
-                            print("Goodbye!")
+                            print(Style.RESET_ALL+Fore.GREEN+"Goodbye!")
                             sleep(1)
                             sys.exit()
         if (username == "ns" and password == "ns"):
-            reply = input('Would you like to have the script enter your username and password for you (Y or N)? >>> ')
+            reply = input(Style.RESET_ALL+Fore.BLUE+'Would you like to have the script enter your username and password for you (Y or N)? >>> ')
             if (reply == "n" or reply == "N"):
                 username = "dw"
                 password = "dw"
             if (reply == "Y" or reply == "y"):
                 while passwordChoosen == False:
-                    print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
-                    username = input("Email: >>> ")
-                    password = getpass.getpass("Password: >>> ")
-                    confirmpassword = getpass.getpass("Confirm Password: >>> ")
+                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"All the info you type in will be only stored on this machine and typed into the login screen.")
+                    username = input(Style.RESET_ALL+Fore.BLUE+"Email: >>> ")
+                    password = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Password: >>> ")
+                    confirmpassword = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Confirm Password: >>> ")
                     if confirmpassword == password:
-                        print("Thank you!")
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                         passwordChoosen = True
                     else:
-                        print("Passwords do not match!")
+                        print(Style.RESET_ALL+Fore.RED+"Passwords do not match!")
                         passwordChoosen = False
         if USERUSERNAME == "ns" and USERPASSWORD == "ns":
-            reply = input("Would you like the script to integrate with your GitHub account (Y or N)? >>> ")
+            reply = input(Style.RESET_ALL+Fore.BLUE+"Would you like the script to integrate with your GitHub account (Y or N)? >>> ")
             reply = reply.upper()
             if reply == "Y":
                 while True:
-                    print("None of this data is transmitted to anything other then GitHub for Issue Reporting.")
-                    USERUSERNAME = input("GitHub Username: >>> ")
-                    USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
-                    CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
+                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"None of this data is transmitted to anywhere other then GitHub for Issue Reporting.")
+                    USERUSERNAME = input(Style.RESET_ALL+Fore.BLUE+"GitHub Username: >>> ")
+                    USERPASSWORD = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"GitHub Password: >>> ")
+                    CONFIRMPASS = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Confirm Password: >>> ")
                     if USERPASSWORD == CONFIRMPASS:
-                        print("Thank you!")
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                         break
             else:
@@ -518,24 +522,33 @@ try:
                 uploadable = False
             if updateNeeded == True:
                 if dev == False:
-                    print("Type in an option: Start, Settings, Update, Quit")
+                    print(Style.RESET_ALL+Style.BRIGHT+"Type in an option: "+Fore.GREEN+"Start, Settings, Help, Update, Quit")
                 if dev == True:
-                    print("Type in an option: Start, Settings, Update, Expirment, Quit")
+                    print(Style.RESET_ALL+Style.BRIGHT+"Type in an option: "+Fore.GREEN+Style.BRIGHT+"Start, Settings, Help, Update, Expirment, Quit")
             else:
                 if dev == True:
                     if uploadable == True:
-                        print("Type in an option: Start, Settings, Upload, Expirment, Quit")
+                        print(Style.RESET_ALL+Style.BRIGHT+"Type in an option: "+Fore.GREEN+Style.BRIGHT+"Start, Settings, Help, Upload, Expirment, Quit")
                     else:
-                        print("Type in an option: Start, Settings, Expirment, Quit")
+                        print(Style.RESET_ALL+Style.BRIGHT+"Type in an option: "+Fore.GREEN+Style.BRIGHT+"Start, Settings, Help, Expirment, Quit")
                 else:
-                    print("Type in an option: Start, Settings, Quit")
-            runTypeInput = input("I choose: >>> ")
+                    print(Style.RESET_ALL+"Type in an option:"+Fore.GREEN+Style.BRIGHT+" Start, Settings, Quit")
+            runTypeInput = input(Style.RESET_ALL+Fore.BLUE+"I choose: >>> ")
             runTypeInput = runTypeInput.upper()
             if updateNeeded == True:
                 if runTypeInput == "UPDATE":
                     update.update()
+            if runTypeInput == "HELP":
+                print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Welcome to the help menu "+Style.RESET_ALL+Style.DIM+"(beta)"+Style.RESET_ALL+Fore.GREEN+"!")
+                while True:
+                    helpInput = input(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Choose an option: pageID, Quit: >>> "+Style.RESET_ALL)
+                    helpInput = helpInput.upper()
+                    if helpInput == "PAGEID":
+                        print(Style.RESET_ALL+"The page ID is a number contained in the URL of a quizlet set. It tells the bot what quizlet set to go to. "+Style.BRIGHT+"Example:"+Style.RESET_ALL+Style.DIM+"https://quizlet.com/"+Style.RESET_ALL+Style.BRIGHT+"5000321"+Fore.GREEN+"<--PAGEID"+Style.RESET_ALL+Style.DIM+"/cool-flash-cards/.") 
+                    elif helpInput == "QUIT":
+                        break
             if runTypeInput == "EXPIRMENT":
-                print("Starting GUI...")
+                print(Style.RESET_ALL+Fore.BLUE+"Starting GUI...")
                 from PyQt5.QtWidgets import QWidget, QPushButton, QApplication
                 from PyQt5.QtCore import QCoreApplication
                 class Example(QWidget):
@@ -548,7 +561,7 @@ try:
 
                     def initUI(self):
                         # sbtn = QPushButton('Start', self)
-                        # sbtn.clicked.connect(print("Hello!"))
+                        # sbtn.clicked.connect(print(Style.RESET_ALL+"Hello!"))
                         # sbtn.resize(qbtn.sizeHint())
                         # sbtn.move(75, 75)
                         qbtn = QPushButton('Quit', self)
@@ -569,14 +582,16 @@ try:
                 if pasteV < version:
                     uploadable = True
                 else:
+                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Version is not higher than current release.")
                     uploadable = False
                 codeGood = os.system('pyflakes main.py')
-                if codeGood == 0:
+                if codeGood == 0 and uploadable:
                     uploadable = True
                 else:
-                    print("Pyflakes returned an error!")
+                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Pyflakes returned an error!")
                     uploadable = False
                 if uploadable == True:
+                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Code checks complete! All code seems good!")
                     checked = True
                     if checked == True:
                         fname = os.path.basename(__file__)
@@ -585,7 +600,7 @@ try:
                         titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
                         title = titleget.text
                         titlenumber = len(title)
-                        updateName = input("What should the commit name be? >>> ")
+                        updateName = input(Style.RESET_ALL+Fore.BLUE+"What should the commit name be? >>> ")
                         chromedriver = path
                         os.environ["webdriver.chrome.driver"] = chromedriver
                         browser = webdriver.Chrome(chromedriver)
@@ -624,12 +639,12 @@ try:
                         os.system('git push')
                         os.chdir(directory)
                     else:
-                        print("ERROR: Pastebin Version is Newer.")
+                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"ERROR: Pastebin Version is Newer.")
                         runTypeSelected = False
             if runTypeInput == "START":
                 if option == "ns":
                     while True:
-                        optionInput = input("What game would you like the bot to complete? Gravity, Match, Gravity and Match: >>> ")
+                        optionInput = input(Style.RESET_ALL+Fore.BLUE+"What game would you like the bot to complete? Gravity, Match, Gravity and Match: >>> ")
                         optionInput = optionInput.upper()
                         if optionInput == "GRAVITY":
                             option = 0
@@ -641,31 +656,31 @@ try:
                             option = 2
                             break
                         else:
-                            print("Invalid Option!")
+                            print(Style.RESET_ALL+"Invalid Option!")
                 if option == 2 or option == 0:
                     if diff == "ns":
                         while True:
-                            print("Choose a difficulty for the Gravity Bot: Easy, Medium, Hard")
-                            diffOption = input("I choose: >>> ")
+                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Choose a difficulty for the Gravity Bot: Easy, Medium, Hard")
+                            diffOption = input(Style.RESET_ALL+Fore.BLUE+"I choose: >>> ")
                             diffOption = diffOption.upper()
                             if diffOption == "EASY":
                                 diff = 0
                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                print("You have set the difficulty to easy for the Gravity Bot.")
+                                print(Style.RESET_ALL+Style.BRIGHT+"You have set the difficulty to easy for the Gravity Bot.")
                                 break
                             elif diffOption == "MEDIUM":
                                 diff = 1
                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                print("You have set the difficulty to medium for the Gravity Bot.")
+                                print(Style.RESET_ALL+Style.BRIGHT+"You have set the difficulty to medium for the Gravity Bot.")
                                 break
                             elif diffOption == "HARD":
                                 diff = 2
                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                print("You have set the difficulty to hard for the Gravity Bot.")
+                                print(Style.RESET_ALL+Style.BRIGHT+"You have set the difficulty to hard for the Gravity Bot.")
                                 break
                     if maxScore == "ns":
                         while True:
-                            maxScore = input("What should be the target score for the Gravity Bot? >>> ")
+                            maxScore = input(Style.RESET_ALL+Fore.BLUE+"What should be the target score for the Gravity Bot? >>> ")
                             try:
                                 maxScore = int(maxScore)
                                 if maxScore < 0:
@@ -673,17 +688,17 @@ try:
                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                 break
                             except:
-                                print("Enter a number please.")
+                                print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Enter a number please.")
                 if timesQuizlet == "ns":
-                    chooseRunType = input("Would you like to run the bot infinitely (Y or N)? >>> ")
+                    chooseRunType = input(Style.RESET_ALL+Fore.BLUE+"Would you like to run the bot infinitely (Y or N)? >>> ")
                     if (chooseRunType == "y" or chooseRunType == "Y"):
                         if not timesQuizlet == "dw":
                             timesQuizlet = "dw"
                         if pageID == "ns":
-                            print("https://quizlet.com/0<---PageID/micromatch")
+                            print(Style.RESET_ALL+"https://quizlet.com/0<---PageID/micromatch")
                             while pageIDChoosen == False:
                                 pageIDChoosen = True
-                                pageID = input("What pageID would you like to start from? >>> ")
+                                pageID = input(Style.RESET_ALL+"What pageID would you like to start from? >>> ")
                                 try:
                                     pageID = int(pageID)
                                     save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
@@ -696,7 +711,7 @@ try:
                             timesChoosen = False
                             while timesChoosen == False:
                                 timesChoosen = True
-                                timesQuizlet = input("How many quizes would you like to do? >>> ")
+                                timesQuizlet = input(Style.RESET_ALL+Fore.BLUE+"How many quizes would you like to do? >>> ")
                                 try:
                                     timesQuizlet = int(timesQuizlet)
                                     if not timesQuizlet < 0:
@@ -712,11 +727,11 @@ try:
                     started = True
                     oneQuiz = True
                     if pageID == "ns":
-                        print("https://quizlet.com/0<---PageID/micromatch")
+                        print(Style.RESET_ALL+Style.BRIGHT+Fore.GREEN+"https://quizlet.com/0<---PageID/micromatch")
                         pageIDChoosen = False
                         while pageIDChoosen == False:
                             pageIDChoosen = True
-                            pageID = input("What pageID would you like the bot to run on? >>> ")
+                            pageID = input(Style.RESET_ALL+Fore.BLUE+"What pageID would you like the bot to run on? >>> ")
                             try:
                                 pageID = int(pageID)
                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
@@ -729,55 +744,55 @@ try:
                 while doneChanging == False:
                     save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                     if dev == False:
-                        settingsoption = input("Type an option: General, Gravity, Quit: >>> ")
+                        settingsoption = input(Style.RESET_ALL+"Type an option: "+Fore.GREEN+Style.BRIGHT+"General, Gravity, Quit: >>> ")
                     else:
-                        settingsoption = input("Type an option: General, Gravity, Dev, Quit: >>> ")
+                        settingsoption = input(Style.RESET_ALL+"Type an option: "+Fore.GREEN+Style.BRIGHT+"General, Gravity, Dev, Quit: >>> ")
                     settingsoption = settingsoption.upper()
-                    if settingsoption == "QUIT":
+                    if settingsoption == "QUIT": 
                         runTypeSelected = False
-                        print("Leaving...")
+                        print(Style.RESET_ALL+"Leaving...")
                         break
                     if dev == True and settingsoption == "DEV":
                         while True:
-                            devOption = input("Type an option: Create Issue, Print Info, Run Code, Quit: >>> ")
+                            devOption = input(Style.RESET_ALL+Style.RESET_ALL+"Type an option: "+Fore.GREEN+Style.BRIGHT+"Create Issue, Print Info, Run Code, Quit: >>> ")
                             devOption = devOption.upper()
                             if devOption == "CREATE ISSUE":
-                                issueName = input("What would you like to name the issue? >>> ")
+                                issueName = input(Style.RESET_ALL+Fore.BLUE+"What would you like to name the issue? >>> ")
                                 complain(issueName)
                             elif devOption == "PRINT INFO":
                                 with open('info.json', 'r') as myfile:
                                     data=myfile.read().replace('\n', '')
-                                print('Info reads:', data)
+                                print(Style.RESET_ALL+Style.BRIGHT+'Info reads:', data)
                             elif devOption == "RUN CODE":
-                                codeRun = input("What would you like to run? >>> ")
+                                codeRun = input(Style.RESET_ALL+Fore.BLUE+"What would you like to run? >>> ")
                                 try:
                                     exec(codeRun)
                                 except Exception as e:
-                                    print("Welp...your code failed, this is what happened:", e)
+                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Welp...your code failed, this is what happened:", e)
                             elif devOption == "QUIT":
                                 break
                     if settingsoption == "GRAVITY":
                         while True:
-                            print("Choose an option: Target Score, Difficulty, Quit")
-                            gravityOption = input("I choose: >>> ")
+                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Choose an option: Target Score, Difficulty, Quit")
+                            gravityOption = input(Style.RESET_ALL+Fore.BLUE+"I choose: >>> ")
                             gravityOption = gravityOption.upper()
                             if gravityOption == "DIFFICULTY":
                                 while True:
                                     if diff == "ns":
-                                        print("You have not set the difficulty for the Gravity Bot.")
+                                        print(Style.RESET_ALL+Fore.RED+"You have not set the difficulty for the Gravity Bot.")
                                     else:
                                         if diff == 0:
-                                            print("You have set the difficulty to easy for the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set the difficulty to easy for the Gravity Bot.")
                                         elif diff == 1:
-                                            print("You have set the difficulty to medium for the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set the difficulty to medium for the Gravity Bot.")
                                         elif diff == 2:
-                                            print("You have set the difficulty to hard for the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set the difficulty to hard for the Gravity Bot.")
                                         else:
-                                            print("Something is corrupt! Oh no!")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Something is corrupt! Oh no!")
                                             sleep(0.5)
                                             complain("Diff Variable is corrupt.")
-                                    print("Choose a option: Easy, Medium, Hard")
-                                    diffOption = input("I choose: >>> ")
+                                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Choose a option: Easy, Medium, Hard")
+                                    diffOption = input(Style.RESET_ALL+Fore.BLUE+"I choose: >>> ")
                                     diffOption = diffOption.upper()
                                     if diffOption == "EASY":
                                         diff = 0
@@ -792,14 +807,14 @@ try:
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                         break
                                     else:
-                                        print("Invalid Option!")
+                                        print(Style.RESET_ALL+Fore.RED+"Invalid Option!")
                             if gravityOption == "TARGET SCORE":
                                 if maxScore == "ns":
-                                    print("You have not set the target score for the Gravity Bot.")
+                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"You have not set the target score for the Gravity Bot.")
                                 else:
-                                    print("The target score for the Gravity Bot is:", str(maxScore)+".")
+                                    print(Style.RESET_ALL+Fore.BLUE+"The target score for the Gravity Bot is:", str(maxScore)+".")
                                 while True:
-                                    maxScore = input("What should be the target score for the Gravity Bot? >>> ")
+                                    maxScore = input(Style.RESET_ALL+Fore.BLUE+"What should be the target score for the Gravity Bot? >>> ")
                                     try:
                                         maxScore = int(maxScore)
                                         if maxScore < 0:
@@ -807,20 +822,20 @@ try:
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                         break
                                     except:
-                                        print("Enter a number please.")
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Enter a number please.")
                             elif gravityOption == "QUIT":
                                 break
                     if settingsoption == "GENERAL":
                         while True:
-                            print("Choose an option: About, Automatic Login, GitHub Integration, PageID, Path to ChromeDriver, Bots to Run, Times to Run OQBRTA, Advanced, Quit")
-                            generalChoose = input("I Choose: >>> ")
+                            print(Style.RESET_ALL+"Choose an option:"+Fore.GREEN+Style.BRIGHT+" About, Automatic Login, GitHub Integration, PageID, Path to ChromeDriver, Bots to Run, Times to Run OQBRTA, Advanced, Quit")
+                            generalChoose = input(Style.RESET_ALL+Fore.BLUE+"I Choose: >>> ")
                             generalChoose = generalChoose.upper()
                             if generalChoose == "ADVANCED":
                                 while True:
-                                    advancedChoose = input("Choose an option: Reset, Quit: >>> ")
+                                    advancedChoose = input(Style.RESET_ALL+"Choose an option: "+Fore.GREEN+Style.BRIGHT+"Reset, Quit: >>> ")
                                     advancedChoose = advancedChoose.upper()
                                     if advancedChoose == "RESET":
-                                        usersure = input("Are you sure (Y or N)? >>> ")
+                                        usersure = input(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Are you sure (Y or N)? >>> ")
                                         if (usersure == "y" or usersure == "Y"):
                                             reset()
                                             restart = True
@@ -828,116 +843,116 @@ try:
                                         break
                             if generalChoose == "ABOUT":
                                 while True:
-                                    aboutChoose = input("Choose an option: Version, Data, Quit: >>> ")
+                                    aboutChoose = input(Style.RESET_ALL+"Choose an option: "+Fore.GREEN+Style.BRIGHT+"Version, Data, Quit: >>> ")
                                     aboutChoose = aboutChoose.upper()
                                     if aboutChoose == "QUIT":
                                         break
                                     if aboutChoose == "VERSION":
                                         if osis == 0:
-                                            print("This is OQBRTA, V.", version, "and you are running MacOS.")
+                                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"This is OQBRTA, V.", version, "and you are running MacOS.")
                                         if osis == 1:
-                                            print("This is OQBRTA, V.", version, "and you are running Windows.")
+                                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"This is OQBRTA, V.", version, "and you are running Windows.")
                                         if osis == 2:
-                                            print("This is OQBRTA, V.", version, "and you are running Linux.")
+                                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"This is OQBRTA, V.", version, "and you are running Linux.")
                                         if not osis == 0 and not osis == 1 and not osis == 2:
-                                            print("This is OQBRTA, V.", version, "and you are running an unknown OS called:", userplatform+".")
+                                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"This is OQBRTA, V.", version, "and you are running an unknown OS called:", userplatform+".")
                                     elif aboutChoose == "DATA":
                                         if pageID == "ns":
-                                            print("PageID has not been set.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"PageID has not been set.")
                                         else:
-                                            print("PageID is set to:",str(pageID))
-                                        print("There have been:",str(failures),"failures.")
-                                        print("There have been:",str(successes),"successes.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"PageID is set to:",str(pageID))
+                                        print(Style.RESET_ALL+Fore.GREEN+"There have been:",str(failures),"failures.")
+                                        print(Style.RESET_ALL+Fore.GREEN+"There have been:",str(successes),"successes.")
                                         if path == "ns":
-                                            print("The path to ChromeDriver is not set.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The path to ChromeDriver is not set.")
                                         else:
-                                            print("The path to ChromeDriver is set to:",path)
+                                            print(Style.RESET_ALL+Fore.GREEN+"The path to ChromeDriver is set to:",path)
                                         if timesQuizlet == "dw":
-                                            print("You have set OQBRTA to run infinitely.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set OQBRTA to run infinitely.")
                                         if timesQuizlet == "ns":
-                                            print("You have not set how many times you want OQBRTA to run.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"You have not set how many times you want OQBRTA to run.")
                                         if not timesQuizlet == "ns" and not timesQuizlet == "dw":
-                                            print("You have set OQBRTA to run:", timesQuizlet, "times.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set OQBRTA to run:", timesQuizlet, "times.")
                                         if username == "ns":
-                                            print("The email is not set.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The email is not set.")
                                         if username == "dw" and password == "dw":
-                                            print("You have disabled automatic password and email entering.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have disabled automatic password and email entering.")
                                         if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
-                                            print("The email is set to:",username)
+                                            print(Style.RESET_ALL+Fore.GREEN+"The email is set to:",username)
                                         if not password == "ns" and not username == "dw" and not password == "dw" and not username == "ns":
-                                            print("The password is:", passwordhidden)
-                                            seePassword = input("Would you like to see the password (Y or N)? >>> ")
+                                            print(Style.RESET_ALL+Fore.GREEN+"The password is: "+Style.RESET_ALL+Style.DIM+passwordhidden)
+                                            seePassword = input(Style.RESET_ALL+Fore.BLUE+"Would you like to see the password (Y or N)? >>> ")
                                             seePassword = seePassword.upper()
                                             if seePassword == "Y":
-                                                passwordprotect = getpass.getpass("Enter the password to unhide the password: >>> ")
+                                                passwordprotect = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Enter the password to unhide the password: >>> ")
                                                 if (passwordprotect == password):
-                                                    print("The password is:", password)
+                                                    print(Style.RESET_ALL+Fore.GREEN+"The password is:", password)
                                                 else:
-                                                    print("Incorrect!")
+                                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Incorrect password.")
                                         if password == "ns":
-                                            print("The password is not set.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The password is not set.")
                                         if USERUSERNAME == "ns":
-                                            print("The GitHub Username is not set.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The GitHub Username is not set.")
                                         if USERPASSWORD == "ns":
-                                            print("The GitHub Password is not set.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The GitHub Password is not set.")
                                         if USERUSERNAME == "dw" and USERPASSWORD == "dw":
-                                            print("You have disabled GitHub Integration.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have disabled GitHub Integration.")
                                         if not USERUSERNAME == "dw" and not USERUSERNAME == "ns":
-                                            print("Your GitHub username is set to:", USERUSERNAME+".")
+                                            print(Style.RESET_ALL+Fore.GREEN+"Your GitHub username is set to:", USERUSERNAME+".")
                                         if not USERPASSWORD == "dw" and not USERPASSWORD == "ns":
-                                            print("The password is:", gitPassword)
-                                            seePassword = input("Would you like to see the GitHub password (Y or N)? >>> ")
+                                            print(Style.RESET_ALL+"The password is: "+Style.RESET_ALL+Style.DIM+gitPassword)
+                                            seePassword = input(Style.RESET_ALL+Fore.BLUE+"Would you like to see the GitHub password (Y or N)? >>> ")
                                             seePassword = seePassword.upper()
                                             if seePassword == "Y":
-                                                passwordprotect = getpass.getpass("Enter the password to unhide the password: >>> ")
+                                                passwordprotect = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Enter the password to unhide the password: >>> ")
                                                 if (passwordprotect == USERPASSWORD):
-                                                    print("The password is:", USERPASSWORD+".")
+                                                    print(Style.RESET_ALL+Fore.GREEN+"The password is:", USERPASSWORD+".")
                                                 else:
-                                                    print("Incorrect!")
+                                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Incorrect password.")
                                         if maxScore != "ns":
-                                            print("The target score for Gravity is set to:", str(maxScore)+".")
+                                            print(Style.RESET_ALL+Fore.GREEN+"The target score for Gravity is set to:", str(maxScore)+".")
                                         else:
-                                            print("The target score for Gravity is not set.")
-                                        print("There have been", str(successesG), "successes in the Gravity Bot.")
-                                        print("There have been", str(failuresG), "failures in the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The target score for Gravity is not set.")
+                                        print(Style.RESET_ALL+Fore.GREEN+"There have been", str(successesG), "successes in the Gravity Bot.")
+                                        print(Style.RESET_ALL+Fore.RED+"There have been", str(failuresG), "failures in the Gravity Bot.")
                                         if diff == 0:
-                                            print("You have set the difficulty to easy in the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set the difficulty to easy in the Gravity Bot.")
                                         elif diff == 1:
-                                            print("You have set the difficulty to medium in the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set the difficulty to medium in the Gravity Bot.")
                                         elif diff == 2:
-                                            print("You have set the difficulty to hard in the Gravity Bot.")
+                                            print(Style.RESET_ALL+Fore.GREEN+"You have set the difficulty to hard in the Gravity Bot.")
                                         else:
+                                            print(Fore.RED+Style.BRIGHT+"Oh no! A variable is corrupt!")
                                             complain("Diff variable is corrupt.")
                                         if option == "ns":
-                                            print("You have not decided which bot(s) to run.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"You have not decided which bot(s) to run.")
                                         else:
                                             if option == 0:
-                                                print("You have decided to only run the Gravity Bot.")
+                                                print(Style.RESET_ALL+Fore.GREEN+"You have decided to only run the Gravity Bot.")
                                             if option == 1:
-                                                print("You have decided to only run the Match Bot.")
+                                                print(Style.RESET_ALL+Fore.GREEN+"You have decided to only run the Match Bot.")
                                             if option == 2:
-                                                print("You have decided to run both the Gravity and Match Bots.")
+                                                print(Style.RESET_ALL+Fore.GREEN+"You have decided to run both the Gravity and Match Bots.")
                             elif generalChoose == "AUTOMATIC LOGIN":
                                 while True:
                                     if password == "dw" and username == "dw":
-                                        loginSettings = input("What would you like to do? Enable Automatic Login or Quit: >>> ")
+                                        loginSettings = input(Style.RESET_ALL+Fore.BLUE+"What would you like to do? Enable Automatic Login or Quit: >>> ")
                                     else:
-                                        loginSettings = input("What would you like to do? Change Email, Change Password, Disable Automatic Login or Quit: >>> ")
+                                        loginSettings = input(Style.RESET_ALL+Fore.BLUE+"What would you like to do? Change Email, Change Password, Disable Automatic Login or Quit: >>> ")
                                     loginSettings = loginSettings.upper()
                                     if password == "dw" and username == "dw" and loginSettings == "ENABLE AUTOMATIC LOGIN":
                                         passwordChoosen = False
                                         while passwordChoosen == False:
-                                            passwordChoosen = True
-                                            print("None of this data is transmitted, it is just saved for ease of use on your local machine.")
-                                            username = input("Email: >>> ")
-                                            password = getpass.getpass("Password: >>> ")
-                                            confirmpassword = getpass.getpass("Confirm Password: >>> ")
+                                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"All the info you type in will be only stored on this machine and typed into the login screen.")
+                                            username = input(Style.RESET_ALL+Fore.BLUE+"Email: >>> ")
+                                            password = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Password: >>> ")
+                                            confirmpassword = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Confirm Password: >>> ")
                                             if confirmpassword == password:
-                                                print("Thank you!")
                                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                            else:
-                                                print("Passwords do not match!")
                                                 passwordChoosen = True
+                                            else:
+                                                print(Style.RESET_ALL+Fore.RED+"Passwords do not match!")
+                                                passwordChoosen = False
                                     if not password == "dw" and not username == "dw":
                                         if loginSettings == "DISABLE AUTOMATIC LOGIN":
                                             username = "dw"
@@ -947,78 +962,77 @@ try:
                                             passwordVerified = False
                                             while passwordVerified == False:
                                                 passwordVerified = True
-                                                print("The password currently is:", passwordhidden)
-                                                verifypassword = getpass.getpass("Please enter your password to continue: >>> ")
+                                                print(Style.RESET_ALL+Fore.GREEN+"The password currently is: "+Style.RESET_ALL+Style.DIM+passwordhidden)
+                                                verifypassword = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Please enter your password to continue: >>> ")
                                                 if verifypassword == password:
-                                                    print("Correct!")
-                                                    seePassword = input("Would you like to see the password (Y or N)? >>> ")
+                                                    print(Style.RESET_ALL+"Correct!")
+                                                    seePassword = input(Style.RESET_ALL+Fore.BLUE+"Would you like to see the password (Y or N)? >>> ")
                                                     seePassword = seePassword.upper()
                                                     if seePassword == "Y":
-                                                        print("The password currently is:", password)
+                                                        print(Style.RESET_ALL+Fore.GREEN+"The password currently is:", password)
                                                     else:
-                                                        print("The password currently is:", passwordhidden)
+                                                        print(Style.RESET_ALL+Fore.YELLOW+"The password currently is: "+Style.RESET_ALL+Style.DIM+passwordhidden)
                                                     passwordChanged = False
                                                     while passwordChanged == False:
-                                                        password = getpass.getpass("I would like to change my password to: >>> ")
-                                                        confirmpassword = getpass.getpass("Confirm: >>> ")
+                                                        password = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"I would like to change my password to: >>> ")
+                                                        confirmpassword = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Confirm: >>> ")
                                                         if confirmpassword == password:
-                                                            print("Changed!")
+                                                            print(Style.RESET_ALL+Fore.GREEN+"Changed!")
                                                             passwordChanged = True
                                                         else:
-                                                            print("Passwords do not match!")
+                                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Passwords do not match!")
                                                 else:
                                                     passwordVerified = True
-                                                    print("Invalid Password!")
+                                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid Password!")
                                         if loginSettings == "CHANGE EMAIL":
                                             if username == "ns":
-                                                print("The email has not been set.")
+                                                print(Style.RESET_ALL+Fore.RED+"The email has not been set.")
                                             if not username == "ns" and not username == "dw":
-                                                print("The email is set to:", username)
+                                                print(Style.RESET_ALL+Fore.GREEN+"The email is set to:", username)
                                             if not username == "dw":
-                                                username = input("I would like to set the email to: >>> ")
+                                                username = input(Style.RESET_ALL+Fore.BLUE+"I would like to set the email to: >>> ")
                                     if loginSettings == "QUIT":
                                         break
                             elif generalChoose == "GITHUB INTEGRATION":
                                 while True:
                                     if USERUSERNAME == "dw" and USERUSERNAME == "dw":
-                                        gitSettings = input("What would you like to do? Enable GitHub Integration, Quit: >>> ")
+                                        gitSettings = input(Style.RESET_ALL+"What would you like to do? "+Fore.GREEN+Style.BRIGHT+"Enable GitHub Integration, Quit: >>> ")
                                         disabled = True
                                     else:
-                                        gitSettings = input("What would you like to do? Change Username, Change Password, Disable GitHub Integration, Quit: >>> ")
+                                        gitSettings = input(Style.RESET_ALL+"What would you like to do? "+Fore.GREEN+Style.BRIGHT+"Change Username, Change Password, Disable GitHub Integration, Quit: >>> ")
                                         disabled = False
                                     gitSettings = gitSettings.upper()
                                     if gitSettings == "ENABLE GITHUB INTEGRATION" and disabled == True:
                                         while True:
-                                            print("None of this data is transmitted to anything other then GitHub for Issue Reporting.")
-                                            USERUSERNAME = input("GitHub Username: >>> ")
-                                            USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
-                                            CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
+                                            print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"None of this data is transmitted to anywhere other then GitHub for Issue Reporting.")
+                                            USERUSERNAME = input(Style.RESET_ALL+Fore.BLUE+"GitHub Username: >>> ")
+                                            USERPASSWORD = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"GitHub Password: >>> ")
+                                            CONFIRMPASS = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Confirm Password: >>> ")
                                             if USERPASSWORD == CONFIRMPASS:
-                                                print("Thank you!")
                                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                                 break
                                     if disabled == False:
                                         if gitSettings == "CHANGE USERNAME":
-                                            print("The GitHub Username is currently set to:", USERUSERNAME+".")
-                                            USERUSERNAME = input("I would like to change the GitHub Username to: >>> ")
+                                            print(Style.RESET_ALL+Fore.GREEN+"The GitHub Username is currently set to:", USERUSERNAME+".")
+                                            USERUSERNAME = input(Style.RESET_ALL+Fore.BLUE+"I would like to change the GitHub Username to: >>> ")
                                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                         if gitSettings == "CHANGE PASSWORD":
-                                            print("The GitHub password is set to:", gitPassword+".")
-                                            passwordProtect = getpass.getpass("Enter your GitHub Password First: >>> ")
+                                            print(Style.RESET_ALL+Fore.GREEN+"The GitHub password is set to:", gitPassword+".")
+                                            passwordProtect = getpass.getpass(Style.RESET_ALL+Fore.GREEN+"Enter your GitHub Password First: >>> ")
                                             if passwordProtect == USERPASSWORD:
-                                                showPass = input("Would you like to see the GitHub password (Y or N)? >>> ")
+                                                showPass = input(Style.RESET_ALL+Fore.BLUE+"Would you like to see the GitHub password (Y or N)? >>> ")
                                                 showPass = showPass.upper()
                                                 if showPass == "Y":
                                                     if passwordProtect == USERPASSWORD:
-                                                        print("The GitHub password is set to:", USERPASSWORD+".")
+                                                        print(Style.RESET_ALL+Fore.GREEN+"The GitHub password is set to:", USERPASSWORD+".")
                                                 while True:
-                                                    USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
-                                                    CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
+                                                    USERPASSWORD = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"GitHub Password: >>> ")
+                                                    CONFIRMPASS = getpass.getpass(Style.RESET_ALL+Fore.BLUE+"Confirm Password: >>> ")
                                                     if USERPASSWORD == CONFIRMPASS:
                                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                                         break
                                             else:
-                                                print("Incorrect Password!")
+                                                print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Incorrect Password!")
                                         if gitSettings == "DISABLE GITHUB INTEGRATION":
                                             USERUSERNAME = "dw"
                                             USERPASSWORD = "dw"
@@ -1028,13 +1042,13 @@ try:
                                         break
                             elif generalChoose == "PAGEID":
                                 if pageID == "ns":
-                                    print("PageID has not been set.")
+                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"PageID has not been set.")
                                 else:
-                                    print("PageID is set to:", pageID)
+                                    print(Style.RESET_ALL+Fore.GREEN+"PageID is set to:", pageID)
                                 pageIDChoosen = False
                                 while pageIDChoosen == False:
                                     pageIDChoosen = True
-                                    pageID = input("What would you like to set the pageID to? >>> ")
+                                    pageID = input(Style.RESET_ALL+Fore.BLUE+"What would you like to set the pageID to? >>> ")
                                     try:
                                         pageID = int(pageID)
                                         if pageID < 0:
@@ -1044,25 +1058,27 @@ try:
                                         pageIDChoosen = False
                             elif generalChoose == "PATH TO CHROMEDRIVER":
                                 if path == "ns":
-                                    print("The path to ChromeDriver has not been set.")
+                                    print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The path to ChromeDriver has not been set.")
                                 else:
-                                    print("The path to ChromeDriver is set to:", path)
+                                    print(Style.RESET_ALL+Fore.GREEN+"The path to ChromeDriver is set to:", path)
                                     checkedforchrome = False
                                     while (checkedforchrome == False):
                                             checkedforchrome = True
-                                            path = input("I would like to set the path to ChromeDriver to: >>> ")
+                                            path = input(Style.RESET_ALL+Fore.BLUE+"I would like to set the path to ChromeDriver to: >>> ")
                                             if not os.path.exists(path):
-                                                print("Invalid Path!")
+                                                print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid Path!")
                                                 checkedforchrome = False
                             elif generalChoose == "BOTS TO RUN":
                                 while True:
                                     if option == 0:
-                                        print("You have decided to only run the Gravity Bot.")
-                                    if option == 1:
-                                        print("You have decided to only run the Match Bot.")
-                                    if option == 2:
-                                        print("You have decided to run both the Gravity and Match Bots.")
-                                    optionInput = input("Choose a bot: Gravity, Match, Gravity and Match: >>> ")
+                                        print(Style.RESET_ALL+Fore.GREEN+"You have decided to only run the Gravity Bot.")
+                                    elif option == 1:
+                                        print(Style.RESET_ALL+Fore.GREEN+"You have decided to only run the Match Bot.")
+                                    elif option == 2:
+                                        print(Style.RESET_ALL+Fore.GREEN+"You have decided to run both the Gravity and Match Bots.")
+                                    else:
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"You have not set what bots to run.")
+                                    optionInput = input(Style.RESET_ALL+"Choose a bot:"+Fore.GREEN+Style.BRIGHT+" Gravity, Match, Gravity and Match: >>> ")
                                     optionInput = optionInput.upper()
                                     if optionInput == "GRAVITY":
                                         option = 0
@@ -1074,16 +1090,16 @@ try:
                                         option = 2
                                         break
                                     else:
-                                        print("Invalid Option!")
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid Option!")
                             elif generalChoose == "TIMES TO RUN OQBRTA":
                                 while True:
                                     if timesQuizlet == "dw":
-                                        print("You have decided to run OQBRTA infinitely.")
+                                        print(Style.RESET_ALL+Fore.GREEN+"You have decided to run OQBRTA infinitely.")
                                     if not timesQuizlet == "dw" and not timesQuizlet == "ns":
-                                        print("You have decided to run OQBRTA", timesQuizlet, "times.")
+                                        print(Style.RESET_ALL+Fore.GREEN+"You have decided to run OQBRTA", timesQuizlet, "times.")
                                     if timesQuizlet == "ns":
-                                        print("You have not set the amount of times you would like to run OQBRTA.")
-                                    timesQuizletSettings = input("What would you like to do? Run OQBRTA infinitely, Run OQBRTA a specific amount of times or Quit: >>> ")
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"You have not set the amount of times you would like to run OQBRTA.")
+                                    timesQuizletSettings = input(Style.RESET_ALL+Fore.BLUE+"What would you like to do? Run OQBRTA infinitely, Run OQBRTA a specific amount of times or Quit: >>> ")
                                     timesQuizletSettings = timesQuizletSettings.upper()
                                     if timesQuizletSettings == "RUN OQBRTA INFINITELY" or timesQuizletSettings == "RUN INFINITELY" or timesQuizletSettings == "INFINITELY":
                                         if not timesQuizlet == "dw":
@@ -1092,7 +1108,7 @@ try:
                                         timesChoosen = False
                                         while timesChoosen == False:
                                             timesChoosen = True
-                                            timesQuizlet = input("How many quizes would you like to do? >>> ")
+                                            timesQuizlet = input(Style.RESET_ALL+Fore.BLUE+"How many quizes would you like to do? >>> ")
                                             try:
                                                 timesQuizlet = int(timesQuizlet)
                                                 if not timesQuizlet < 0:
@@ -1104,11 +1120,11 @@ try:
                                     elif timesQuizletSettings == "QUIT" or timesQuizletSettings == "EXIT":
                                         break
                                     else:
-                                        print("Invalid Option!")
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid Option!")
                             elif generalChoose == "QUIT":
                                 break
             if runTypeInput == "QUIT":
-                print("Goodbye!")
+                print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Goodbye!")
                 sleep(1)
                 sys.exit()
             if updateNeeded == True:
@@ -1171,7 +1187,7 @@ try:
                                             printed = False
                                             while True:
                                                 if printed == False:
-                                                    print("You can now login.")
+                                                    print(Style.RESET_ALL+"You can now login.")
                                                     printed = True
                                                 getBrowserUrl = browser.current_url
                                                 simpleURL = tldextract.extract(getBrowserUrl)
@@ -1235,7 +1251,7 @@ try:
                                         try:
                                             asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
                                         except:
-                                            print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
                                             problem = True
                                             break
                                         if asteroidText != '':
@@ -1248,10 +1264,11 @@ try:
                                     elif asteroidText in rep:
                                         index = rep.index(asteroidText)
                                         answer = ans[index]
-                                    browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
-                                    # except:
-                                    #     print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
-                                    #     break
+                                    try:
+                                        browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
+                                    except:
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                        break
                                 if restart == True:
                                     break
                                 if maxScore <= score:
@@ -1276,7 +1293,7 @@ try:
                                             printed = False
                                             while True:
                                                 if printed == False:
-                                                    print("You can now login.")
+                                                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"You can now login.")
                                                     printed = True
                                                 getBrowserUrl = browser.current_url
                                                 simpleURL = tldextract.extract(getBrowserUrl)
@@ -1392,7 +1409,7 @@ try:
                                             printed = False
                                             while True:
                                                 if printed == False:
-                                                    print("You can now login.")
+                                                    print(Style.RESET_ALL+"You can now login.")
                                                     printed = True
                                                 getBrowserUrl = browser.current_url
                                                 simpleURL = tldextract.extract(getBrowserUrl)
@@ -1456,7 +1473,7 @@ try:
                                         try:
                                             asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
                                         except:
-                                            print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                            print(Style.RESET_ALL+Style.BRIGHT+Fore.RED+"The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
                                             problem = True
                                             break
                                         if asteroidText != '':
@@ -1471,7 +1488,7 @@ try:
                                         answer = ans[index]
                                     browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                     # except:
-                                    #     print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                    #     print(Style.RESET_ALL+"The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
                                     #     break
                                 if restart == True:
                                     break
@@ -1497,7 +1514,7 @@ try:
                                             printed = False
                                             while True:
                                                 if printed == False:
-                                                    print("You can now login.")
+                                                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"You can now login.")
                                                     printed = True
                                                 getBrowserUrl = browser.current_url
                                                 simpleURL = tldextract.extract(getBrowserUrl)
@@ -1566,7 +1583,7 @@ try:
                         if not timesRan == timesQuizlet:
                             pageID = pageID + 1
                     if timesRan == timesQuizlet:
-                        print("Complete.")
+                        print(Style.RESET_ALL+"Complete.")
                         browser.quit()
                         restart = True
 except Exception as e:
