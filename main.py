@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.8
+    version = 5.81
     imported = False
     while imported == False:
         import inspect
@@ -716,7 +716,8 @@ try:
                     print(Style.RESET_ALL+Style.BRIGHT+"PageID Location: "+Style.RESET_ALL+Style.DIM+"https://quizlet.com/"+Style.RESET_ALL+Style.BRIGHT+"5000321"+Fore.GREEN+"<--PAGEID"+Style.RESET_ALL+Style.DIM+"/cool-flash-cards/.") 
                     IDError = False
                     while True:
-                        pageIDURL = input(Style.RESET_ALL+Fore.BLUE+"Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the set or type in the PageID yourself: >>> ")
+                        print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the quizlet set or just type in the PageID yourself.")
+                        pageIDURL = input(Style.RESET_ALL+Fore.BLUE+"PageID or URL: >>> ")
                         pageID = re.findall('\d+', pageIDURL)
                         if pageID == None:
                             print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid pageID or URL.")
@@ -732,9 +733,6 @@ try:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                             break 
                         IDError = False     
-                        started = True
-                        oneQuiz = False
-                    
                 if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
@@ -1047,17 +1045,25 @@ try:
                                     print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"PageID has not been set.")
                                 else:
                                     print(Style.RESET_ALL+Fore.GREEN+"PageID is set to:", pageID)
-                                pageIDChoosen = False
-                                while pageIDChoosen == False:
-                                    pageIDChoosen = True
-                                    pageID = input(Style.RESET_ALL+Fore.BLUE+"What would you like to set the pageID to? >>> ")
-                                    try:
-                                        pageID = int(pageID)
-                                        if pageID < 0:
-                                            pageID = dict(pageID)
+                                IDError = False
+                                while True:
+                                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the quizlet set or just type in the PageID yourself.")
+                                    pageIDURL = input(Style.RESET_ALL+Fore.BLUE+"PageID or URL: >>> ")
+                                    pageID = re.findall('\d+', pageIDURL)
+                                    if pageID == None:
+                                        print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid pageID or URL.")
+                                        IDError = True
+                                    if IDError == False:
+                                        try:
+                                            pageID = int(pageID[0])
+                                        except:
+                                           print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"PageID is not an integer.") 
+                                           IDError = True    
+                                    if IDError == False:
+                                        print(Style.RESET_ALL+Fore.GREEN+"PageID has been successfully identified as: "+Style.BRIGHT+str(pageID)+Style.RESET_ALL+".")
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                    except ValueError:
-                                        pageIDChoosen = False
+                                        break 
+                                    IDError = False     
                             elif generalChoose == "PATH TO CHROMEDRIVER":
                                 if path == "ns":
                                     print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"The path to ChromeDriver has not been set.")
