@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.7
+    version = 5.8
     imported = False
     while imported == False:
         import inspect
@@ -146,6 +146,7 @@ try:
         import sys
         import json
         import urllib
+        import re
         import shutil
         import platform
         computerName = platform.node()
@@ -203,7 +204,7 @@ try:
                         import requests
                     except ImportError:
                         install('requests')
-                    print(Style.RESET_ALL+"Installed!")
+                    print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Installed!")
                     sleep(1)
                     sys.exit()
                 else:
@@ -240,7 +241,7 @@ try:
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
             title = titleget.text
-            print(Style.RESET_ALL+Style.BRIGHT+Fore.Green+"Updating to V.",title+"...")
+            print(Style.RESET_ALL+Style.BRIGHT+Fore.GREEN+"Updating to V.",title+"...")
             reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
             code = reply.text
             with codecs.open(fname, "w", "utf-8-sig") as f:
@@ -436,13 +437,13 @@ try:
                 if (chromecheck == "y" or chromecheck == "Y"):
                     path = input(Style.RESET_ALL+Fore.BLUE+"The path to chromedriver is: >>> ")
                     if not os.path.exists(path):
-                        print(Style.RESET_ALL+Fore.RED+"Invalid Path!")
+                        print(Style.RESET_ALL+Fore.RED+"Invalid Path.")
                         checkedforchrome = False
                     else:
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                         print(Style.RESET_ALL+Fore.GREEN+"Continuing...")
                 if (not chromecheck == "Y" and not chromecheck == "y" and not chromecheck == "N" and not chromecheck == "n"):
-                    print(Style.RESET_ALL+Fore.RED+"Invalid Option...Restarting...")
+                    print(Style.RESET_ALL+Fore.RED+Style.BRGIHT+"Invalid Option...Restarting...")
                     checkedforchrome = False
                 if (chromecheck == "n" or chromecheck == "N"):
                     chromeinstalled = input(Style.RESET_ALL+Fore.BLUE+"Would you like the script to install it for you (Y or N)? >>> ")
@@ -476,7 +477,8 @@ try:
             if (reply == "n" or reply == "N"):
                 username = "dw"
                 password = "dw"
-            if (reply == "Y" or reply == "y"):
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+            elif (reply == "Y" or reply == "y"):
                 while passwordChoosen == False:
                     print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"All the info you type in will be only stored on this machine and typed into the login screen.")
                     username = input(Style.RESET_ALL+Fore.BLUE+"Email: >>> ")
@@ -500,9 +502,10 @@ try:
                     if USERPASSWORD == CONFIRMPASS:
                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                         break
-            else:
+            elif reply == "N":
                 USERUSERNAME = "dw"
                 USERPASSWORD = "dw"
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
@@ -541,8 +544,10 @@ try:
             if runTypeInput == "HELP":
                 print(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Welcome to the help menu "+Style.RESET_ALL+Style.DIM+"(beta)"+Style.RESET_ALL+Fore.GREEN+"!")
                 while True:
-                    helpInput = input(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Choose an option: pageID, Quit: >>> "+Style.RESET_ALL)
+                    helpInput = input(Style.RESET_ALL+Fore.GREEN+Style.BRIGHT+"Choose an option: pageID, How to Quit when Running, Quit: >>> "+Style.RESET_ALL)
                     helpInput = helpInput.upper()
+                    if helpInput == "HOW TO QUIT WHEN RUNNING":
+                        print(Style.RESET_ALL+Fore.BLUE+"In order to quit the bot while it is running, simply close the open chrome window.")
                     if helpInput == "PAGEID":
                         print(Style.RESET_ALL+"The page ID is a number contained in the URL of a quizlet set. It tells the bot what quizlet set to go to. "+Style.BRIGHT+"Example:"+Style.RESET_ALL+Style.DIM+"https://quizlet.com/"+Style.RESET_ALL+Style.BRIGHT+"5000321"+Fore.GREEN+"<--PAGEID"+Style.RESET_ALL+Style.DIM+"/cool-flash-cards/.") 
                     elif helpInput == "QUIT":
@@ -691,54 +696,51 @@ try:
                                 print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Enter a number please.")
                 if timesQuizlet == "ns":
                     chooseRunType = input(Style.RESET_ALL+Fore.BLUE+"Would you like to run the bot infinitely (Y or N)? >>> ")
-                    if (chooseRunType == "y" or chooseRunType == "Y"):
+                    if chooseRunType == "y" or chooseRunType == "Y":
                         if not timesQuizlet == "dw":
                             timesQuizlet = "dw"
-                        if pageID == "ns":
-                            print(Style.RESET_ALL+"https://quizlet.com/0<---PageID/micromatch")
-                            while pageIDChoosen == False:
-                                pageIDChoosen = True
-                                pageID = input(Style.RESET_ALL+"What pageID would you like to start from? >>> ")
-                                try:
-                                    pageID = int(pageID)
+                    if (chooseRunType == "n" or chooseRunType == "N"):
+                        timesChoosen = False
+                        while timesChoosen == False:
+                            timesChoosen = True
+                            timesQuizlet = input(Style.RESET_ALL+Fore.BLUE+"How many quizes would you like to do? >>> ")
+                            try:
+                                timesQuizlet = int(timesQuizlet)
+                                if not timesQuizlet < 0:
                                     save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                except ValueError:
-                                    pageIDChoosen = False
+                            except ValueError:
+                                timesChoosen = False
+                            if timesQuizlet < 0:
+                                timesChoosen = False        
+                if pageID == "ns":
+                    print(Style.RESET_ALL+Style.BRIGHT+"PageID Location: "+Style.RESET_ALL+Style.DIM+"https://quizlet.com/"+Style.RESET_ALL+Style.BRIGHT+"5000321"+Fore.GREEN+"<--PAGEID"+Style.RESET_ALL+Style.DIM+"/cool-flash-cards/.") 
+                    IDError = False
+                    while True:
+                        pageIDURL = input(Style.RESET_ALL+Fore.BLUE+"Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the set or type in the PageID yourself: >>> ")
+                        pageID = re.findall('\d+', pageIDURL)
+                        if pageID == None:
+                            print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"Invalid pageID or URL.")
+                            IDError = True
+                        if IDError == False:
+                            try:
+                                pageID = int(pageID[0])
+                            except:
+                               print(Style.RESET_ALL+Fore.RED+Style.BRIGHT+"PageID is not an integer.") 
+                               IDError = True    
+                        if IDError == False:
+                            print(Style.RESET_ALL+Fore.GREEN+"PageID has been successfully identified as: "+Style.BRIGHT+str(pageID)+Style.RESET_ALL+".")
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                            break 
+                        IDError = False     
                         started = True
                         oneQuiz = False
-                    if (chooseRunType == "n" or chooseRunType == "N"):
-                        if timesQuizlet == "ns":
-                            timesChoosen = False
-                            while timesChoosen == False:
-                                timesChoosen = True
-                                timesQuizlet = input(Style.RESET_ALL+Fore.BLUE+"How many quizes would you like to do? >>> ")
-                                try:
-                                    timesQuizlet = int(timesQuizlet)
-                                    if not timesQuizlet < 0:
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                except ValueError:
-                                    timesChoosen = False
-                                if timesQuizlet < 0:
-                                    timesChoosen = False
+                    
                 if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
                 if not timesQuizlet == "dw" and not timesQuizlet == "ns":
                     started = True
                     oneQuiz = True
-                    if pageID == "ns":
-                        print(Style.RESET_ALL+Style.BRIGHT+Fore.GREEN+"https://quizlet.com/0<---PageID/micromatch")
-                        pageIDChoosen = False
-                        while pageIDChoosen == False:
-                            pageIDChoosen = True
-                            pageID = input(Style.RESET_ALL+Fore.BLUE+"What pageID would you like the bot to run on? >>> ")
-                            try:
-                                pageID = int(pageID)
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                            except ValueError:
-                                pageIDChoosen = False
-                        started = True
-                        oneQuiz = True
             if runTypeInput == "SETTINGS":
                 doneChanging = False
                 while doneChanging == False:
