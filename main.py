@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.82
+    version = 5.83
     imported = False
     while imported == False:
         import inspect
@@ -536,7 +536,7 @@ try:
                 if runTypeInput == "UPDATE":
                     update.update()
             if runTypeInput == "HELP":
-                print("Welcome to the help menu "+"(beta)"+"!")
+                print("Welcome to the help menu (beta)!")
                 while True:
                     helpInput = input("Choose an option: pageID, How to Quit when Running, Quit: >>> ")
                     helpInput = helpInput.upper()
@@ -581,7 +581,7 @@ try:
                 if pasteV < version:
                     uploadable = True
                 else:
-                    print("Version is not higher than current release.")
+                    print("Development Version is not higher than current release.")
                     uploadable = False
                 codeGood = os.system('pyflakes main.py')
                 if codeGood == 0 and uploadable:
@@ -591,59 +591,54 @@ try:
                     uploadable = False
                 if uploadable == True:
                     print("Code checks complete! All code seems good!")
-                    checked = True
-                    if checked == True:
-                        fname = os.path.basename(__file__)
-                        with open(fname, 'r') as f1:
-                            updatedcode = f1.read()
-                        titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
-                        title = titleget.text
-                        titlenumber = len(title)
-                        updateName = input("What should the commit name be? >>> ")
-                        chromedriver = path
-                        os.environ["webdriver.chrome.driver"] = chromedriver
-                        browser = webdriver.Chrome(chromedriver)
-                        browser.get("https://pastebin.com/login")
-                        sleep(1)
-                        browser.find_element_by_xpath('//div[@onclick][3]').click()
-                        sleep(1)
-                        browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                        sleep(1.5)
-                        browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                        sleep(1)
-                        browser.get('https://pastebin.com/edit/hHLndhTS')
-                        sleep(1)
-                        browser.find_element_by_xpath('//textarea').click()
-                        sleep(1)
-                        timesRanDelete = 0
-                        while not timesRanDelete == titlenumber:
-                            browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE)
-                            timesRanDelete = timesRanDelete + 1
-                        sleep(1)
-                        browser.find_element_by_xpath('//textarea').send_keys(str(version))
-                        sleep(1)
-                        browser.find_element_by_name('submit').click()
-                        sleep(1)
-                        browser.quit()
-                        gitdir = directory+"/Git"
-                        os.chdir(gitdir)
-                        try:
-                            os.remove('main.py')
-                        except:
-                            pass
-                        src = directory+"/"+fname
-                        dst = directory+"/Git/main.py"
-                        shutil.copyfile(src, dst)
-                        os.system("git commit main.py -m '"+updateName+"'")
-                        os.system('git push')
-                        os.chdir(directory)
-                    else:
-                        print("ERROR: Pastebin Version is Newer.")
-                        runTypeSelected = False
+                    fname = os.path.basename(__file__)
+                    with open(fname, 'r') as f1:
+                        updatedcode = f1.read()
+                    titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
+                    title = titleget.text
+                    titlenumber = len(title)
+                    updateName = input("What should the commit name be? >>> ")
+                    chromedriver = path
+                    os.environ["webdriver.chrome.driver"] = chromedriver
+                    browser = webdriver.Chrome(chromedriver)
+                    browser.get("https://pastebin.com/login")
+                    sleep(1)
+                    browser.find_element_by_xpath('//div[@onclick][3]').click()
+                    sleep(1)
+                    browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
+                    sleep(1.5)
+                    browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
+                    sleep(1)
+                    browser.get('https://pastebin.com/edit/hHLndhTS')
+                    sleep(1)
+                    browser.find_element_by_xpath('//textarea').click()
+                    sleep(1)
+                    timesRanDelete = 0
+                    while not timesRanDelete == titlenumber:
+                        browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE)
+                        timesRanDelete = timesRanDelete + 1
+                    sleep(1)
+                    browser.find_element_by_xpath('//textarea').send_keys(str(version))
+                    sleep(1)
+                    browser.find_element_by_name('submit').click()
+                    sleep(1)
+                    browser.quit()
+                    gitdir = directory+"/Git"
+                    os.chdir(gitdir)
+                    try:
+                        os.remove('main.py')
+                    except:
+                        pass
+                    src = directory+"/"+fname
+                    dst = directory+"/Git/main.py"
+                    shutil.copyfile(src, dst)
+                    os.system("git commit main.py -m '"+updateName+"'")
+                    os.system('git push')
+                    os.chdir(directory)
             if runTypeInput == "START":
                 if option == "ns":
                     while True:
-                        optionInput = input("What game would you like the bot to complete? Gravity, Match, Gravity and Match: >>> ")
+                        optionInput = input("What game would you like the bot to complete? Gravity (Expirmental), Match, Gravity and Match: >>> ")
                         optionInput = optionInput.upper()
                         if optionInput == "GRAVITY":
                             option = 0
@@ -712,21 +707,28 @@ try:
                     while True:
                         print("Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the quizlet set or just type in the PageID yourself.")
                         pageIDURL = input("PageID or URL: >>> ")
-                        pageID = re.findall('\d+', pageIDURL)
-                        if pageID == None:
+                        pageIDTemp = re.findall('\d+', pageIDURL)
+                        if pageIDTemp == None:
                             print("Invalid pageID or URL.")
                             IDError = True
                         if IDError == False:
                             try:
-                                pageID = int(pageID[0])
+                                testList = int(pageIDTemp[1])
+                                IDError = True
+                                print("Multiple Values detected in URL or number.")  
                             except:
-                               print("PageID is not an integer.") 
-                               IDError = True    
+                                IDError = False
+                            try:
+                                pageIDTemp = int(pageIDTemp[0])
+                            except:
+                               print("ID is not an integer.") 
+                               IDError = True  
                         if IDError == False:
+                            pageID = int(pageIDTemp)
                             print("PageID has been successfully identified as: "+str(pageID)+".")
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                             break 
-                        IDError = False     
+                        IDError = False      
                 if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
@@ -1044,17 +1046,24 @@ try:
                                 while True:
                                     print("Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the quizlet set or just type in the PageID yourself.")
                                     pageIDURL = input("PageID or URL: >>> ")
-                                    pageID = re.findall('\d+', pageIDURL)
-                                    if pageID == None:
+                                    pageIDTemp = re.findall('\d+', pageIDURL)
+                                    if pageIDTemp == None:
                                         print("Invalid pageID or URL.")
                                         IDError = True
                                     if IDError == False:
                                         try:
-                                            pageID = int(pageID[0])
+                                            testList = int(pageIDTemp[1])
+                                            IDError = True
+                                            print("Multiple Values detected in URL or number.")  
                                         except:
-                                           print("PageID is not an integer.") 
-                                           IDError = True    
+                                            IDError = False
+                                        try:
+                                            pageIDTemp = int(pageIDTemp[0])
+                                        except:
+                                           print("ID is not an integer.") 
+                                           IDError = True  
                                     if IDError == False:
+                                        pageID = int(pageIDTemp)
                                         print("PageID has been successfully identified as: "+str(pageID)+".")
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                         break 
@@ -1081,7 +1090,7 @@ try:
                                         print("You have decided to run both the Gravity and Match Bots.")
                                     else:
                                         print("You have not set what bots to run.")
-                                    optionInput = input("Choose a bot:"+" Gravity, Match, Gravity and Match: >>> ")
+                                    optionInput = input("Choose a bot: Gravity (Expirmental), Match, Gravity and Match: >>> ")
                                     optionInput = optionInput.upper()
                                     if optionInput == "GRAVITY":
                                         option = 0
@@ -1236,7 +1245,6 @@ try:
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                         restart = True
                                         break
-                                    # try:
                                     getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
                                     score = getScore.text
                                     score = score.replace(",", "")
