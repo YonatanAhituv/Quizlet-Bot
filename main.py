@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.83
+    version = 5.84
     imported = False
     while imported == False:
         import inspect
@@ -253,7 +253,7 @@ try:
     if connectedToInternet == False:
         print("You are not connected to the internet, please connect and try again.")
         sleep(1)
-        sys.exit()
+        sys.exit() 
     passwordChoosen = False
     restart = True
     while restart == True:
@@ -1146,6 +1146,27 @@ try:
                 if not runTypeInput == "EXPIRMENT" and not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
                     runTypeSelected = False
         if started == True:
+            def login():
+                browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
+                sleep(0.3)
+                browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
+                sleep(1)
+                if not username == "dw" and not password == "dw":
+                    browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
+                    sleep(1)
+                    browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
+                    sleep(1)
+                if username == "dw" and password == "dw":
+                    printed = False
+                    while True:
+                        if printed == False:
+                            print("You can now login.")
+                            printed = True
+                        getBrowserUrl = browser.current_url
+                        simpleURL = tldextract.extract(getBrowserUrl)
+                        simpleURL = simpleURL.domain
+                        if not simpleURL == "google":
+                            break
             problem = False
             chromedriver = path
             os.environ["webdriver.chrome.driver"] = chromedriver
@@ -1169,6 +1190,9 @@ try:
                             try:
                                 browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                 sleep(1)
+                                if not loggedIn:
+                                    login()
+                                    loggedIn = True
                                 button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
                                 button.click()
                                 failed = False
@@ -1186,27 +1210,6 @@ try:
                                         ans.append(pair[0].text)
                                         rep.append(pair[1].text)
                                     extracted = True
-                                    if not loggedIn:
-                                        browser.find_element_by_xpath('//button[1]/span').click()
-                                        sleep(0.1)
-                                        browser.find_element_by_xpath('//div[@class="UIRow"][1]/div/a').click()
-                                        if not username == "dw" and not password == "dw":
-                                            browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                                            sleep(1)
-                                            browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                                            sleep(1)
-                                        if username == "dw" and password == "dw":
-                                            printed = False
-                                            while True:
-                                                if printed == False:
-                                                    print("You can now login.")
-                                                    printed = True
-                                                getBrowserUrl = browser.current_url
-                                                simpleURL = tldextract.extract(getBrowserUrl)
-                                                simpleURL = simpleURL.domain
-                                                if not simpleURL == "google":
-                                                    break
-                                        loggedIn = True
                                     browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
                                     sleep(1)
                                     browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
@@ -1288,32 +1291,11 @@ try:
                         if option == 2 or option == 1:
                             try:
                                 if option == 1:
-                                    if not loggedIn:
-                                        browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                        sleep(1)
-                                        browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
-                                        sleep(0.3)
-                                        browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
-                                        sleep(1)
-                                        if not username == "dw" and not password == "dw":
-                                            browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                                            sleep(1)
-                                            browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                                            sleep(1)
-                                        if username == "dw" and password == "dw":
-                                            printed = False
-                                            while True:
-                                                if printed == False:
-                                                    print("You can now login.")
-                                                    printed = True
-                                                getBrowserUrl = browser.current_url
-                                                simpleURL = tldextract.extract(getBrowserUrl)
-                                                simpleURL = simpleURL.domain
-                                                if not simpleURL == "google":
-                                                    break
-                                        loggedIn = True
                                     browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                    sleep(0.5)
+                                    sleep(1)
+                                    if not loggedIn:
+                                        login()
+                                        loggedIn = True
                                     try:
                                         browser.find_element_by_xpath('//span[@class="ModeControls-backText"]/span').click()
                                         failed = False
@@ -1364,7 +1346,11 @@ try:
                                                 pairIndex += 1
                                         tiles.pop(0)
                                     sleep(0.5)
-                                    successes = successes + 1
+                                    try:
+                                        browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
+                                        successes = successes + 1
+                                    except:
+                                        failures = failures + 1   
                             except:
                                 failures = failures + 1
                         pageID = pageID + 1
@@ -1391,7 +1377,11 @@ try:
                             try:
                                 browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                 sleep(1)
-                                browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a').click()
+                                if not loggedIn:
+                                    login()
+                                    loggedIn = True
+                                button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
+                                button.click()
                                 failed = False
                             except:
                                 failuresG = failuresG + 1
@@ -1407,27 +1397,6 @@ try:
                                         ans.append(pair[0].text)
                                         rep.append(pair[1].text)
                                     extracted = True
-                                    if not loggedIn:
-                                        browser.find_element_by_xpath('//button[1]/span').click()
-                                        sleep(0.1)
-                                        browser.find_element_by_xpath('//div[@class="UIRow"][1]/div/a').click()
-                                        if not username == "dw" and not password == "dw":
-                                            browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                                            sleep(1)
-                                            browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                                            sleep(1)
-                                        if username == "dw" and password == "dw":
-                                            printed = False
-                                            while True:
-                                                if printed == False:
-                                                    print("You can now login.")
-                                                    printed = True
-                                                getBrowserUrl = browser.current_url
-                                                simpleURL = tldextract.extract(getBrowserUrl)
-                                                simpleURL = simpleURL.domain
-                                                if not simpleURL == "google":
-                                                    break
-                                        loggedIn = True
                                     browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
                                     sleep(1)
                                     browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
@@ -1466,7 +1435,6 @@ try:
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
                                         restart = True
                                         break
-                                    # try:
                                     getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
                                     score = getScore.text
                                     score = score.replace(",", "")
@@ -1497,10 +1465,11 @@ try:
                                     elif asteroidText in rep:
                                         index = rep.index(asteroidText)
                                         answer = ans[index]
-                                    browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
-                                    # except:
-                                    #     print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
-                                    #     break
+                                    try:
+                                        browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
+                                    except:
+                                        print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
+                                        break
                                 if restart == True:
                                     break
                                 if maxScore <= score:
@@ -1509,33 +1478,11 @@ try:
                         if option == 2 or option == 1:
                             try:
                                 if option == 1:
-                                    if not loggedIn:
-                                        browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                        sleep(0.3)
-                                        browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
-                                        sleep(0.3)
-                                        browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
-                                        sleep(1)
-                                        if not username == "dw" and not password == "dw":
-                                            browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                                            sleep(1)
-                                            browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
-                                            sleep(1)
-                                        if username == "dw" and password == "dw":
-                                            printed = False
-                                            while True:
-                                                if printed == False:
-                                                    print("You can now login.")
-                                                    printed = True
-                                                getBrowserUrl = browser.current_url
-                                                simpleURL = tldextract.extract(getBrowserUrl)
-                                                simpleURL = simpleURL.domain
-                                                if not simpleURL == "google":
-                                                    break
-                                        loggedIn = True
-
                                     browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                    sleep(0.5)
+                                    sleep(1)
+                                    if not loggedIn:
+                                        login()
+                                        loggedIn = True
                                     try:
                                         browser.find_element_by_xpath('//span[@class="ModeControls-backText"]/span').click()
                                         failed = False
@@ -1586,7 +1533,11 @@ try:
                                                 pairIndex += 1
                                         tiles.pop(0)
                                     sleep(0.5)
-                                    successes = successes + 1
+                                    try:
+                                        browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
+                                        successes = successes + 1
+                                    except:
+                                        failures = failures + 1
                             except:
                                 failures = failures + 1
                         extracted = False
