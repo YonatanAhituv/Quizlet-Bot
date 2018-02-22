@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.84
+    version = 5.9
     imported = False
     while imported == False:
         import inspect
@@ -551,18 +551,11 @@ try:
                 from PyQt5.QtWidgets import QWidget, QPushButton, QApplication
                 from PyQt5.QtCore import QCoreApplication
                 class Example(QWidget):
-
                     def __init__(self):
                         super().__init__()
 
                         self.initUI()
-
-
                     def initUI(self):
-                        # sbtn = QPushButton('Start', self)
-                        # sbtn.clicked.connect(print("Hello!"))
-                        # sbtn.resize(qbtn.sizeHint())
-                        # sbtn.move(75, 75)
                         qbtn = QPushButton('Quit', self)
                         qbtn.clicked.connect(QCoreApplication.instance().quit)
                         qbtn.resize(qbtn.sizeHint())
@@ -638,7 +631,7 @@ try:
             if runTypeInput == "START":
                 if option == "ns":
                     while True:
-                        optionInput = input("What game would you like the bot to complete? Gravity (Expirmental), Match, Gravity and Match: >>> ")
+                        optionInput = input("What game would you like the bot to complete? Gravity, Match, Gravity and Match: >>> ")
                         optionInput = optionInput.upper()
                         if optionInput == "GRAVITY":
                             option = 0
@@ -1090,7 +1083,7 @@ try:
                                         print("You have decided to run both the Gravity and Match Bots.")
                                     else:
                                         print("You have not set what bots to run.")
-                                    optionInput = input("Choose a bot: Gravity (Expirmental), Match, Gravity and Match: >>> ")
+                                    optionInput = input("Choose a bot: Gravity, Match, Gravity and Match: >>> ")
                                     optionInput = optionInput.upper()
                                     if optionInput == "GRAVITY":
                                         option = 0
@@ -1263,9 +1256,8 @@ try:
                                     answer = ''
                                     while True:
                                         try:
-                                            asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
+                                            asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
                                         except:
-                                            print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
                                             problem = True
                                             break
                                         if asteroidText != '':
@@ -1281,7 +1273,6 @@ try:
                                     try:
                                         browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                     except:
-                                        print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
                                         break
                                 if restart == True:
                                     break
@@ -1373,108 +1364,106 @@ try:
                         break
                     else:
                         extracted = False
-                        if option == 2 or option == 0:
+                    if option == 2 or option == 0:
+                        try:
+                            browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                            sleep(1)
+                            if not loggedIn:
+                                login()
+                                loggedIn = True
+                            button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
+                            button.click()
+                            failed = False
+                        except:
+                            failuresG = failuresG + 1
+                            failed = True
+                        if failed == False:
                             try:
-                                browser.get("https://quizlet.com/"+str(pageID)+"/learn")
                                 sleep(1)
-                                if not loggedIn:
-                                    login()
-                                    loggedIn = True
-                                button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
-                                button.click()
-                                failed = False
-                            except:
-                                failuresG = failuresG + 1
-                                failed = True
-                            if failed == False:
+                                elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
+                                ans = []
+                                rep = []
+                                for element in elements1:
+                                    pair = element.find_elements_by_tag_name('span')
+                                    ans.append(pair[0].text)
+                                    rep.append(pair[1].text)
+                                extracted = True
+                                browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
+                                sleep(1)
+                                browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
+                                sleep(0.1)
+                                if diff == 0:
+                                    browser.find_element_by_xpath('//input[@value="BEGINNER"]').click()
+                                if diff == 1:
+                                    browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
+                                if diff == 2:
+                                    browser.find_element_by_xpath('//input[@value="EXPERT"]')
+                                failedDropDown = 0
                                 try:
-                                    sleep(1)
-                                    elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
-                                    ans = []
-                                    rep = []
-                                    for element in elements1:
-                                        pair = element.find_elements_by_tag_name('span')
-                                        ans.append(pair[0].text)
-                                        rep.append(pair[1].text)
-                                    extracted = True
-                                    browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
-                                    sleep(1)
-                                    browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
-                                    sleep(0.1)
-                                    if diff == 0:
-                                        browser.find_element_by_xpath('//input[@value="BEGINNER"]').click()
-                                    if diff == 1:
-                                        browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
-                                    if diff == 2:
-                                        browser.find_element_by_xpath('//input[@value="EXPERT"]')
-                                    failedDropDown = 0
-                                    try:
-                                        select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
-                                    except:
-                                        failedDropDown = failedDropDown + 1
-                                    try:
-                                        select.select_by_visible_text('Definition')
-                                    except:
-                                        failedDropDown = failedDropDown + 1
-                                    if failedDropDown == 2:
-                                        complain("An error occured clicking on the dropdown, this is the element's data: "+str(select))
-                                    browser.find_element_by_xpath("//div[@class='GravityOptionsView-nextButtonWrapper']/button").click()
-                                    sleep(0.1)
-                                    browser.find_element_by_xpath("//div[@class='GravityDirectionsView-startButton']/button").click()
-                                    sleep(0.2)
+                                    select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
                                 except:
-                                    pass
-                                score = -1
-                                while maxScore > score:
-                                    try:
-                                        checkBrowser = browser.current_url
-                                        chromeOpen = True
-                                    except:
-                                        chromeOpen = False
-                                    if chromeOpen == False:
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                        restart = True
-                                        break
-                                    getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
-                                    score = getScore.text
-                                    score = score.replace(",", "")
-                                    score = int(score)
-                                    found = False
-                                    asteroid = None
-                                    while not found:
-                                        try:
-                                            asteroid = browser.find_element_by_class_name("GravityTerm-content")
-                                            found = True
-                                        except:
-                                            found = False
-                                    answer = ''
-                                    while True:
-                                        try:
-                                            asteroidText = asteroid.find_element_by_xpath("//span[@class='TermText notranslate lang-en']").text
-                                        except:
-                                            print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
-                                            problem = True
-                                            break
-                                        if asteroidText != '':
-                                            break
-                                    if problem == True:
-                                        break
-                                    if asteroidText in ans:
-                                        index = ans.index(asteroidText)
-                                        answer = rep[index]
-                                    elif asteroidText in rep:
-                                        index = rep.index(asteroidText)
-                                        answer = ans[index]
-                                    try:
-                                        browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
-                                    except:
-                                        print("The Gravity Bot encountered an error, this is most likely due to a foreign language being used.")
-                                        break
-                                if restart == True:
+                                    failedDropDown = failedDropDown + 1
+                                try:
+                                    select.select_by_visible_text('Definition')
+                                except:
+                                    failedDropDown = failedDropDown + 1
+                                if failedDropDown == 2:
+                                    complain("An error occured clicking on the dropdown, this is the element's data: "+str(select))
+                                browser.find_element_by_xpath("//div[@class='GravityOptionsView-nextButtonWrapper']/button").click()
+                                sleep(0.1)
+                                browser.find_element_by_xpath("//div[@class='GravityDirectionsView-startButton']/button").click()
+                                sleep(0.2)
+                            except:
+                                pass
+                            score = -1
+                            while maxScore > score:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                    restart = True
                                     break
-                                if maxScore <= score:
-                                    failed = False
-                                    successesG = successesG + 1
+                                getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
+                                score = getScore.text
+                                score = score.replace(",", "")
+                                score = int(score)
+                                found = False
+                                asteroid = None
+                                while not found:
+                                    try:
+                                        asteroid = browser.find_element_by_class_name("GravityTerm-content")
+                                        found = True
+                                    except:
+                                        found = False
+                                answer = ''
+                                while True:
+                                    try:
+                                        asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
+                                    except:
+                                        problem = True
+                                        break
+                                    if asteroidText != '':
+                                        break
+                                if problem == True:
+                                    break
+                                if asteroidText in ans:
+                                    index = ans.index(asteroidText)
+                                    answer = rep[index]
+                                elif asteroidText in rep:
+                                    index = rep.index(asteroidText)
+                                    answer = ans[index]
+                                try:
+                                    browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
+                                except:
+                                    break
+                            if restart == True:
+                                break
+                            if maxScore <= score:
+                                failed = False
+                                successesG = successesG + 1
                         if option == 2 or option == 1:
                             try:
                                 if option == 1:
