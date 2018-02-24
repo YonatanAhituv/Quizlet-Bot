@@ -44,9 +44,9 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
         USERUSERNAME = info["USERUSERNAME"]
         USERPASSWORD = info["USERPASSWORD"]
         if issueRead == False:
-            print("An error has occured titled:", error+".")
+            print("Oh No! An error occured:", error+".")
         if issueRead == True:
-            print("An error was read titled:", error+".")
+            print("An archived error was found:", error+".")
         try:
             import requests
             cantWork = False
@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 5.9
+    version = 6.0
     imported = False
     while imported == False:
         import inspect
@@ -176,6 +176,7 @@ try:
             from selenium import webdriver
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.support.ui import Select
+            from pick import pick
             imported = True
         except:
             import pip
@@ -198,6 +199,10 @@ try:
                         import requests
                     except ImportError:
                         install('requests')
+                    try:
+                        from pick import pick
+                    except:
+                        install('pick')
                     print("Installed!")
                     sleep(1)
                     sys.exit()
@@ -270,23 +275,29 @@ try:
             f.close()
             noJSON = True
         if noJSON == True:
-            pageID = "ns"
-            successes = 0
-            failures = 0
-            path = "ns"
-            timesQuizlet = "ns"
-            username = "ns"
-            password = "ns"
-            USERUSERNAME = "ns"
-            USERPASSWORD = "ns"
-            maxScore = "ns"
-            successesG = 0
-            failuresG = 0
-            option = 'ns'
-            diff = 'ns'
-            recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns", "USERUSERNAME": "ns", "USERPASSWORD": "ns", "maxScore": "ns", "successesG": 0, "failuresG": 0, "option": "ns", "diff": "ns"}
-            with open ('info.json', 'r+') as myfile:
-                recover=myfile.write(json.dumps(recover))
+           pageID = "ns"
+           successes = 0
+           failures = 0
+           path = "ns"
+           timesQuizlet = "ns"
+           username = "ns"
+           password = "ns"
+           USERUSERNAME = "ns"
+           USERPASSWORD = "ns"
+           maxScore = "ns"
+           successesG = 0
+           failuresG = 0
+           match = False
+           gravity = False
+           learn = False
+           flashcards = False
+           write = False
+           spell = False
+           test = False
+           diff = 'ns'
+           recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": maxScore, "successesG": successesG, "failuresG": failuresG, "match": match, "gravity": gravity, "learn": learn, "flashcards": flashcards, "write": write, "spell": spell, "test": test, "diff": diff}
+           with open ('info.json', 'r+') as myfile:
+            recover=myfile.write(json.dumps(recover))
         try:
             with open ('info.json', 'r') as myfile:
                 info=json.loads(myfile.read())
@@ -309,9 +320,15 @@ try:
                     maxScore = "ns"
                     successesG = 0
                     failuresG = 0
-                    option = 'ns'
+                    match = False
+                    gravity = False
+                    learn = False
+                    flashcards = False
+                    write = False
+                    spell = False
+                    test = False
                     diff = 'ns'
-                    recover = {"pageID": "ns", "successes": 0, "failures": 0, "path": "ns", "timesQuizlet": "ns", "username": "ns", "password": "ns", "USERUSERNAME": "ns", "USERPASSWORD": "ns", "maxScore": "ns", "successesG": 0, "failuresG": 0, "option": "ns", "diff": "ns"}
+                    recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": maxScore, "successesG": successesG, "failuresG": failuresG, "match": match, "gravity": gravity, "learn": learn, "flashcards": flashcards, "write": write, "spell": spell, "test": test, "diff": diff}
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
                     sys.exit()
@@ -333,21 +350,33 @@ try:
                     maxScore = input("MaxScore: >>> ")
                     successesG = input("SuccessesG: >>> ")
                     failuresG = input("FailuresG: >>> ")
-                    option = input("Option: >>> ")
                     diff = input("Diff: >>> ")
+                    match = input("Match: >>> ")
+                    gravity = input("Gravity: >>> ")
+                    learn = input("Learn: >>> ")
+                    flashcards = input("Flashcards: >>> ")
+                    write = input("Write: >>> ")
+                    spell = input("Spell: >>> ")
+                    test = input("Test: >>> ")
                     successesG = int(successesG)
                     failuresG = int(failuresG)
                     pageID = int(pageID)
                     successes = int(successes)
                     failures = int(failures)
+
                     try:
                         timesQuizlet = int(timesQuizlet)
                         maxScore = int(maxScore)
-                        option = int(option)
                         diff = int(diff)
+                        match = bool(match)
+                        gravity = bool(gravity)
+                        learn = bool(learn)
+                        flashcards = bool(flashcards)
+                        write = bool(write)
+                        test = bool(test)
                     except:
                         pass
-                    recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": maxScore, "successesG": successesG, "failuresG": failuresG, "option": option, "diff": diff}
+                    recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": maxScore, "successesG": successesG, "failuresG": failuresG, "match": match, "gravity": gravity, "learn": learn, "flashcards": flashcards, "write": write, "spell": spell, "test": test, "diff": diff}
                     with open ('info.json', 'r+') as myfile:
                         recover=myfile.write(json.dumps(recover))
                     sys.exit()
@@ -355,7 +384,7 @@ try:
                 sys.exit()
         if not osis == 0 and not osis == 1 and not osis == 2:
             complain("Unknown OS detected called:"+str(userplatform))
-        def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1, USERUSERNAME1, USERPASSWORD1, maxScore1, successesG1, failuresG1, option1, diff1):
+        def save(info, pageID1, successes1, failures1, path1, timesQuizlet1, username1, password1, USERUSERNAME1, USERPASSWORD1, maxScore1, successesG1, failuresG1, match1, gravity1, learn1, flashcards1, write1, spell1, test1, diff1):
             info["pageID"] = pageID1
             info["successes"] = successes1
             info["failures"] = failures1
@@ -368,10 +397,17 @@ try:
             info["maxScore"] = maxScore1
             info["successesG"] = successesG1
             info["failuresG"] = failuresG1
-            info["option"] = option1
+            info["match"] = match1
+            info["gravity"] = gravity1
+            info["learn"] = learn1
+            info["flashcards"] = flashcards1
+            info["write"] = write1
+            info["spell"] = spell1
+            info["test"] = test1
             info["diff"] = diff1
             with open('info.json', 'w+') as myfile:
                 info=myfile.write(json.dumps(info))
+        exit = False
         pageID = info["pageID"]
         successes = info["successes"]
         failures = info["failures"]
@@ -387,32 +423,40 @@ try:
             with open ('info.json', 'r+') as myfile:
                 info=myfile.write(json.dumps(recover))
             print("Updated JSON to include GitHub Integration! Please restart the script!")
-            sleep(1)
-            sys.exit()
+            exit = True
         try:
             maxScore = info["maxScore"]
             successesG = info["successesG"]
             failuresG = info["failuresG"]
-            option = info["option"]
             diff = info["diff"]
         except:
             recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": "ns", "successesG": 0, "failuresG": 0, "option": "ns", "diff": "ns"}
             with open ('info.json', 'r+') as myfile:
                 info=myfile.write(json.dumps(recover))
             print("Updated JSON to include a Gravity Bot! Please restart the script!")
+            exit = True
+        try:
+            match = info["match"]
+            gravity = info["gravity"]
+            learn = info["learn"]
+            flashcards = info["flashcards"]
+            write = info["write"]
+            spell = info["spell"]
+            test = info["test"]
+        except:
+            recover = {"pageID": pageID, "successes": successes, "failures": failures, "path": path, "timesQuizlet": timesQuizlet, "username": username, "password": password, "USERUSERNAME": USERUSERNAME, "USERPASSWORD": USERPASSWORD, "maxScore": maxScore, "successesG": successesG, "failuresG": failuresG, "match": False, "gravity": False, "learn": False, "flashcards": False, "write": False, "spell": False, "test": False, "diff": diff}
+            with open ('info.json', 'r+') as myfile:
+                info=myfile.write(json.dumps(recover))
+            print("Updated JSON to include a Gravity Bot! Please restart the script!")
+            exit = True
+        if exit:
             sleep(1)
             sys.exit()
-        if timesQuizlet == "nw":
-            timesQuizlet = "dw"
-        if username == "nw":
-            username = "dw"
-        if password == "nw":
-            password = "dw"
-        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
         checkedforchrome = False
         if not os.path.exists(path):
             path = "ns"
-            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
         def reset():
             os.remove("info.json")
         if path == "ns":
@@ -422,7 +466,7 @@ try:
                 my_file = directory+"/"+"chromedriver"
             if os.path.exists(my_file):
                 path = my_file
-                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
         if (path == "ns"):
             while (checkedforchrome == False):
                 checkedforchrome = True
@@ -433,7 +477,7 @@ try:
                         print("Invalid Path.")
                         checkedforchrome = False
                     else:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                         print("Continuing...")
                 if (not chromecheck == "Y" and not chromecheck == "y" and not chromecheck == "N" and not chromecheck == "n"):
                     print("Invalid Option...Restarting...")
@@ -466,11 +510,16 @@ try:
                             sleep(1)
                             sys.exit()
         if (username == "ns" and password == "ns"):
-            reply = input('Would you like to have the script enter your username and password for you (Y or N)? >>> ')
+            reply = input('Would you like OQBRTA to login for you (Y or N)? >>> ')
             if (reply == "n" or reply == "N"):
-                username = "dw"
-                password = "dw"
-                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                reply = input("Would you like to log in manually (Y or N)?")
+                if reply == "n" or reply == "N":
+                    username = "nw"
+                    password = "nw"
+                if reply == "y" or reply == "Y":
+                    username = "dw"
+                    password = "dw"
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
             elif (reply == "Y" or reply == "y"):
                 while passwordChoosen == False:
                     print("All the info you type in will be only stored on this machine and typed into the login screen.")
@@ -479,7 +528,7 @@ try:
                     password = getpass.getpass("Google Account Password: >>> ")
                     confirmpassword = getpass.getpass("Confirm Password: >>> ")
                     if confirmpassword == password:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                         passwordChoosen = True
                     else:
                         print("Passwords do not match!")
@@ -494,12 +543,12 @@ try:
                     USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
                     CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
                     if USERPASSWORD == CONFIRMPASS:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                         break
             elif reply == "N":
                 USERUSERNAME = "dw"
                 USERPASSWORD = "dw"
-                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
         runTypeSelected = False
         while runTypeSelected == False:
             runTypeSelected = True
@@ -536,7 +585,7 @@ try:
                 if runTypeInput == "UPDATE":
                     update.update()
             if runTypeInput == "HELP":
-                print("Welcome to the help menu (beta)!")
+                print("Welcome to the help menu!")
                 while True:
                     helpInput = input("Choose an option: pageID, How to Quit when Running, Quit: >>> ")
                     helpInput = helpInput.upper()
@@ -629,22 +678,39 @@ try:
                     os.system('git push')
                     os.chdir(directory)
             if runTypeInput == "START":
-                if option == "ns":
-                    while True:
-                        optionInput = input("What game would you like the bot to complete? Gravity, Match, Gravity and Match: >>> ")
-                        optionInput = optionInput.upper()
-                        if optionInput == "GRAVITY":
-                            option = 0
-                            break
-                        elif optionInput == "MATCH":
-                            option = 1
-                            break
-                        elif optionInput == "GRAVITY AND MATCH":
-                            option = 2
-                            break
-                        else:
-                            print("Invalid Option!")
-                if option == 2 or option == 0:
+                if match == False and gravity == False and learn == False and flashcards == False and write == False and spell == False and test == False:
+                   title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
+                   options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
+                   selected = pick(options, title, multi_select=True, min_selection_count=1)
+                   if "Match" in str(selected):
+                      match = True
+                   else:
+                       match = False
+                   if "Gravity" in str(selected):
+                      gravity = True
+                   else:
+                       gravity = False
+                   if "Learn" in str(selected):
+                      learn = True
+                   else:
+                       learn = False
+                   if "Flashcards" in str(selected):
+                      flashcards = True
+                   else:
+                       flashcards = False
+                   if "Write" in str(selected):
+                      write = True
+                   else:
+                       write = False
+                   if "Spell" in str(selected):
+                      spell = True
+                   else:
+                       spell = False
+                   if "Test" in str(selected):
+                       test = True
+                   else:
+                       test = False
+                if gravity == True:
                     if diff == "ns":
                         while True:
                             print("Choose a difficulty for the Gravity Bot: Easy, Medium, Hard")
@@ -652,17 +718,17 @@ try:
                             diffOption = diffOption.upper()
                             if diffOption == "EASY":
                                 diff = 0
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                 print("You have set the difficulty to easy for the Gravity Bot.")
                                 break
                             elif diffOption == "MEDIUM":
                                 diff = 1
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                 print("You have set the difficulty to medium for the Gravity Bot.")
                                 break
                             elif diffOption == "HARD":
                                 diff = 2
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                 print("You have set the difficulty to hard for the Gravity Bot.")
                                 break
                     if maxScore == "ns":
@@ -672,7 +738,7 @@ try:
                                 maxScore = int(maxScore)
                                 if maxScore < 0:
                                     maxScore = dict(maxScore)
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                 break
                             except:
                                 print("Enter a number please.")
@@ -689,7 +755,7 @@ try:
                             try:
                                 timesQuizlet = int(timesQuizlet)
                                 if not timesQuizlet < 0:
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                             except ValueError:
                                 timesChoosen = False
                             if timesQuizlet < 0:
@@ -719,7 +785,7 @@ try:
                         if IDError == False:
                             pageID = int(pageIDTemp)
                             print("PageID has been successfully identified as: "+str(pageID)+".")
-                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                             break 
                         IDError = False      
                 if timesQuizlet == "dw":
@@ -731,7 +797,7 @@ try:
             if runTypeInput == "SETTINGS":
                 doneChanging = False
                 while doneChanging == False:
-                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                     if dev == False:
                         settingsoption = input("Type an option: "+"General, Gravity, Quit: >>> ")
                     else:
@@ -776,24 +842,20 @@ try:
                                             print("You have set the difficulty to medium for the Gravity Bot.")
                                         elif diff == 2:
                                             print("You have set the difficulty to hard for the Gravity Bot.")
-                                        else:
-                                            print("Something is corrupt! Oh no!")
-                                            sleep(0.5)
-                                            complain("Diff Variable is corrupt.")
                                     print("Choose a option: Easy, Medium, Hard")
                                     diffOption = input("I choose: >>> ")
                                     diffOption = diffOption.upper()
                                     if diffOption == "EASY":
                                         diff = 0
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         break
                                     elif diffOption == "MEDIUM":
                                         diff = 1
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         break
                                     elif diffOption == "HARD":
                                         diff = 2
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         break
                                     else:
                                         print("Invalid Option!")
@@ -808,7 +870,7 @@ try:
                                         maxScore = int(maxScore)
                                         if maxScore < 0:
                                             maxScore = dict(maxScore)
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         break
                                     except:
                                         print("Enter a number please.")
@@ -816,7 +878,7 @@ try:
                                 break
                     if settingsoption == "GENERAL":
                         while True:
-                            print("Choose an option:"+" About, Automatic Login, GitHub Integration, PageID, Path to ChromeDriver, Bots to Run, Times to Run OQBRTA, Advanced, Quit")
+                            print("Choose an option:"+" About, Login, GitHub Integration, PageID, Path to ChromeDriver, Bots to Run, Times to Run OQBRTA, Advanced, Quit")
                             generalChoose = input("I Choose: >>> ")
                             generalChoose = generalChoose.upper()
                             if generalChoose == "ADVANCED":
@@ -866,6 +928,8 @@ try:
                                             print("The email is not set.")
                                         if username == "dw" and password == "dw":
                                             print("You have disabled automatic password and email entering.")
+                                        if username == "nw" and password == "nw":
+                                            print("You have disabled login.")
                                         if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
                                             print("The email is set to:",username)
                                         if not password == "ns" and not username == "dw" and not password == "dw" and not username == "ns":
@@ -910,25 +974,52 @@ try:
                                             print("You have set the difficulty to medium in the Gravity Bot.")
                                         elif diff == 2:
                                             print("You have set the difficulty to hard in the Gravity Bot.")
+                                        enabledString = "You have enabled: "
+                                        botsEnabled = False
+                                        if match == True:
+                                            enabledString = enabledString + "Match, "
+                                            botsEnabled = True
+                                        if gravity == True:
+                                            enabledString = enabledString + "Gravity, "
+                                            botsEnabled = True
+                                        if learn == True:
+                                            enabledString = enabledString + "Learn, "
+                                            botsEnabled = True
+                                        if flashcards == True:
+                                            enabledString = enabledString + "Flashcards, "
+                                            botsEnabled = True
+                                        if write == True:
+                                            enabledString = enabledString + "Write, "
+                                            botsEnabled = True
+                                        if spell == True:
+                                            enabledString = enabledString + "Spell, "
+                                            botsEnabled = True
+                                        if test == True:
+                                            enabledString = enabledString + "Test, "
+                                            botsEnabled = True
+                                        if botsEnabled == False:
+                                            print("You have not picked which bots to run.")
                                         else:
-                                            print("Oh no! A variable is corrupt!")
-                                            complain("Diff variable is corrupt.")
-                                        if option == "ns":
-                                            print("You have not decided which bot(s) to run.")
-                                        else:
-                                            if option == 0:
-                                                print("You have decided to only run the Gravity Bot.")
-                                            if option == 1:
-                                                print("You have decided to only run the Match Bot.")
-                                            if option == 2:
-                                                print("You have decided to run both the Gravity and Match Bots.")
-                            elif generalChoose == "AUTOMATIC LOGIN":
+                                            enabledString = enabledString[:-2]
+                                            enabledString = enabledString + "."
+                                            print(enabledString)
+                            elif generalChoose == "LOGIN":
                                 while True:
                                     if password == "dw" and username == "dw":
-                                        loginSettings = input("What would you like to do? Enable Automatic Login or Quit: >>> ")
+                                        loginSettings = input("What would you like to do? Enable Automatic Login, Disable Login or Quit: >>> ")
+                                    elif password == "nw" and username == "nw":
+                                        loginSettings = input("What would you like to do? Enable Manual Login or Quit: >>> ")
                                     else:
                                         loginSettings = input("What would you like to do? Change Email, Change Password, Disable Automatic Login or Quit: >>> ")
                                     loginSettings = loginSettings.upper()
+                                    if username == "dw" and password == "dw" and loginSettings == "DISABLE LOGIN":
+                                        username = "nw"
+                                        password = "nw"
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    if username == "nw" and password == "nw" and loginSettings == "ENABLE MANUAL LOGIN":
+                                        username = "dw"
+                                        password = "dw"
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                     if password == "dw" and username == "dw" and loginSettings == "ENABLE AUTOMATIC LOGIN":
                                         passwordChoosen = False
                                         while passwordChoosen == False:
@@ -938,7 +1029,7 @@ try:
                                             password = getpass.getpass("Google Account Password: >>> ")
                                             confirmpassword = getpass.getpass("Confirm Password: >>> ")
                                             if confirmpassword == password:
-                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                                 passwordChoosen = True
                                             else:
                                                 print("Passwords do not match!")
@@ -947,7 +1038,7 @@ try:
                                         if loginSettings == "DISABLE AUTOMATIC LOGIN":
                                             username = "dw"
                                             password = "dw"
-                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         if loginSettings == "CHANGE PASSWORD":
                                             passwordVerified = False
                                             while passwordVerified == False:
@@ -999,13 +1090,13 @@ try:
                                             USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
                                             CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
                                             if USERPASSWORD == CONFIRMPASS:
-                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                                 break
                                     if disabled == False:
                                         if gitSettings == "CHANGE USERNAME":
                                             print("The GitHub Username is currently set to:", USERUSERNAME+".")
                                             USERUSERNAME = input("I would like to change the GitHub Username to: >>> ")
-                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         if gitSettings == "CHANGE PASSWORD":
                                             print("The GitHub password is set to:", gitPassword+".")
                                             passwordProtect = getpass.getpass("Enter your GitHub Password First: >>> ")
@@ -1019,14 +1110,14 @@ try:
                                                     USERPASSWORD = getpass.getpass("GitHub Password: >>> ")
                                                     CONFIRMPASS = getpass.getpass("Confirm Password: >>> ")
                                                     if USERPASSWORD == CONFIRMPASS:
-                                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                                         break
                                             else:
                                                 print("Incorrect Password!")
                                         if gitSettings == "DISABLE GITHUB INTEGRATION":
                                             USERUSERNAME = "dw"
                                             USERPASSWORD = "dw"
-                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                             disabled = True
                                     if gitSettings == "QUIT":
                                         break
@@ -1058,7 +1149,7 @@ try:
                                     if IDError == False:
                                         pageID = int(pageIDTemp)
                                         print("PageID has been successfully identified as: "+str(pageID)+".")
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         break 
                                     IDError = False     
                             elif generalChoose == "PATH TO CHROMEDRIVER":
@@ -1074,28 +1165,67 @@ try:
                                                 print("Invalid Path!")
                                                 checkedforchrome = False
                             elif generalChoose == "BOTS TO RUN":
-                                while True:
-                                    if option == 0:
-                                        print("You have decided to only run the Gravity Bot.")
-                                    elif option == 1:
-                                        print("You have decided to only run the Match Bot.")
-                                    elif option == 2:
-                                        print("You have decided to run both the Gravity and Match Bots.")
-                                    else:
-                                        print("You have not set what bots to run.")
-                                    optionInput = input("Choose a bot: Gravity, Match, Gravity and Match: >>> ")
-                                    optionInput = optionInput.upper()
-                                    if optionInput == "GRAVITY":
-                                        option = 0
-                                        break
-                                    elif optionInput == "MATCH":
-                                        option = 1
-                                        break
-                                    elif optionInput == "GRAVITY AND MATCH":
-                                        option = 2
-                                        break
-                                    else:
-                                        print("Invalid Option!")
+                               enabledString = "You have enabled: "
+                               botsEnabled = False
+                               if match == True:
+                                   enabledString = enabledString + "Match, "
+                                   botsEnabled = True
+                               if gravity == True:
+                                   enabledString = enabledString + "Gravity, "
+                                   botsEnabled = True
+                               if learn == True:
+                                   enabledString = enabledString + "Learn, "
+                                   botsEnabled = True
+                               if flashcards == True:
+                                   enabledString = enabledString + "Flashcards, "
+                                   botsEnabled = True
+                               if write == True:
+                                   enabledString = enabledString + "Write, "
+                                   botsEnabled = True
+                               if spell == True:
+                                   enabledString = enabledString + "Spell, "
+                                   botsEnabled = True
+                               if test == True:
+                                   enabledString = enabledString + "Test, "
+                                   botsEnabled = True
+                               if botsEnabled == False:
+                                   print("You have not picked which bots to run.")
+                               else:
+                                   enabledString = enabledString[:-2]
+                                   enabledString = enabledString + "."
+                                   print(enabledString)
+                               input("Press Enter to continue...")
+                               title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
+                               options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
+                               selected = pick(options, title, multi_select=True, min_selection_count=1)
+                               if "Match" in str(selected):
+                                  match = True
+                               else:
+                                   match = False
+                               if "Gravity" in str(selected):
+                                  gravity = True
+                               else:
+                                   gravity = False
+                               if "Learn" in str(selected):
+                                  learn = True
+                               else:
+                                   learn = False
+                               if "Flashcards" in str(selected):
+                                  flashcards = True
+                               else:
+                                   flashcards = False
+                               if "Write" in str(selected):
+                                  write = True
+                               else:
+                                   write = False
+                               if "Spell" in str(selected):
+                                  spell = True
+                               else:
+                                   spell = False
+                               if "Test" in str(selected):
+                                   test = True
+                               else:
+                                   test = False
                             elif generalChoose == "TIMES TO RUN OQBRTA":
                                 while True:
                                     if timesQuizlet == "dw":
@@ -1117,7 +1247,7 @@ try:
                                             try:
                                                 timesQuizlet = int(timesQuizlet)
                                                 if not timesQuizlet < 0:
-                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                             except ValueError:
                                                 timesChoosen = False
                                             if timesQuizlet < 0:
@@ -1140,26 +1270,30 @@ try:
                     runTypeSelected = False
         if started == True:
             def login():
-                browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
-                sleep(0.3)
-                browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
-                sleep(1)
-                if not username == "dw" and not password == "dw":
-                    browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
+                try:
+                    browser.find_element_by_xpath('//div[@class="SiteHeader-signIn"]/button[2]').click()
                     sleep(1)
-                    browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
+                    browser.find_element_by_xpath('//a[@class="UIButton UIButton--social UIButton--fill"]').click()
                     sleep(1)
-                if username == "dw" and password == "dw":
-                    printed = False
-                    while True:
-                        if printed == False:
-                            print("You can now login.")
-                            printed = True
-                        getBrowserUrl = browser.current_url
-                        simpleURL = tldextract.extract(getBrowserUrl)
-                        simpleURL = simpleURL.domain
-                        if not simpleURL == "google":
-                            break
+                    if not username == "dw" and not password == "dw":
+                        browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
+                        sleep(1)
+                        browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
+                        sleep(1)
+                    if username == "dw" and password == "dw":
+                        printed = False
+                        while True:
+                            if printed == False:
+                                print("You can now login.")
+                                printed = True
+                            getBrowserUrl = browser.current_url
+                            simpleURL = tldextract.extract(getBrowserUrl)
+                            simpleURL = simpleURL.domain
+                            if not simpleURL == "google":
+                                break
+                    return True
+                except:
+                    return False
             problem = False
             chromedriver = path
             os.environ["webdriver.chrome.driver"] = chromedriver
@@ -1167,227 +1301,42 @@ try:
             browser.set_window_size(1600, 1000)
             if oneQuiz == False:
                 while True:
-                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                     try:
                         checkBrowser = browser.current_url
                         chromeOpen = True
                     except:
                         chromeOpen = False
                     if chromeOpen == False:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                         restart = True
                         break
-                    else:
-                        extracted = False
-                        if option == 2 or option == 0:
-                            try:
-                                browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                sleep(1)
-                                if not loggedIn:
-                                    login()
-                                    loggedIn = True
-                                button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
-                                button.click()
-                                failed = False
-                            except:
-                                failuresG = failuresG + 1
+                    try:
+                        browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                        sleep(1)
+                        if not loggedIn and username != "nw" and password != "nw":
+                            login = login()
+                            if login == False:
                                 failed = True
-                            if failed == False:
-                                try:
-                                    sleep(1)
-                                    elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
-                                    ans = []
-                                    rep = []
-                                    for element in elements1:
-                                        pair = element.find_elements_by_tag_name('span')
-                                        ans.append(pair[0].text)
-                                        rep.append(pair[1].text)
-                                    extracted = True
-                                    browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
-                                    sleep(1)
-                                    browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
-                                    sleep(0.1)
-                                    if diff == 0:
-                                        browser.find_element_by_xpath('//input[@value="BEGINNER"]').click()
-                                    if diff == 1:
-                                        browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
-                                    if diff == 2:
-                                        browser.find_element_by_xpath('//input[@value="EXPERT"]')
-                                    failedDropDown = 0
-                                    try:
-                                        select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
-                                    except:
-                                        failedDropDown = failedDropDown + 1
-                                    try:
-                                        select.select_by_visible_text('Definition')
-                                    except:
-                                        failedDropDown = failedDropDown + 1
-                                    if failedDropDown == 2:
-                                        complain("An error occured clicking on the dropdown, this is the element's data: "+str(select))
-                                    browser.find_element_by_xpath("//div[@class='GravityOptionsView-nextButtonWrapper']/button").click()
-                                    sleep(0.1)
-                                    browser.find_element_by_xpath("//div[@class='GravityDirectionsView-startButton']/button").click()
-                                    sleep(0.2)
-                                except:
-                                    pass
-                                score = -1
-                                while maxScore > score:
-                                    try:
-                                        checkBrowser = browser.current_url
-                                        chromeOpen = True
-                                    except:
-                                        chromeOpen = False
-                                    if chromeOpen == False:
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                        restart = True
-                                        break
-                                    getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
-                                    score = getScore.text
-                                    score = score.replace(",", "")
-                                    score = int(score)
-                                    found = False
-                                    asteroid = None
-                                    while not found:
-                                        try:
-                                            asteroid = browser.find_element_by_class_name("GravityTerm-content")
-                                            found = True
-                                        except:
-                                            found = False
-                                    answer = ''
-                                    while True:
-                                        try:
-                                            asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
-                                        except:
-                                            problem = True
-                                            break
-                                        if asteroidText != '':
-                                            break
-                                    if problem == True:
-                                        break
-                                    if asteroidText in ans:
-                                        index = ans.index(asteroidText)
-                                        answer = rep[index]
-                                    elif asteroidText in rep:
-                                        index = rep.index(asteroidText)
-                                        answer = ans[index]
-                                    try:
-                                        browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
-                                    except:
-                                        break
-                                if restart == True:
-                                    break
-                                if maxScore <= score:
-                                    failed = False
-                                    successesG = successesG + 1
-                        if option == 2 or option == 1:
-                            try:
-                                if option == 1:
-                                    browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                    sleep(1)
-                                    if not loggedIn:
-                                        login()
-                                        loggedIn = True
-                                    try:
-                                        browser.find_element_by_xpath('//span[@class="ModeControls-backText"]/span').click()
-                                        failed = False
-                                    except:
-                                        failed = True
-                                    if failed == False:
-                                        sleep(0.5)
-                                        elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
-                                        ans = []
-                                        rep = []
-                                        for element in elements1:
-                                            pair = element.find_elements_by_tag_name('span')
-                                            ans.append(pair[0].text)
-                                            rep.append(pair[1].text)
-                                        failed = False
-                                if failed == True:
-                                    failures = failures + 1
-                                if failed == False:
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                    browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-                                    browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
-                                    tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
-                                    sleep(0.2)
-                                    tileNumber = 0
-                                    while len(tiles) > 0:
-                                        sleep(0.01)
-                                        currentTerm = tiles[0].text
-                                        tiles[0].click()
-                                        if currentTerm in ans:
-                                            index = ans.index(currentTerm)
-                                            myPairText = rep[index]
-                                            pairIndex = 1
-                                            while pairIndex < len(tiles):
-                                                if tiles[pairIndex].text == myPairText:
-                                                    tiles[pairIndex].click()
-                                                    tiles.pop(pairIndex)
-                                                    break
-                                                pairIndex += 1
-                                        if currentTerm in rep:
-                                            index = rep.index(currentTerm)
-                                            myPairText = ans[index]
-                                            pairIndex = 1
-                                            while pairIndex < len(tiles):
-                                                if tiles[pairIndex].text == myPairText:
-                                                    tiles[pairIndex].click()
-                                                    tiles.pop(pairIndex)
-                                                    break
-                                                pairIndex += 1
-                                        tiles.pop(0)
-                                    sleep(0.5)
-                                    try:
-                                        browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
-                                        successes = successes + 1
-                                    except:
-                                        failures = failures + 1   
-                            except:
-                                failures = failures + 1
-                        pageID = pageID + 1
-                        extracted = False
-            if oneQuiz == True:
-                timesRan = 0
-                while not timesRan == timesQuizlet:
-                    if not timesQuizlet == 1:
-                        if not timesRan == 0:
-                            pageID = pageID + 1
-                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                    try:
-                        checkBrowser = browser.current_url
-                        chromeOpen = True
-                    except:
-                        chromeOpen = False
-                    if chromeOpen == False:
-                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                        restart = True
-                        break
-                    else:
-                        extracted = False
-                    if option == 2 or option == 0:
-                        try:
-                            browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                            sleep(1)
-                            if not loggedIn:
-                                login()
+                                loggedIn = False
+                            else:
                                 loggedIn = True
-                            button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
-                            button.click()
-                            failed = False
-                        except:
-                            failuresG = failuresG + 1
-                            failed = True
+                        button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
+                        button.click()
+                        failed = False
+                        sleep(1)
+                        elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
+                        ans = []
+                        rep = []
+                        for element in elements1:
+                            pair = element.find_elements_by_tag_name('span')
+                            ans.append(pair[0].text)
+                            rep.append(pair[1].text)
+                    except:
+                        failed = True
+                    if gravity and not failed:
                         if failed == False:
                             try:
-                                sleep(1)
-                                elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
-                                ans = []
-                                rep = []
-                                for element in elements1:
-                                    pair = element.find_elements_by_tag_name('span')
-                                    ans.append(pair[0].text)
-                                    rep.append(pair[1].text)
-                                extracted = True
                                 browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
                                 sleep(1)
                                 browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
@@ -1423,8 +1372,9 @@ try:
                                 except:
                                     chromeOpen = False
                                 if chromeOpen == False:
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                     restart = True
+                                    failed = True
                                     break
                                 getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
                                 score = getScore.text
@@ -1464,79 +1414,748 @@ try:
                             if maxScore <= score:
                                 failed = False
                                 successesG = successesG + 1
-                        if option == 2 or option == 1:
+                    if match and not failed:
+                        if failed == False:
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                            browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
+                            tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
+                            sleep(0.2)
+                            tileNumber = 0
+                            while len(tiles) > 0:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                sleep(0.01)
+                                currentTerm = tiles[0].text
+                                tiles[0].click()
+                                if currentTerm in ans:
+                                    index = ans.index(currentTerm)
+                                    myPairText = rep[index]
+                                    pairIndex = 1
+                                    while pairIndex < len(tiles):
+                                        if tiles[pairIndex].text == myPairText:
+                                            tiles[pairIndex].click()
+                                            tiles.pop(pairIndex)
+                                            break
+                                        pairIndex += 1
+                                if currentTerm in rep:
+                                    index = rep.index(currentTerm)
+                                    myPairText = ans[index]
+                                    pairIndex = 1
+                                    while pairIndex < len(tiles):
+                                        if tiles[pairIndex].text == myPairText:
+                                            tiles[pairIndex].click()
+                                            tiles.pop(pairIndex)
+                                            break
+                                        pairIndex += 1
+                                tiles.pop(0)
+                            sleep(0.5)
                             try:
-                                if option == 1:
-                                    browser.get("https://quizlet.com/"+str(pageID)+"/learn")
-                                    sleep(1)
-                                    if not loggedIn:
-                                        login()
-                                        loggedIn = True
-                                    try:
-                                        browser.find_element_by_xpath('//span[@class="ModeControls-backText"]/span').click()
-                                        failed = False
-                                    except:
-                                        failed = True
-                                    if failed == False:
-                                        sleep(0.5)
-                                        elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
-                                        ans = []
-                                        rep = []
-                                        for element in elements1:
-                                            pair = element.find_elements_by_tag_name('span')
-                                            ans.append(pair[0].text)
-                                            rep.append(pair[1].text)
-                                        failed = False
-                                if failed == True:
-                                    failures = failures + 1
-                                if failed == False:
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, option, diff)
-                                    browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-                                    browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
-                                    tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
-                                    sleep(0.2)
-                                    tileNumber = 0
-                                    while len(tiles) > 0:
-                                        sleep(0.01)
-                                        currentTerm = tiles[0].text
-                                        tiles[0].click()
-                                        if currentTerm in ans:
-                                            index = ans.index(currentTerm)
-                                            myPairText = rep[index]
-                                            pairIndex = 1
-                                            while pairIndex < len(tiles):
-                                                if tiles[pairIndex].text == myPairText:
-                                                    tiles[pairIndex].click()
-                                                    tiles.pop(pairIndex)
-                                                    break
-                                                pairIndex += 1
-                                        if currentTerm in rep:
-                                            index = rep.index(currentTerm)
-                                            myPairText = ans[index]
-                                            pairIndex = 1
-                                            while pairIndex < len(tiles):
-                                                if tiles[pairIndex].text == myPairText:
-                                                    tiles[pairIndex].click()
-                                                    tiles.pop(pairIndex)
-                                                    break
-                                                pairIndex += 1
-                                        tiles.pop(0)
-                                    sleep(0.5)
-                                    try:
-                                        browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
-                                        successes = successes + 1
-                                    except:
-                                        failures = failures + 1
+                                browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
+                                successes = successes + 1
                             except:
-                                failures = failures + 1
-                        extracted = False
-                        timesRan = timesRan + 1
-                        if not timesRan == timesQuizlet:
-                            pageID = pageID + 1
-                    if timesRan == timesQuizlet:
-                        print("Complete.")
-                        browser.quit()
+                                failures = failures + 1   
+                    if learn and not failed:
+                       try:
+                           checkBrowser = browser.current_url
+                           chromeOpen = True
+                       except:
+                           chromeOpen = False
+                       if chromeOpen == False:
+                           save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                           restart = True
+                           break
+                       if failed == False:
+                           try:
+                               browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                               sleep(1)
+                               browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                               browser.find_element_by_xpath('(//div[@class="AssistantOptionsModal-col"])[2]/label/input').click()
+                               browser.find_element_by_xpath('(//div[@class="AssistantOptionsModal-col"])[3]/label/input').click()
+                               browser.find_element_by_xpath('(//div[@class="UIModalHeader-closeIconButton"])/span/button').click()
+                               sleep(0.5)
+                               browser.find_element_by_xpath('(//div[@class="AssistantLearnIntroView-getStartedButton"])/button').click()
+                               sleep(0.6)
+                               browser.find_element_by_xpath('(//div[@class="AssistantLearnQuestionInfoView-gotItButton"])/button').click()
+                               sleep(0.8) 
+                           except:
+                                pass
+                           while True:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                failed = True
+                                break
+                            try:
+                                cardword = browser.find_element_by_xpath("//span[contains(@class, 'TermText')]")
+                                cardtext = cardword.text
+                                if cardtext in ans:
+                                    index = ans.index(cardtext)
+                                    answer = rep[index]
+                                elif cardtext in rep:
+                                    index = rep.index(cardtext)
+                                    answer = ans[index]
+                                else:
+                                    complain("Script Incorrectly Indentified Text in Write")
+                                browser.find_element_by_xpath('//textarea').send_keys(answer+Keys.ENTER)
+                                sleep(0.1)
+                                browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                sleep(0.5)
+                            except:
+                                try:
+                                    browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                    sleep(0.5)
+                                    progress = browser.find_element_by_class_name("ProgressSegmentedSemicircle-percent").text
+                                    progress = progress.replace('%', '')
+                                    progress = int(progress)
+                                    if progress >= 100:
+                                        try:
+                                            sleep(0.5)
+                                            browser.find_element_by_xpath('(//div[@class="AssistantEndView-finish"])/button').click()
+                                            sleep(0.2)
+                                        except:
+                                            pass
+                                        break
+                                except:
+                                    pass
+                    if flashcards and not failed:
+                        try:
+                            checkBrowser = browser.current_url
+                            chromeOpen = True
+                        except:
+                            chromeOpen = False
+                        if chromeOpen == False:
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                            restart = True
+                            break
+                        if failed == False:
+                            browser.get("https://quizlet.com/"+str(pageID)+"/flashcards")
+                            nextButton = browser.find_element_by_class_name("nextButton")
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                nextButton.click()
+                                try:
+                                    browser.find_element_by_xpath('//div[text()="THE END"]')
+                                    break
+                                except:
+                                    pass
+                            sleep(0.5)
+                    if write and not failed:
+                        if failed == False:
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/write")
+                                sleep(1)
+                                termlist = browser.find_element_by_xpath('(//div[@class="LearnModeProgressBar-value"])[1]').text
+                            except:
+                                pass
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                try:
+                                    termtext = browser.find_element_by_xpath('(//div[@class="LearnModeInputView-prompt"])/div/span').text
+                                    if termtext in ans:
+                                        index = ans.index(termtext)
+                                        answer = rep[index]
+                                    elif termtext in rep:
+                                        index = rep.index(termtext)
+                                        answer = ans[index]
+                                    else:
+                                        complain("Script Incorrectly Indentified Text in Write")
+                                    browser.find_element_by_xpath("//textarea").send_keys(answer+Keys.ENTER)
+                                    sleep(0.1)
+                                    browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                    sleep(0.1)
+                                except:
+                                    complete = browser.find_element_by_xpath('(//div[@class="LearnModeProgressBar-value"])[1]').text
+                                    if complete == "0":
+                                        break
+                    if spell and not failed:
+                       if failed == False:
+                           try:
+                               browser.get("https://quizlet.com/"+str(pageID)+"/spell")
+                               sleep(1)
+                               try:
+                                   browser.find_element_by_xpath('(//div[@class="UIDiv SpellModeGameAnalysisView-startOverButton js-spellRestartButton"])/button')
+                                   stop = True
+                               except:
+                                   pass
+                               browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                               sleep(0.2)
+                               browser.find_element_by_xpath('((//span[@class="UIToggle-option"])/input)[3]').click()
+                               sleep(0.5)
+                               try:
+                                   browser.switch_to_alert().accept()
+                                   sleep(0.5)
+                               except:
+                                    try:
+                                        browser.find_element_by_xpath('(//div[@class="UIModalHeader-closeIconButton"])/span/button').click()
+                                    except:
+                                        complain("Could not accept alert or close options.")
+                               sleep(5)
+                           except:
+                            pass
+                           while True:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                failed = True
+                                break
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                break
+                            try:
+                                if stop:
+                                    break
+                            except:
+                                pass
+                            try:
+                                sleep(1)
+                                cardword = browser.find_element_by_xpath('(//div[@class="SpellModeInputView-prompt"])/span')
+                                cardtext = cardword.text
+                                if cardtext in ans:
+                                       index = ans.index(cardtext)
+                                       answer = rep[index]
+                                elif cardtext in rep:
+                                   index = rep.index(cardtext)
+                                   answer = ans[index]
+                                sleep(0.5)
+                                browser.find_element_by_xpath("//textarea").send_keys(answer+Keys.ENTER)
+                                sleep(0.5)
+                               
+                            except:
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="SpellModeRoundAnalysisView-headerCell js-spellCheckpointContinue"])/button').click()
+                                except:
+                                    pass
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="UIDiv SpellModeGameAnalysisView-startOverButton js-spellRestartButton"])/button')
+                                    break
+                                except:
+                                    pass
+                                sleep(1)
+                    if test and not failed:
+                        if failed == False:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                break
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/test")
+                                sleep(1)
+                                browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                                sleep(0.2)
+                                checkboxes = browser.find_elements_by_xpath('(//li[@class="TestModeOptions-listOption"])/label/input')
+                                checkboxes[1].click()
+                                checkboxes[2].click()
+                                checkboxes[3].click()
+                                browser.find_element_by_xpath('//button[@type="submit"]').click()
+                                questions = browser.find_elements_by_xpath('(//span[@class="TestModeTermText"])/span/span')
+                                inputs = browser.find_elements_by_xpath("//textarea")
+                            except:
+                                pass
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                try:
+                                    currentQuestion = questions[0]
+                                    currentQuestionText = currentQuestion.text
+                                    if currentQuestionText in ans:
+                                       index = ans.index(currentQuestionText)
+                                       answer = rep[index]
+                                    elif currentQuestionText in rep:
+                                       index = rep.index(currentQuestionText)
+                                       answer = ans[index]
+                                    else:
+                                        complain("Script Incorrectly Indentified Text in Write")
+                                    inputs[0].send_keys(answer)
+                                    questions.pop(0)
+                                    inputs.pop(0)
+                                except:
+                                    browser.find_element_by_xpath('(//div[@class="UIDiv TestModePage-button"])/button').click()
+                                    break
+                    pageID = pageID + 1
+                    extracted = False
+            if oneQuiz == True:
+                timesRan = 0
+                while not timesRan == timesQuizlet:
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                    try:
+                        checkBrowser = browser.current_url
+                        chromeOpen = True
+                    except:
+                        chromeOpen = False
+                    if chromeOpen == False:
+                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                         restart = True
+                        break
+                    try:
+                        browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                        sleep(1)
+                        if not loggedIn and username != "nw" and password != "nw":
+                            login = login()
+                            if login == False:
+                                failed = True
+                                loggedIn = False
+                            else:
+                                loggedIn = True
+                        button = browser.find_element_by_xpath('//div[@class="ModeControls-back"]/a')
+                        button.click()
+                        failed = False
+                        sleep(1)
+                        elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
+                        ans = []
+                        rep = []
+                        for element in elements1:
+                            pair = element.find_elements_by_tag_name('span')
+                            ans.append(pair[0].text)
+                            rep.append(pair[1].text)
+                    except:
+                        failed = True
+                    if gravity and not failed:
+                        if failed == False:
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/gravity")
+                                sleep(1)
+                                browser.find_element_by_xpath("//div[@class='GravitySplashView']/button").click()
+                                sleep(0.1)
+                                if diff == 0:
+                                    browser.find_element_by_xpath('//input[@value="BEGINNER"]').click()
+                                if diff == 1:
+                                    browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
+                                if diff == 2:
+                                    browser.find_element_by_xpath('//input[@value="EXPERT"]')
+                                failedDropDown = 0
+                                try:
+                                    select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
+                                except:
+                                    failedDropDown = failedDropDown + 1
+                                try:
+                                    select.select_by_visible_text('Definition')
+                                except:
+                                    failedDropDown = failedDropDown + 1
+                                if failedDropDown == 2:
+                                    complain("An error occured clicking on the dropdown, this is the element's data: "+str(select))
+                                browser.find_element_by_xpath("//div[@class='GravityOptionsView-nextButtonWrapper']/button").click()
+                                sleep(0.1)
+                                browser.find_element_by_xpath("//div[@class='GravityDirectionsView-startButton']/button").click()
+                                sleep(0.2)
+                            except:
+                                pass
+                            score = -1
+                            while maxScore > score:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
+                                score = getScore.text
+                                score = score.replace(",", "")
+                                score = int(score)
+                                found = False
+                                asteroid = None
+                                while not found:
+                                    try:
+                                        asteroid = browser.find_element_by_class_name("GravityTerm-content")
+                                        found = True
+                                    except:
+                                        found = False
+                                answer = ''
+                                while True:
+                                    try:
+                                        asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
+                                    except:
+                                        problem = True
+                                        break
+                                    if asteroidText != '':
+                                        break
+                                if problem == True:
+                                    break
+                                if asteroidText in ans:
+                                    index = ans.index(asteroidText)
+                                    answer = rep[index]
+                                elif asteroidText in rep:
+                                    index = rep.index(asteroidText)
+                                    answer = ans[index]
+                                try:
+                                    browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
+                                except:
+                                    break
+                            if restart == True:
+                                break
+                            if maxScore <= score:
+                                failed = False
+                                successesG = successesG + 1
+                    if match and not failed:
+                        if failed == False:
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                            browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
+                            tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
+                            sleep(0.2)
+                            tileNumber = 0
+                            while len(tiles) > 0:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                sleep(0.01)
+                                currentTerm = tiles[0].text
+                                tiles[0].click()
+                                if currentTerm in ans:
+                                    index = ans.index(currentTerm)
+                                    myPairText = rep[index]
+                                    pairIndex = 1
+                                    while pairIndex < len(tiles):
+                                        if tiles[pairIndex].text == myPairText:
+                                            tiles[pairIndex].click()
+                                            tiles.pop(pairIndex)
+                                            break
+                                        pairIndex += 1
+                                if currentTerm in rep:
+                                    index = rep.index(currentTerm)
+                                    myPairText = ans[index]
+                                    pairIndex = 1
+                                    while pairIndex < len(tiles):
+                                        if tiles[pairIndex].text == myPairText:
+                                            tiles[pairIndex].click()
+                                            tiles.pop(pairIndex)
+                                            break
+                                        pairIndex += 1
+                                tiles.pop(0)
+                            sleep(0.5)
+                            try:
+                                browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
+                                successes = successes + 1
+                            except:
+                                failures = failures + 1   
+                    if learn and not failed:
+                       try:
+                           checkBrowser = browser.current_url
+                           chromeOpen = True
+                       except:
+                           chromeOpen = False
+                       if chromeOpen == False:
+                           save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                           restart = True
+                           break
+                       if failed == False:
+                           try:
+                               browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                               sleep(1)
+                               browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                               browser.find_element_by_xpath('(//div[@class="AssistantOptionsModal-col"])[2]/label/input').click()
+                               browser.find_element_by_xpath('(//div[@class="AssistantOptionsModal-col"])[3]/label/input').click()
+                               browser.find_element_by_xpath('(//div[@class="UIModalHeader-closeIconButton"])/span/button').click()
+                               sleep(0.5)
+                               browser.find_element_by_xpath('(//div[@class="AssistantLearnIntroView-getStartedButton"])/button').click()
+                               sleep(0.6)
+                               browser.find_element_by_xpath('(//div[@class="AssistantLearnQuestionInfoView-gotItButton"])/button').click()
+                               sleep(0.8) 
+                           except:
+                                pass
+                           while True:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                failed = True
+                                break
+                            try:
+                                cardword = browser.find_element_by_xpath("//span[contains(@class, 'TermText')]")
+                                cardtext = cardword.text
+                                if cardtext in ans:
+                                    index = ans.index(cardtext)
+                                    answer = rep[index]
+                                elif cardtext in rep:
+                                    index = rep.index(cardtext)
+                                    answer = ans[index]
+                                else:
+                                    complain("Script Incorrectly Indentified Text in Write")
+                                browser.find_element_by_xpath('//textarea').send_keys(answer+Keys.ENTER)
+                                sleep(0.1)
+                                browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                sleep(0.5)
+                            except:
+                                try:
+                                    browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                    sleep(0.5)
+                                    progress = browser.find_element_by_class_name("ProgressSegmentedSemicircle-percent").text
+                                    progress = progress.replace('%', '')
+                                    progress = int(progress)
+                                    if progress >= 100:
+                                        try:
+                                            sleep(0.5)
+                                            browser.find_element_by_xpath('(//div[@class="AssistantEndView-finish"])/button').click()
+                                            sleep(0.2)
+                                        except:
+                                            pass
+                                        break
+                                except:
+                                    pass
+                    if flashcards and not failed:
+                        try:
+                            checkBrowser = browser.current_url
+                            chromeOpen = True
+                        except:
+                            chromeOpen = False
+                        if chromeOpen == False:
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                            restart = True
+                            break
+                        if failed == False:
+                            browser.get("https://quizlet.com/"+str(pageID)+"/flashcards")
+                            nextButton = browser.find_element_by_class_name("nextButton")
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                nextButton.click()
+                                try:
+                                    browser.find_element_by_xpath('//div[text()="THE END"]')
+                                    break
+                                except:
+                                    pass
+                            sleep(0.5)
+                    if write and not failed:
+                        if failed == False:
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/write")
+                                sleep(1)
+                                termlist = browser.find_element_by_xpath('(//div[@class="LearnModeProgressBar-value"])[1]').text
+                            except:
+                                pass
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                try:
+                                    termtext = browser.find_element_by_xpath('(//div[@class="LearnModeInputView-prompt"])/div/span').text
+                                    if termtext in ans:
+                                        index = ans.index(termtext)
+                                        answer = rep[index]
+                                    elif termtext in rep:
+                                        index = rep.index(termtext)
+                                        answer = ans[index]
+                                    else:
+                                        complain("Script Incorrectly Indentified Text in Write")
+                                    browser.find_element_by_xpath("//textarea").send_keys(answer+Keys.ENTER)
+                                    sleep(0.1)
+                                    browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                    sleep(0.1)
+                                except:
+                                    complete = browser.find_element_by_xpath('(//div[@class="LearnModeProgressBar-value"])[1]').text
+                                    if complete == "0":
+                                        break
+                    if spell and not failed:
+                       if failed == False:
+                           try:
+                               browser.get("https://quizlet.com/"+str(pageID)+"/spell")
+                               sleep(1)
+                               try:
+                                   browser.find_element_by_xpath('(//div[@class="UIDiv SpellModeGameAnalysisView-startOverButton js-spellRestartButton"])/button')
+                                   stop = True
+                               except:
+                                   pass
+                               browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                               sleep(0.2)
+                               browser.find_element_by_xpath('((//span[@class="UIToggle-option"])/input)[3]').click()
+                               sleep(0.5)
+                               try:
+                                   browser.switch_to_alert().accept()
+                                   sleep(0.5)
+                               except:
+                                    try:
+                                        browser.find_element_by_xpath('(//div[@class="UIModalHeader-closeIconButton"])/span/button').click()
+                                    except:
+                                        complain("Could not accept alert or close options.")
+                               sleep(5)
+                           except:
+                            pass
+                           while True:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                failed = True
+                                break
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                break
+                            try:
+                                if stop:
+                                    break
+                            except:
+                                pass
+                            try:
+                                sleep(1)
+                                cardword = browser.find_element_by_xpath('(//div[@class="SpellModeInputView-prompt"])/span')
+                                cardtext = cardword.text
+                                if cardtext in ans:
+                                       index = ans.index(cardtext)
+                                       answer = rep[index]
+                                elif cardtext in rep:
+                                   index = rep.index(cardtext)
+                                   answer = ans[index]
+                                sleep(0.5)
+                                browser.find_element_by_xpath("//textarea").send_keys(answer+Keys.ENTER)
+                                sleep(0.5)
+                               
+                            except:
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="SpellModeRoundAnalysisView-headerCell js-spellCheckpointContinue"])/button').click()
+                                except:
+                                    pass
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="UIDiv SpellModeGameAnalysisView-startOverButton js-spellRestartButton"])/button')
+                                    break
+                                except:
+                                    pass
+                                sleep(1)
+                    if test and not failed:
+                        if failed == False:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                break
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/test")
+                                sleep(1)
+                                browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                                sleep(0.2)
+                                checkboxes = browser.find_elements_by_xpath('(//li[@class="TestModeOptions-listOption"])/label/input')
+                                checkboxes[1].click()
+                                checkboxes[2].click()
+                                checkboxes[3].click()
+                                browser.find_element_by_xpath('//button[@type="submit"]').click()
+                                questions = browser.find_elements_by_xpath('(//span[@class="TestModeTermText"])/span/span')
+                                inputs = browser.find_elements_by_xpath("//textarea")
+                            except:
+                                pass
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                try:
+                                    currentQuestion = questions[0]
+                                    currentQuestionText = currentQuestion.text
+                                    if currentQuestionText in ans:
+                                       index = ans.index(currentQuestionText)
+                                       answer = rep[index]
+                                    elif currentQuestionText in rep:
+                                       index = rep.index(currentQuestionText)
+                                       answer = ans[index]
+                                    else:
+                                        complain("Script Incorrectly Indentified Text in Write")
+                                    inputs[0].send_keys(answer)
+                                    questions.pop(0)
+                                    inputs.pop(0)
+                                except:
+                                    browser.find_element_by_xpath('(//div[@class="UIDiv TestModePage-button"])/button').click()
+                                    break
+                    extracted = False
+                    timesRan = timesRan + 1
+                    if not timesRan == timesQuizlet:
+                        pageID = pageID + 1
+                if timesRan == timesQuizlet:
+                    print("Complete.")
+                    browser.quit()
+                    restart = True
 except Exception as e:
         import sys, os
         exc_type, exc_obj, exc_tb = sys.exc_info()
