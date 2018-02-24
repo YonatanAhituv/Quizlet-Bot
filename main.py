@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.0
+    version = 6.01
     imported = False
     while imported == False:
         import inspect
@@ -1295,6 +1295,7 @@ try:
                 except:
                     return False
             problem = False
+            loggedIn = False
             chromedriver = path
             os.environ["webdriver.chrome.driver"] = chromedriver
             browser = webdriver.Chrome(chromedriver)
@@ -1346,7 +1347,7 @@ try:
                                 if diff == 1:
                                     browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
                                 if diff == 2:
-                                    browser.find_element_by_xpath('//input[@value="EXPERT"]')
+                                    browser.find_element_by_xpath('//input[@value="EXPERT"]').click()
                                 failedDropDown = 0
                                 try:
                                     select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
@@ -1376,12 +1377,15 @@ try:
                                     restart = True
                                     failed = True
                                     break
-                                getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
-                                score = getScore.text
-                                score = score.replace(",", "")
-                                score = int(score)
-                                found = False
-                                asteroid = None
+                                try:
+                                    getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
+                                    score = getScore.text
+                                    score = score.replace(",", "")
+                                    score = int(score)
+                                    found = False
+                                    asteroid = None
+                                except:
+                                    pass
                                 while not found:
                                     try:
                                         asteroid = browser.find_element_by_class_name("GravityTerm-content")
@@ -1390,6 +1394,15 @@ try:
                                         found = False
                                 answer = ''
                                 while True:
+                                    try:
+                                        checkBrowser = browser.current_url
+                                        chromeOpen = True
+                                    except:
+                                        chromeOpen = False
+                                    if chromeOpen == False:
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                        restart = True
+                                        break
                                     try:
                                         asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
                                     except:
@@ -1417,11 +1430,14 @@ try:
                     if match and not failed:
                         if failed == False:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-                            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-                            browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
-                            tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
-                            sleep(0.2)
-                            tileNumber = 0
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                                browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
+                                tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
+                                sleep(0.2)
+                                tileNumber = 0 
+                            except:
+                                pass
                             while len(tiles) > 0:
                                 try:
                                     checkBrowser = browser.current_url
@@ -1441,6 +1457,15 @@ try:
                                     myPairText = rep[index]
                                     pairIndex = 1
                                     while pairIndex < len(tiles):
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
                                         if tiles[pairIndex].text == myPairText:
                                             tiles[pairIndex].click()
                                             tiles.pop(pairIndex)
@@ -1451,6 +1476,15 @@ try:
                                     myPairText = ans[index]
                                     pairIndex = 1
                                     while pairIndex < len(tiles):
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
                                         if tiles[pairIndex].text == myPairText:
                                             tiles[pairIndex].click()
                                             tiles.pop(pairIndex)
@@ -1645,7 +1679,7 @@ try:
                             except:
                                 pass
                             try:
-                                sleep(1)
+                                sleep(0.5)
                                 cardword = browser.find_element_by_xpath('(//div[@class="SpellModeInputView-prompt"])/span')
                                 cardtext = cardword.text
                                 if cardtext in ans:
@@ -1722,7 +1756,8 @@ try:
                                 except:
                                     browser.find_element_by_xpath('(//div[@class="UIDiv TestModePage-button"])/button').click()
                                     break
-                    pageID = pageID + 1
+                    if chromeOpen:
+                        pageID = pageID + 1
                     extracted = False
             if oneQuiz == True:
                 timesRan = 0
@@ -1772,7 +1807,7 @@ try:
                                 if diff == 1:
                                     browser.find_element_by_xpath('//input[@value="INTERMEDIATE"]').click()
                                 if diff == 2:
-                                    browser.find_element_by_xpath('//input[@value="EXPERT"]')
+                                    browser.find_element_by_xpath('//input[@value="EXPERT"]').click()
                                 failedDropDown = 0
                                 try:
                                     select = Select(browser.find_element_by_xpath('//select[@class="UIDropdown-select"]'))
@@ -1802,12 +1837,15 @@ try:
                                     restart = True
                                     failed = True
                                     break
-                                getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
-                                score = getScore.text
-                                score = score.replace(",", "")
-                                score = int(score)
-                                found = False
-                                asteroid = None
+                                try:
+                                    getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
+                                    score = getScore.text
+                                    score = score.replace(",", "")
+                                    score = int(score)
+                                    found = False
+                                    asteroid = None
+                                except:
+                                    pass
                                 while not found:
                                     try:
                                         asteroid = browser.find_element_by_class_name("GravityTerm-content")
@@ -1816,6 +1854,15 @@ try:
                                         found = False
                                 answer = ''
                                 while True:
+                                    try:
+                                        checkBrowser = browser.current_url
+                                        chromeOpen = True
+                                    except:
+                                        chromeOpen = False
+                                    if chromeOpen == False:
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                        restart = True
+                                        break
                                     try:
                                         asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
                                     except:
@@ -1843,11 +1890,14 @@ try:
                     if match and not failed:
                         if failed == False:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-                            browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
-                            browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
-                            tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
-                            sleep(0.2)
-                            tileNumber = 0
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                                browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
+                                tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
+                                sleep(0.2)
+                                tileNumber = 0 
+                            except:
+                                pass
                             while len(tiles) > 0:
                                 try:
                                     checkBrowser = browser.current_url
@@ -1867,6 +1917,15 @@ try:
                                     myPairText = rep[index]
                                     pairIndex = 1
                                     while pairIndex < len(tiles):
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
                                         if tiles[pairIndex].text == myPairText:
                                             tiles[pairIndex].click()
                                             tiles.pop(pairIndex)
@@ -1877,6 +1936,15 @@ try:
                                     myPairText = ans[index]
                                     pairIndex = 1
                                     while pairIndex < len(tiles):
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
                                         if tiles[pairIndex].text == myPairText:
                                             tiles[pairIndex].click()
                                             tiles.pop(pairIndex)
@@ -2071,7 +2139,7 @@ try:
                             except:
                                 pass
                             try:
-                                sleep(1)
+                                sleep(0.5)
                                 cardword = browser.find_element_by_xpath('(//div[@class="SpellModeInputView-prompt"])/span')
                                 cardtext = cardword.text
                                 if cardtext in ans:
@@ -2150,7 +2218,7 @@ try:
                                     break
                     extracted = False
                     timesRan = timesRan + 1
-                    if not timesRan == timesQuizlet:
+                    if not timesRan == timesQuizlet and chromeOpen:
                         pageID = pageID + 1
                 if timesRan == timesQuizlet:
                     print("Complete.")
