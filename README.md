@@ -17,6 +17,14 @@ Python 3
 
 Google Chrome or Chromium
 # Installation
-Literally, just run the script.
+* If you do not have python already, install it [here](https://python.org). Make sure to install python 3.
+* Run the installer and go through the process.
+* Click Clone or Download and push Download as Zip.
+* Extract the zip to a folder.
+  * Windows
+    * Double click on "main.py".
+  * Mac
+    * Push Command+Space. Type Terminal and click on the application. Type CD and push space, then drag the folder onto the terminal and push enter. Then type in "python main.py" and push enter.
+* That's it!
 # Is that it?
 Yes...that is it.
