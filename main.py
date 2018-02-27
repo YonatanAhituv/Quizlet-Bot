@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.02
+    version = 6.04
     imported = False
     while imported == False:
         import inspect
@@ -204,6 +204,18 @@ try:
                     except:
                         install('pick')
                     print("Installed!")
+                    if osis == 2:
+                        while True:
+                            errors = input("Was there any red text or errors above? (Y or N) >>> ") 
+                            errors = errors.upper()
+                            if errors == "Y":
+                                print("Running install commands as sudo...")
+                                os.system("sudo pip install tldextract requests selenium pick")
+                                os.system("sudo pip3 install tldextract requests selenium pick")
+                                print("If there were two sets of errors above, something is wrong with your python enviroment. Otherwise, re-run the script.")    
+                                break
+                            elif errors == "N":
+                                break
                     sleep(1)
                     sys.exit()
                 else:
@@ -363,7 +375,6 @@ try:
                     pageID = int(pageID)
                     successes = int(successes)
                     failures = int(failures)
-
                     try:
                         timesQuizlet = int(timesQuizlet)
                         maxScore = int(maxScore)
@@ -486,23 +497,49 @@ try:
                     chromeinstalled = input("Would you like the script to install it for you (Y or N)? >>> ")
                     if (chromeinstalled == "y" or chromeinstalled == "Y"):
                         while (osSelected == False):
+                            from zipfile import ZipFile, ZipInfo
+                            class Zip(ZipFile):
+                                def extract(self, member, path=None, pwd=None):
+                                    if not isinstance(member, ZipInfo):
+                                        member = self.getinfo(member)
+
+                                    if path is None:
+                                        path = os.getcwd()
+
+                                    ret_val = self._extract_member(member, path, pwd)
+                                    attr = member.external_attr >> 16
+                                    os.chmod(ret_val, attr)
+
+                                    return ret_val
                             osSelected = True
+                            from lxml import etree
+                            import urllib.request as request
+                            tree = etree.parse(request.urlopen("https://sites.google.com/a/chromium.org/chromedriver/downloads", timeout=1), etree.HTMLParser())
+                            download = tree.xpath("((//b)/a)[1]")
+                            download = str(download[0].text)
+                            versionnumber = re.findall("\d+\.\d+", download)
                             print("Downloading...")
                             if (userplatform == "WIN32" or userplatform == "WINDOWS"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_win32.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_win32.zip"
                                 file_name = "chromedriver_win32.zip"
                             if (userplatform == "DARWIN" or userplatform == "MAC"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_mac64.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_mac64.zip"
                                 file_name = "chromedriver_mac64.zip"
                             if (userplatform == "LINUX"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_linux64.zip"
                                 file_name = "chromedriver_linux64.zip"
                             if (userplatform == "LINUX32"):
-                                downloadurl = "https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux32.zip"
+                                downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_linux32.zip"
                                 file_name = "chromedriver_linux32.zip"
                             with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
                                 shutil.copyfileobj(response, out_file)
-                            print("Downloaded! Please extract the file to the script's directory and restart the script.")
+                            if not osis == 1:
+                                with Zip(file_name) as file:
+                                    file.extract('chromedriver')
+                            if osis == 1:
+                                print("Downloaded! Please extract the file to the script's directory and restart the script.")
+                            else:
+                                print("Downloaded and Installed! Restart the script!")
                             sleep(1)
                             sys.exit()
                     if (chromeinstalled == "n" or chromeinstalled == "N"):
@@ -512,7 +549,7 @@ try:
         if (username == "ns" and password == "ns"):
             reply = input('Would you like OQBRTA to login for you (Y or N)? >>> ')
             if (reply == "n" or reply == "N"):
-                reply = input("Would you like to log in manually (Y or N)?")
+                reply = input("Would you like to log in manually (Y or N)? >>> ")
                 if reply == "n" or reply == "N":
                     username = "nw"
                     password = "nw"
@@ -930,9 +967,9 @@ try:
                                             print("You have disabled automatic password and email entering.")
                                         if username == "nw" and password == "nw":
                                             print("You have disabled login.")
-                                        if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw":
+                                        if not username == "ns" and not username == "dw" and not password == "ns" and not password == "dw" and not username == "nw" and not password == "nw":
                                             print("The email is set to:",username)
-                                        if not password == "ns" and not username == "dw" and not password == "dw" and not username == "ns":
+                                        if not password == "ns" and not username == "dw" and not password == "dw" and not username == "ns" and not password == "nw" and not username == "nw":
                                             print("The password is: "+passwordhidden)
                                             seePassword = input("Would you like to see the password (Y or N)? >>> ")
                                             seePassword = seePassword.upper()
@@ -1431,6 +1468,353 @@ try:
                     if match and not failed:
                         if failed == False:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/micromatch")
+                                browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
+                                tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
+                                sleep(0.2)
+                                tileNumber = 0 
+                            except:
+                                pass
+                            while len(tiles) > 0:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                sleep(0.01)
+                                currentTerm = tiles[0].text
+                                tiles[0].click()
+                                if currentTerm in ans:
+                                    index = ans.index(currentTerm)
+                                    myPairText = rep[index]
+                                    pairIndex = 1
+                                    while pairIndex < len(tiles):
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
+                                        if tiles[pairIndex].text == myPairText:
+                                            tiles[pairIndex].click()
+                                            tiles.pop(pairIndex)
+                                            break
+                                        pairIndex += 1
+                                if currentTerm in rep:
+                                    index = rep.index(currentTerm)
+                                    myPairText = ans[index]
+                                    pairIndex = 1
+                                    while pairIndex < len(tiles):
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
+                                        if tiles[pairIndex].text == myPairText:
+                                            tiles[pairIndex].click()
+                                            tiles.pop(pairIndex)
+                                            break
+                                        pairIndex += 1
+                                tiles.pop(0)
+                            sleep(0.5)
+                            try:
+                                browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
+                                successes = successes + 1
+                            except:
+                                failures = failures + 1   
+                    if learn and not failed:
+                       try:
+                           checkBrowser = browser.current_url
+                           chromeOpen = True
+                       except:
+                           chromeOpen = False
+                       if chromeOpen == False:
+                           save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                           restart = True
+                           break
+                       if failed == False:
+                           try:
+                               browser.get("https://quizlet.com/"+str(pageID)+"/learn")
+                               sleep(1)
+                               browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                               browser.find_element_by_xpath('(//div[@class="AssistantOptionsModal-col"])[2]/label/input').click()
+                               browser.find_element_by_xpath('(//div[@class="AssistantOptionsModal-col"])[3]/label/input').click()
+                               browser.find_element_by_xpath('(//div[@class="UIModalHeader-closeIconButton"])/span/button').click()
+                               sleep(0.5)
+                               browser.find_element_by_xpath('(//div[@class="AssistantLearnIntroView-getStartedButton"])/button').click()
+                               sleep(0.6)
+                               browser.find_element_by_xpath('(//div[@class="AssistantLearnQuestionInfoView-gotItButton"])/button').click()
+                               sleep(0.8) 
+                           except:
+                                pass
+                           while True:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                failed = True
+                                break
+                            try:
+                                cardword = browser.find_element_by_xpath("//span[contains(@class, 'TermText')]")
+                                cardtext = cardword.text
+                                if cardtext in ans:
+                                    index = ans.index(cardtext)
+                                    answer = rep[index]
+                                elif cardtext in rep:
+                                    index = rep.index(cardtext)
+                                    answer = ans[index]
+                                else:
+                                    complain("Script Incorrectly Indentified Text in Write")
+                                browser.find_element_by_xpath('//textarea').send_keys(answer+Keys.ENTER)
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="AssistantWrittenQuestionCopyAnswerView-correctAnswerLabel"])/h6/span')
+                                    if cardtext in ans:
+                                        index = ans.index(cardtext)
+                                        answer1 = rep[index]
+                                    if cardtext in rep:
+                                        index = rep.index(cardtext)
+                                        answer2 = ans[index]
+                                    browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE * len(answer))
+                                    browser.find_element_by_xpath('//textarea').send_keys(answer1+Keys.ENTER)
+                                    browser.find_element_by_xpath('(//div[@class="AssistantWrittenQuestionCopyAnswerView-correctAnswerLabel"])/h6/span')
+                                    browser.find_element_by_xpath('//textarea').send_keys(answer2+Keys.ENTER)
+                                    browser.find_element_by_xpath('(//div[@class="AssistantWrittenQuestionCopyAnswerView-correctAnswerLabel"])/h6/span')
+                                    complain("Could not go past wrong answer screen. List is as follows: "+str(ans)+str(rep)+".")
+                                except:
+                                    pass
+                                sleep(0.1)
+                                browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                sleep(0.5)
+                            except:
+                                try:
+                                    browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                    sleep(0.5)
+                                    progress = browser.find_element_by_class_name("ProgressSegmentedSemicircle-percent").text
+                                    progress = progress.replace('%', '')
+                                    progress = int(progress)
+                                    if progress >= 100:
+                                        try:
+                                            sleep(0.5)
+                                            browser.find_element_by_xpath('(//div[@class="AssistantEndView-finish"])/button').click()
+                                            sleep(0.2)
+                                        except:
+                                            pass
+                                        break
+                                except:
+                                    pass
+                    if flashcards and not failed:
+                        try:
+                            checkBrowser = browser.current_url
+                            chromeOpen = True
+                        except:
+                            chromeOpen = False
+                        if chromeOpen == False:
+                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                            restart = True
+                            break
+                        if failed == False:
+                            browser.get("https://quizlet.com/"+str(pageID)+"/flashcards")
+                            nextButton = browser.find_element_by_class_name("nextButton")
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                nextButton.click()
+                                try:
+                                    browser.find_element_by_xpath('//div[text()="THE END"]')
+                                    break
+                                except:
+                                    pass
+                            sleep(0.5)
+                    if write and not failed:
+                        if failed == False:
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/write")
+                                sleep(1)
+                                termlist = browser.find_element_by_xpath('(//div[@class="LearnModeProgressBar-value"])[1]').text
+                            except:
+                                pass
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                try:
+                                    termtext = browser.find_element_by_xpath('(//div[@class="LearnModeInputView-prompt"])/div/span').text
+                                    if termtext in ans:
+                                        index = ans.index(termtext)
+                                        answer = rep[index]
+                                    elif termtext in rep:
+                                        index = rep.index(termtext)
+                                        answer = ans[index]
+                                    else:
+                                        complain("Script Incorrectly Indentified Text in Write")
+                                    browser.find_element_by_xpath("//textarea").send_keys(answer+Keys.ENTER)
+                                    sleep(0.1)
+                                    browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
+                                    sleep(0.1)
+                                except:
+                                    complete = browser.find_element_by_xpath('(//div[@class="LearnModeProgressBar-value"])[1]').text
+                                    if complete == "0":
+                                        break
+                    if spell and not failed:
+                       if failed == False:
+                           try:
+                               browser.get("https://quizlet.com/"+str(pageID)+"/spell")
+                               sleep(1)
+                               try:
+                                   browser.find_element_by_xpath('(//div[@class="UIDiv SpellModeGameAnalysisView-startOverButton js-spellRestartButton"])/button')
+                                   stop = True
+                               except:
+                                   pass
+                               browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                               sleep(0.2)
+                               browser.find_element_by_xpath('((//span[@class="UIToggle-option"])/input)[3]').click()
+                               sleep(0.5)
+                               try:
+                                   browser.switch_to_alert().accept()
+                                   sleep(0.5)
+                               except:
+                                    try:
+                                        browser.find_element_by_xpath('(//div[@class="UIModalHeader-closeIconButton"])/span/button').click()
+                                    except:
+                                        complain("Could not accept alert or close options.")
+                               sleep(5)
+                           except:
+                            pass
+                           while True:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                failed = True
+                                break
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                break
+                            try:
+                                if stop:
+                                    break
+                            except:
+                                pass
+                            try:
+                                sleep(0.8)
+                                cardword = browser.find_element_by_xpath('(//div[@class="SpellModeInputView-prompt"])/span')
+                                cardtext = cardword.text
+                                if cardtext in ans:
+                                       index = ans.index(cardtext)
+                                       answer = rep[index]
+                                elif cardtext in rep:
+                                   index = rep.index(cardtext)
+                                   answer = ans[index]
+                                browser.find_element_by_xpath("//textarea").send_keys(answer+Keys.ENTER)
+                            except:
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="SpellModeRoundAnalysisView-headerCell js-spellCheckpointContinue"])/button').click()
+                                except:
+                                    pass
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="UIDiv SpellModeGameAnalysisView-startOverButton js-spellRestartButton"])/button')
+                                    break
+                                except:
+                                    pass
+                                sleep(1)
+                    if test and not failed:
+                        if failed == False:
+                            try:
+                                checkBrowser = browser.current_url
+                                chromeOpen = True
+                            except:
+                                chromeOpen = False
+                            if chromeOpen == False:
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                restart = True
+                                break
+                            try:
+                                browser.get("https://quizlet.com/"+str(pageID)+"/test")
+                                sleep(1)
+                                browser.find_element_by_xpath('(//div[@class="ModeControls-action"])/button').click()
+                                sleep(0.2)
+                                checkboxes = browser.find_elements_by_xpath('(//li[@class="TestModeOptions-listOption"])/label/input')
+                                checkboxes[1].click()
+                                checkboxes[2].click()
+                                checkboxes[3].click()
+                                browser.find_element_by_xpath('//button[@type="submit"]').click()
+                                questions = browser.find_elements_by_xpath('(//span[@class="TestModeTermText"])/span/span')
+                                inputs = browser.find_elements_by_xpath("//textarea")
+                            except:
+                                pass
+                            while True:
+                                try:
+                                    checkBrowser = browser.current_url
+                                    chromeOpen = True
+                                except:
+                                    chromeOpen = False
+                                if chromeOpen == False:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    restart = True
+                                    failed = True
+                                    break
+                                try:
+                                    currentQuestion = questions[0]
+                                    currentQuestionText = currentQuestion.text
+                                    if currentQuestionText in ans:
+                                       index = ans.index(currentQuestionText)
+                                       answer = rep[index]
+                                    elif currentQuestionText in rep:
+                                       index = rep.index(currentQuestionText)
+                                       answer = ans[index]
+                                    else:
+                                        complain("Script Incorrectly Indentified Text in Write")
+                                    inputs[0].send_keys(answer)
+                                    questions.pop(0)
+                                    inputs.pop(0)
+                                except:
+                                    browser.find_element_by_xpath('(//div[@class="UIDiv TestModePage-button"])/button').click()
+                                    break
+                    if chromeOpen:
+                        pageID = pageID + 1
+                    failed = False
+                    extracted = False
+            if oneQuiz == True:
+                timesRan = 0
+                while not timesRan == timesQuizlet:
+                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                     try:
                         checkBrowser = browser.current_url
                         chromeOpen = True
@@ -1673,6 +2057,22 @@ try:
                                 else:
                                     complain("Script Incorrectly Indentified Text in Write")
                                 browser.find_element_by_xpath('//textarea').send_keys(answer+Keys.ENTER)
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="AssistantWrittenQuestionCopyAnswerView-correctAnswerLabel"])/h6/span')
+                                    if cardtext in ans:
+                                        index = ans.index(cardtext)
+                                        answer1 = rep[index]
+                                    if cardtext in rep:
+                                        index = rep.index(cardtext)
+                                        answer2 = ans[index]
+                                    browser.find_element_by_xpath('//textarea').send_keys(Keys.BACKSPACE * len(answer))
+                                    browser.find_element_by_xpath('//textarea').send_keys(answer1+Keys.ENTER)
+                                    browser.find_element_by_xpath('(//div[@class="AssistantWrittenQuestionCopyAnswerView-correctAnswerLabel"])/h6/span')
+                                    browser.find_element_by_xpath('//textarea').send_keys(answer2+Keys.ENTER)
+                                    browser.find_element_by_xpath('(//div[@class="AssistantWrittenQuestionCopyAnswerView-correctAnswerLabel"])/h6/span')
+                                    complain("Could not go past wrong answer screen. List is as follows: "+str(ans)+str(rep)+".")
+                                except:
+                                    pass
                                 sleep(0.1)
                                 browser.find_element_by_tag_name("body").send_keys(Keys.ENTER)
                                 sleep(0.5)
