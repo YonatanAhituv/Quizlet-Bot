@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.04
+    version = 6.05
     imported = False
     while imported == False:
         import inspect
@@ -1314,7 +1314,7 @@ try:
                     sleep(1)
                     if not username == "dw" and not password == "dw":
                         browser.find_element_by_xpath("//input[@type='email']").send_keys(username+Keys.ENTER)
-                        sleep(1)
+                        sleep(1.2)
                         browser.find_element_by_xpath("//input[@type='password']").send_keys(password+Keys.ENTER)
                         sleep(1)
                     if username == "dw" and password == "dw":
@@ -1460,11 +1460,28 @@ try:
                                     browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                 except:
                                     break
+                            while True:
+                               if not chromeOpen:
+                                    break
+                               browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+                               try:
+                                   sleep(0.5)
+                                   cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
+                                   sleep(0.2)
+                                   browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
+                               except:
+                                   pass
+                               try:
+                                   browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                   break
+                               except:
+                                   pass
                             if restart == True:
                                 break
                             if maxScore <= score:
                                 failed = False
                                 successesG = successesG + 1
+
                     if match and not failed:
                         if failed == False:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
@@ -1572,6 +1589,7 @@ try:
                                 failed = True
                                 break
                             try:
+                                sleep(0.5)
                                 cardword = browser.find_element_by_xpath("//span[contains(@class, 'TermText')]")
                                 cardtext = cardword.text
                                 if cardtext in ans:
@@ -1934,11 +1952,28 @@ try:
                                     browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                 except:
                                     break
+                            while True:
+                               if not chromeOpen:
+                                    break
+                               browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+                               try:
+                                   sleep(0.5)
+                                   cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
+                                   sleep(0.2)
+                                   browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
+                               except:
+                                   pass
+                               try:
+                                   browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                   break
+                               except:
+                                   pass
                             if restart == True:
                                 break
                             if maxScore <= score:
                                 failed = False
                                 successesG = successesG + 1
+
                     if match and not failed:
                         if failed == False:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
@@ -2046,6 +2081,7 @@ try:
                                 failed = True
                                 break
                             try:
+                                sleep(0.5)
                                 cardword = browser.find_element_by_xpath("//span[contains(@class, 'TermText')]")
                                 cardtext = cardword.text
                                 if cardtext in ans:
