@@ -26,5 +26,3 @@ Google Chrome or Chromium
   * Mac
     * Push Command+Space. Type Terminal and click on the application. Type CD and push space, then drag the folder onto the terminal and push enter. Then type in "python main.py" and push enter.
 * That's it!
-# Is that it?
-Yes...that is it.
