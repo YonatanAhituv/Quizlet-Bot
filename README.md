@@ -17,7 +17,7 @@ Python 3
 
 Google Chrome or Chromium
 # Running the Script
-* If you do not have python already, install it [here](https://python.org). Make sure to install python 3.
+* If you do not have Python already, install it [here](https://python.org). Make sure to install python 3.
 * Run the installer and go through the process.
 * Click Clone or Download and push Download as Zip.
 * Extract the zip to a folder.
