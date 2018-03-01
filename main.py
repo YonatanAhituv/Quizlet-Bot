@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.11
+    version = 6.12
     imported = False
     while imported == False:
         import inspect
@@ -317,7 +317,7 @@ try:
             jsonreset = input("ERROR: COULD NOT LOAD IN JSON, WOULD YOU LIKE TO TRY TO FIX THE JSON (Y or N)? >>> ")
             jsonreset = jsonreset.upper()
             if jsonreset == "Y":
-                jsonfix = input("Would you like to reset the JSON or manually repair it? >>> ")
+                jsonfix = input("Would you like to reset the JSON or manually repair it (Reset or Fix)? >>> ")
                 jsonfix = jsonfix.upper()
                 if jsonfix == "RESET THE JSON" or jsonfix == "RESET" or jsonfix == "RESET JSON":
                     pageID = "ns"
@@ -1567,13 +1567,27 @@ try:
                                         browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                     except:
                                         pass
-                                try:
-                                    browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
-                                    failed = False
-                                    successesG = successesG + 1
-                                    break
-                                except:
-                                   pass
+                                failed = False
+                                successesG = successesG + 1
+                                while True:
+                                 if not chromeOpen:
+                                     break
+                                 try:
+                                    browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+                                 except:
+                                    pass
+                                 try:
+                                     sleep(0.8)
+                                     cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
+                                     sleep(0.2)
+                                     browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
+                                 except:
+                                     pass
+                                 try:
+                                     browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                     break
+                                 except:
+                                     pass
                                 if restart == True:
                                     break
                     if match and not failed:
@@ -2131,13 +2145,27 @@ try:
                                         browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                     except:
                                         pass
-                                try:
-                                    browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
-                                    failed = False
-                                    successesG = successesG + 1
-                                    break
-                                except:
-                                   pass
+                                failed = False
+                                successesG = successesG + 1
+                                while True:
+                                 if not chromeOpen:
+                                     break
+                                 try:
+                                    browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
+                                 except:
+                                    pass
+                                 try:
+                                     sleep(0.8)
+                                     cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
+                                     sleep(0.2)
+                                     browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
+                                 except:
+                                     pass
+                                 try:
+                                     browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                     break
+                                 except:
+                                     pass
                                 if restart == True:
                                     break
                     if match and not failed:
