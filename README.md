@@ -23,7 +23,7 @@ Google Chrome or Chromium
 * Extract the zip to a folder.
   * Windows
     * Extract the zip to a folder and go to it.
-    * Double click on "main.py".
+    * Double click on `main.py`.
   * Mac
-    * Push Command+Space. Type Terminal and click on the application. Type "cd" and push space, then drag the extracted folder onto the terminal and press enter. Then type in "python main.py" and press enter.
+    * Push Command+Space. Type Terminal and click on the application. Type `cd` and push space, then drag the extracted folder onto the terminal and press enter. Then type in `python main.py` and press enter.
 * That's it!
