@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.05
+    version = 6.1
     imported = False
     while imported == False:
         import inspect
@@ -770,15 +770,20 @@ try:
                                 break
                     if maxScore == "ns":
                         while True:
-                            maxScore = input("What should be the target score for the Gravity Bot? >>> ")
-                            try:
-                                maxScore = int(maxScore)
-                                if maxScore < 0:
-                                    maxScore = dict(maxScore)
-                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-                                break
-                            except:
-                                print("Enter a number please.")
+                            infinite = input("Would you like to run the Gravity Bot until it fails (Y or N)? >>> ")
+                            infinite = infinite.upper()
+                            if infinite == "Y":
+                                maxScore == "dw"
+                            elif infinite == "N":
+                                maxScore = input("What should be the target score for the Gravity Bot? >>> ")
+                                try:
+                                    maxScore = int(maxScore)
+                                    if maxScore < 0:
+                                        maxScore = dict(maxScore)
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    break
+                                except:
+                                    print("Enter a number please.")
                 if timesQuizlet == "ns":
                     chooseRunType = input("Would you like to run the bot infinitely (Y or N)? >>> ")
                     if chooseRunType == "y" or chooseRunType == "Y":
@@ -899,18 +904,35 @@ try:
                             if gravityOption == "TARGET SCORE":
                                 if maxScore == "ns":
                                     print("You have not set the target score for the Gravity Bot.")
+                                elif maxScore == "dw":
+                                    print("You have set the gravity bot to run until it fails.")
                                 else:
                                     print("The target score for the Gravity Bot is:", str(maxScore)+".")
                                 while True:
-                                    maxScore = input("What should be the target score for the Gravity Bot? >>> ")
-                                    try:
-                                        maxScore = int(maxScore)
-                                        if maxScore < 0:
-                                            maxScore = dict(maxScore)
-                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    if maxScore == "dw":
+                                        option = input("What do you want to do? Have Gravity Run until it reaches a specific score or Quit: >>> ")
+                                    elif maxScore != "ns" and maxScore != "dw":
+                                        option = input("What do you want to do? Have Gravity Run until it fails, Change Target Score or Quit: >>> ")
+                                    else:
+                                        option = input("What do you want to do? Have Gravity Run until it fails, Have Gravity Run until it reaches a specific score or Quit:  >>> ")
+                                    option = option.upper()
+                                    if option == "QUIT":
                                         break
-                                    except:
-                                        print("Enter a number please.")
+                                    if option == "HAVE GRAVITY RUN UNTIL IT FAILS":
+                                        maxScore = "dw"
+                                        maxScore = "dw"
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                    if option == "HAVE GRAVITY RUN UNTIL IT REACHES A SPECIFIC SCORE" or option == "CHANGE TARGET SCORE":
+                                        while True:
+                                            maxScore = input("What should be the target score for the Gravity Bot? >>> ")
+                                            try:
+                                                maxScore = int(maxScore)
+                                                if maxScore < 0:
+                                                    maxScore = dict(maxScore)
+                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                                break
+                                            except:
+                                                print("Enter a number please.")
                             elif gravityOption == "QUIT":
                                 break
                     if settingsoption == "GENERAL":
@@ -1404,34 +1426,9 @@ try:
                             except:
                                 pass
                             score = -1
-                            while maxScore > score:
-                                try:
-                                    checkBrowser = browser.current_url
-                                    chromeOpen = True
-                                except:
-                                    chromeOpen = False
-                                if chromeOpen == False:
-                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-                                    restart = True
-                                    failed = True
-                                    break
-                                try:
-                                    getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
-                                    score = getScore.text
-                                    score = score.replace(",", "")
-                                    score = int(score)
-                                    found = False
-                                    asteroid = None
-                                except:
-                                    pass
-                                while not found:
-                                    try:
-                                        asteroid = browser.find_element_by_class_name("GravityTerm-content")
-                                        found = True
-                                    except:
-                                        found = False
-                                answer = ''
-                                while True:
+                            if maxScore == "dw":
+                                chromeOpen = True
+                                while chromeOpen:
                                     try:
                                         checkBrowser = browser.current_url
                                         chromeOpen = True
@@ -1440,48 +1437,145 @@ try:
                                     if chromeOpen == False:
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                         restart = True
+                                        failed = True
                                         break
+                                    found = False
+                                    while not found:
+                                        try:
+                                            asteroid = browser.find_element_by_class_name("GravityTerm-content")
+                                            found = True
+                                        except:
+                                            found = False
+                                    answer = ''
+                                    while True:
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
+                                        try:
+                                            asteroidText = browser.find_element_by_xpath("((//div[@class='GravityTerm-content'])/div/span)[1]").text
+                                        except:
+                                            try:
+                                                sleep(0.8)
+                                                cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
+                                                sleep(0.2)
+                                                browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
+                                                try:
+                                                   browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                                   failed = False
+                                                   successesG = successesG + 1
+                                                   break
+                                                except:
+                                                  pass
+                                            except:
+                                                pass
+                                        if asteroidText != '':
+                                            break
+                                    if problem == True:
+                                        break
+                                    if asteroidText in ans:
+                                        index = ans.index(asteroidText)
+                                        answer = rep[index]
+                                    elif asteroidText in rep:
+                                        index = rep.index(asteroidText)
+                                        answer = ans[index]
                                     try:
-                                        asteroidText = asteroid.find_element_by_xpath("(//div[@class='GravityTerm-content'])/div/span").text
+                                        browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
                                     except:
-                                        problem = True
-                                        break
-                                    if asteroidText != '':
-                                        break
-                                if problem == True:
-                                    break
-                                if asteroidText in ans:
-                                    index = ans.index(asteroidText)
-                                    answer = rep[index]
-                                elif asteroidText in rep:
-                                    index = rep.index(asteroidText)
-                                    answer = ans[index]
+                                        pass
                                 try:
-                                    browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
+                                    browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                    failed = False
+                                    successesG = successesG + 1
+                                    break
                                 except:
-                                    break
-                            while True:
-                               if not chromeOpen:
-                                    break
-                               browser.find_element_by_tag_name('body').send_keys(Keys.ESCAPE)
-                               try:
-                                   sleep(0.5)
-                                   cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
-                                   sleep(0.2)
-                                   browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
-                               except:
                                    pass
-                               try:
-                                   browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
-                                   break
-                               except:
+                                if restart == True:
+                                    break
+                            else:
+                                while maxScore > score:
+                                    try:
+                                        getScore = browser.find_element_by_xpath('html/body/div[2]/main/div[3]/div/div/div/div[1]/div/div/div/div[2]/div[2]/div/div/div[1]/span[2]')
+                                        score = getScore.text
+                                        score = score.replace(",", "")
+                                        score = int(score)
+                                        found = False
+                                        asteroid = None
+                                    except:
+                                        pass
+                                    try:
+                                        checkBrowser = browser.current_url
+                                        chromeOpen = True
+                                    except:
+                                        chromeOpen = False
+                                    if chromeOpen == False:
+                                        save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                        restart = True
+                                        failed = True
+                                        break
+                                    found = False
+                                    while not found:
+                                        try:
+                                            asteroid = browser.find_element_by_class_name("GravityTerm-content")
+                                            found = True
+                                        except:
+                                            found = False
+                                    answer = ''
+                                    while True:
+                                        try:
+                                            checkBrowser = browser.current_url
+                                            chromeOpen = True
+                                        except:
+                                            chromeOpen = False
+                                        if chromeOpen == False:
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                            restart = True
+                                            break
+                                        try:
+                                            asteroidText = browser.find_element_by_xpath("((//div[@class='GravityTerm-content'])/div/span)[1]").text
+                                        except:                                      
+                                            try:
+                                                sleep(0.8)
+                                                cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
+                                                sleep(0.2)
+                                                browser.find_element_by_xpath('//textarea').send_keys(str(cardtext)+Keys.ENTER)
+                                                try:
+                                                   browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                                   failed = False
+                                                   successesG = successesG + 1
+                                                   break
+                                                except:
+                                                  pass
+                                            except:
+                                                pass
+                                        if asteroidText != '':
+                                            break
+                                    if problem == True:
+                                        break
+                                    if asteroidText in ans:
+                                        index = ans.index(asteroidText)
+                                        answer = rep[index]
+                                    elif asteroidText in rep:
+                                        index = rep.index(asteroidText)
+                                        answer = ans[index]
+                                    try:
+                                        browser.find_element_by_xpath("//div[@class='GravityTypingPrompt-inputWrapper']/textarea").send_keys(answer+Keys.ENTER)
+                                    except:
+                                        pass
+                                try:
+                                    browser.find_element_by_xpath('(//div[@class="UIModal-box"])/div/div/button')
+                                    failed = False
+                                    successesG = successesG + 1
+                                    break
+                                except:
                                    pass
-                            if restart == True:
-                                break
-                            if maxScore <= score:
-                                failed = False
-                                successesG = successesG + 1
-
+                                if restart == True:
+                                    break
                     if match and not failed:
                         if failed == False:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
