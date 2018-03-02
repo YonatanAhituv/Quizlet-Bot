@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.13
+    version = 6.14
     imported = False
     while imported == False:
         import inspect
@@ -830,7 +830,10 @@ try:
                                     test = True
                                 ran = False
                             if windowsBotPick == "QUIT":
-                                break
+                                if match == False and gravity == False and learn == False and flashcards == False and write == False and spell == False and test == False:   
+                                    print("Please pick at least one bot to run.")
+                                else:
+                                    break
                    if not osis == 1:
                        title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
                        options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
@@ -1342,8 +1345,8 @@ try:
                                                 checkedforchrome = False
                             elif generalChoose == "BOTS TO RUN":
                                 if osis == 1:
-                                    ran = False
-                                    while True:
+                                     ran = False
+                                     while True:
                                         enabledString = "You have enabled: "
                                         botsEnabled = False
                                         if match == True:
@@ -1368,7 +1371,7 @@ try:
                                             enabledString = enabledString + "Test, "
                                             botsEnabled = True
                                         if botsEnabled == False:
-                                            print("You have not enabled any bot.")
+                                            pass
                                         else:
                                             enabledString = enabledString[:-2]
                                             enabledString = enabledString + "."
@@ -1422,7 +1425,10 @@ try:
                                                 test = True
                                             ran = False
                                         if windowsBotPick == "QUIT":
-                                            break
+                                            if match == False and gravity == False and learn == False and flashcards == False and write == False and spell == False and test == False:   
+                                                print("Please pick at least one bot to run.")
+                                            else:
+                                                break
                                 elif not osis == 1:
                                    enabledString = "You have enabled: "
                                    botsEnabled = False
