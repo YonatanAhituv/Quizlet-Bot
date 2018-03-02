@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.14
+    version = 6.15
     imported = False
     while imported == False:
         import inspect
@@ -776,7 +776,7 @@ try:
                                 enabledString = enabledString + "Test, "
                                 botsEnabled = True
                             if botsEnabled == False:
-                                pass
+                                print("You have not picked which bots to run.")
                             else:
                                 enabledString = enabledString[:-2]
                                 enabledString = enabledString + "."
@@ -833,6 +833,7 @@ try:
                                 if match == False and gravity == False and learn == False and flashcards == False and write == False and spell == False and test == False:   
                                     print("Please pick at least one bot to run.")
                                 else:
+                                    save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                                     break
                    if not osis == 1:
                        title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
@@ -1428,7 +1429,8 @@ try:
                                             if match == False and gravity == False and learn == False and flashcards == False and write == False and spell == False and test == False:   
                                                 print("Please pick at least one bot to run.")
                                             else:
-                                                break
+                                                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                                 break
                                 elif not osis == 1:
                                    enabledString = "You have enabled: "
                                    botsEnabled = False
@@ -1491,6 +1493,7 @@ try:
                                        test = True
                                    else:
                                        test = False
+                                   save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                             elif generalChoose == "TIMES TO RUN OQBRTA":
                                 while True:
                                     if timesQuizlet == "dw":
