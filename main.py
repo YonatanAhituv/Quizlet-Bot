@@ -138,7 +138,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.12
+    version = 6.13
     imported = False
     while imported == False:
         import inspect
@@ -149,6 +149,8 @@ try:
         import re
         import shutil
         import platform
+        import pip
+        from urllib import request as request
         computerName = platform.node()
         if computerName == "atomicsystem.lan":
             dev = True
@@ -166,20 +168,23 @@ try:
         userplatform = userplatform.upper()
         if (userplatform == "DARWIN" or userplatform == "MAC"):
             osis = 0
-        if (userplatform == "WIN32" or userplatform == "WINDOWS"):
+        elif (userplatform == "WIN32" or userplatform == "WINDOWS"):
             osis = 1
-        if (userplatform == "LINUX" or userplatform == "LINUX32"):
+        elif (userplatform == "LINUX" or userplatform == "LINUX32"):
             osis = 2
+        else:
+            complain("Could not get platform, this is the name: "+str(userplatform))
         try:
             import tldextract
             import requests
             from selenium import webdriver
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.support.ui import Select
-            from pick import pick
+            if not osis == 1:
+                from pick import pick
+            from lxml import etree
             imported = True
         except:
-            import pip
             imported = False
             userChoose = False
             while userChoose == False:
@@ -196,23 +201,53 @@ try:
                     except ImportError:
                         install('tldextract')
                     try:
+                        from lxml import etree
+                    except ImportError:
+                        install('lxml')
+                    try:
                         import requests
                     except ImportError:
                         install('requests')
-                    try:
-                        from pick import pick
-                    except:
-                        install('pick')
+                    if not osis == 1:
+                        try:
+                            import pick
+                        except ImportError:
+                            install('pick')
                     print("Installed!")
+                    if osis == 1:
+                        while True:
+                            errors = input("Was there any red text or errors above? (Y or N) >>> ")
+                            errors = errors.upper()
+                            if errors == "N":
+                                break
+                            if errors == "Y":
+                                print("Elevating privileges...")
+                                import ctypes
+
+                                def is_admin():
+                                    try:
+                                        return ctypes.windll.shell32.IsUserAnAdmin()
+                                    except:
+                                        return False
+
+                                if is_admin():
+                                    install('selenium')
+                                    install('tldextract')
+                                    install('requests')
+                                    install('pick')
+                                else:
+                                    # Re-run the program with admin rights
+                                    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, "-m import pip, sys; pip.main(['install', 'selenium']); pip.main(['install', 'tldextract']); pip.main(['install', 'requests']); pip.main(['install', 'pick']); sys.exit()", None, 1)
+                                break
                     if osis == 2:
                         while True:
-                            errors = input("Was there any red text or errors above? (Y or N) >>> ") 
+                            errors = input("Was there any red text or errors above? (Y or N) >>> ")
                             errors = errors.upper()
                             if errors == "Y":
                                 print("Running install commands as sudo...")
                                 os.system("sudo pip install tldextract requests selenium pick")
                                 os.system("sudo pip3 install tldextract requests selenium pick")
-                                print("If there were two sets of errors above, something is wrong with your python enviroment. Otherwise, re-run the script.")    
+                                print("If there were two sets of errors above, something is most likely wrong with your python enviroment. Otherwise, re-run the script.")
                                 break
                             elif errors == "N":
                                 break
@@ -270,7 +305,7 @@ try:
     if connectedToInternet == False:
         print("You are not connected to the internet, please connect and try again.")
         sleep(1)
-        sys.exit() 
+        sys.exit()
     passwordChoosen = False
     restart = True
     while restart == True:
@@ -512,8 +547,6 @@ try:
 
                                     return ret_val
                             osSelected = True
-                            from lxml import etree
-                            import urllib.request as request
                             tree = etree.parse(request.urlopen("https://sites.google.com/a/chromium.org/chromedriver/downloads", timeout=1), etree.HTMLParser())
                             download = tree.xpath("((//b)/a)[1]")
                             download = str(download[0].text)
@@ -629,7 +662,7 @@ try:
                     if helpInput == "HOW TO QUIT WHEN RUNNING":
                         print("In order to quit the bot while it is running, simply close the open chrome window.")
                     if helpInput == "PAGEID":
-                        print("The page ID is a number contained in the URL of a quizlet set. It tells the bot what quizlet set to go to. "+"Example:"+"https://quizlet.com/"+"5000321"+"<--PAGEID"+"/cool-flash-cards/.") 
+                        print("The page ID is a number contained in the URL of a quizlet set. It tells the bot what quizlet set to go to. "+"Example:"+"https://quizlet.com/"+"5000321"+"<--PAGEID"+"/cool-flash-cards/.")
                     elif helpInput == "QUIT":
                         break
             if runTypeInput == "EXPIRMENT":
@@ -716,37 +749,121 @@ try:
                     os.chdir(directory)
             if runTypeInput == "START":
                 if match == False and gravity == False and learn == False and flashcards == False and write == False and spell == False and test == False:
-                   title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
-                   options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
-                   selected = pick(options, title, multi_select=True, min_selection_count=1)
-                   if "Match" in str(selected):
-                      match = True
-                   else:
-                       match = False
-                   if "Gravity" in str(selected):
-                      gravity = True
-                   else:
-                       gravity = False
-                   if "Learn" in str(selected):
-                      learn = True
-                   else:
-                       learn = False
-                   if "Flashcards" in str(selected):
-                      flashcards = True
-                   else:
-                       flashcards = False
-                   if "Write" in str(selected):
-                      write = True
-                   else:
-                       write = False
-                   if "Spell" in str(selected):
-                      spell = True
-                   else:
-                       spell = False
-                   if "Test" in str(selected):
-                       test = True
-                   else:
-                       test = False
+                   if osis == 1:
+                        ran = False
+                        while True:
+                            enabledString = "You have enabled: "
+                            botsEnabled = False
+                            if match == True:
+                                enabledString = enabledString + "Match, "
+                                botsEnabled = True
+                            if gravity == True:
+                                enabledString = enabledString + "Gravity, "
+                                botsEnabled = True
+                            if learn == True:
+                                enabledString = enabledString + "Learn, "
+                                botsEnabled = True
+                            if flashcards == True:
+                                enabledString = enabledString + "Flashcards, "
+                                botsEnabled = True
+                            if write == True:
+                                enabledString = enabledString + "Write, "
+                                botsEnabled = True
+                            if spell == True:
+                                enabledString = enabledString + "Spell, "
+                                botsEnabled = True
+                            if test == True:
+                                enabledString = enabledString + "Test, "
+                                botsEnabled = True
+                            if botsEnabled == False:
+                                pass
+                            else:
+                                enabledString = enabledString[:-2]
+                                enabledString = enabledString + "."
+                                print(enabledString)
+                            print("Type in each bot you would like to toggle: Match, Gravity, Learn, Flashcards, Write, Spell, Test Or Quit.")
+                            windowsBotPick = input("I pick: >>> ")
+                            windowsBotPick = windowsBotPick.upper()
+                            if windowsBotPick == "MATCH":
+                                if match:
+                                    match = False
+                                    ran = True
+                                if not match and not ran:
+                                    match = True
+                                ran = False
+                            if windowsBotPick == "GRAVITY":
+                                if gravity:
+                                    gravity = False
+                                    ran = True
+                                if not gravity and not ran:
+                                    gravity = True
+                                ran = False
+                            if windowsBotPick == "LEARN":
+                                if learn:
+                                    learn = False
+                                    ran = True
+                                if not learn and not ran:
+                                    learn = True
+                                ran = False
+                            if windowsBotPick == "FLASHCARDS":
+                                if flashcards:
+                                    flashcards = False
+                                if not flashcards and not ran:
+                                    flashcards = True
+                                ran = False
+                            if windowsBotPick == "WRITE":
+                                if write:
+                                    write = False
+                                if not write and not ran:
+                                    write = True
+                                ran = False
+                            if windowsBotPick == "SPELL":
+                                if spell:
+                                    spell = False
+                                if not spell and not ran:
+                                    spell = True
+                                ran = False
+                            if windowsBotPick == "TEST":
+                                if test:
+                                    test = False
+                                if not test and not ran:
+                                    test = True
+                                ran = False
+                            if windowsBotPick == "QUIT":
+                                break
+                   if not osis == 1:
+                       title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
+                       options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
+                       selected = pick(options, title, multi_select=True, min_selection_count=1)
+                       if "Match" in str(selected):
+                          match = True
+                       else:
+                           match = False
+                       if "Gravity" in str(selected):
+                          gravity = True
+                       else:
+                           gravity = False
+                       if "Learn" in str(selected):
+                          learn = True
+                       else:
+                           learn = False
+                       if "Flashcards" in str(selected):
+                          flashcards = True
+                       else:
+                           flashcards = False
+                       if "Write" in str(selected):
+                          write = True
+                       else:
+                           write = False
+                       if "Spell" in str(selected):
+                          spell = True
+                       else:
+                           spell = False
+                       if "Test" in str(selected):
+                           test = True
+                       else:
+                           test = False
+                       save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                 if gravity == True:
                     if diff == "ns":
                         while True:
@@ -801,9 +918,9 @@ try:
                             except ValueError:
                                 timesChoosen = False
                             if timesQuizlet < 0:
-                                timesChoosen = False        
+                                timesChoosen = False
                 if pageID == "ns":
-                    print("PageID Location: "+"https://quizlet.com/"+"5000321"+"<--PAGEID"+"/cool-flash-cards/.") 
+                    print("PageID Location: "+"https://quizlet.com/"+"5000321"+"<--PAGEID"+"/cool-flash-cards/.")
                     IDError = False
                     while True:
                         print("Paste in the URL of the Quizlet set you would like to start from, this can be from any section or game in the quizlet set or just type in the PageID yourself.")
@@ -816,20 +933,20 @@ try:
                             try:
                                 testList = int(pageIDTemp[1])
                                 IDError = True
-                                print("Multiple Values detected in URL or number.")  
+                                print("Multiple Values detected in URL or number.")
                             except:
                                 IDError = False
                             try:
                                 pageIDTemp = int(pageIDTemp[0])
                             except:
-                               print("ID is not an integer.") 
-                               IDError = True  
+                               print("ID is not an integer.")
+                               IDError = True
                         if IDError == False:
                             pageID = int(pageIDTemp)
                             print("PageID has been successfully identified as: "+str(pageID)+".")
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-                            break 
-                        IDError = False      
+                            break
+                        IDError = False
                 if timesQuizlet == "dw":
                     started = True
                     oneQuiz = False
@@ -845,7 +962,7 @@ try:
                     else:
                         settingsoption = input("Type an option: "+"General, Gravity, Dev, Quit: >>> ")
                     settingsoption = settingsoption.upper()
-                    if settingsoption == "QUIT": 
+                    if settingsoption == "QUIT":
                         runTypeSelected = False
                         print("Leaving...")
                         break
@@ -1197,20 +1314,20 @@ try:
                                         try:
                                             testList = int(pageIDTemp[1])
                                             IDError = True
-                                            print("Multiple Values detected in URL or number.")  
+                                            print("Multiple Values detected in URL or number.")
                                         except:
                                             IDError = False
                                         try:
                                             pageIDTemp = int(pageIDTemp[0])
                                         except:
-                                           print("ID is not an integer.") 
-                                           IDError = True  
+                                           print("ID is not an integer.")
+                                           IDError = True
                                     if IDError == False:
                                         pageID = int(pageIDTemp)
                                         print("PageID has been successfully identified as: "+str(pageID)+".")
                                         save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-                                        break 
-                                    IDError = False     
+                                        break
+                                    IDError = False
                             elif generalChoose == "PATH TO CHROMEDRIVER":
                                 if path == "ns":
                                     print("The path to ChromeDriver has not been set.")
@@ -1224,67 +1341,150 @@ try:
                                                 print("Invalid Path!")
                                                 checkedforchrome = False
                             elif generalChoose == "BOTS TO RUN":
-                               enabledString = "You have enabled: "
-                               botsEnabled = False
-                               if match == True:
-                                   enabledString = enabledString + "Match, "
-                                   botsEnabled = True
-                               if gravity == True:
-                                   enabledString = enabledString + "Gravity, "
-                                   botsEnabled = True
-                               if learn == True:
-                                   enabledString = enabledString + "Learn, "
-                                   botsEnabled = True
-                               if flashcards == True:
-                                   enabledString = enabledString + "Flashcards, "
-                                   botsEnabled = True
-                               if write == True:
-                                   enabledString = enabledString + "Write, "
-                                   botsEnabled = True
-                               if spell == True:
-                                   enabledString = enabledString + "Spell, "
-                                   botsEnabled = True
-                               if test == True:
-                                   enabledString = enabledString + "Test, "
-                                   botsEnabled = True
-                               if botsEnabled == False:
-                                   print("You have not picked which bots to run.")
-                               else:
-                                   enabledString = enabledString[:-2]
-                                   enabledString = enabledString + "."
-                                   print(enabledString)
-                               input("Press Enter to continue...")
-                               title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
-                               options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
-                               selected = pick(options, title, multi_select=True, min_selection_count=1)
-                               if "Match" in str(selected):
-                                  match = True
-                               else:
-                                   match = False
-                               if "Gravity" in str(selected):
-                                  gravity = True
-                               else:
-                                   gravity = False
-                               if "Learn" in str(selected):
-                                  learn = True
-                               else:
-                                   learn = False
-                               if "Flashcards" in str(selected):
-                                  flashcards = True
-                               else:
-                                   flashcards = False
-                               if "Write" in str(selected):
-                                  write = True
-                               else:
-                                   write = False
-                               if "Spell" in str(selected):
-                                  spell = True
-                               else:
-                                   spell = False
-                               if "Test" in str(selected):
-                                   test = True
-                               else:
-                                   test = False
+                                if osis == 1:
+                                    ran = False
+                                    while True:
+                                        enabledString = "You have enabled: "
+                                        botsEnabled = False
+                                        if match == True:
+                                            enabledString = enabledString + "Match, "
+                                            botsEnabled = True
+                                        if gravity == True:
+                                            enabledString = enabledString + "Gravity, "
+                                            botsEnabled = True
+                                        if learn == True:
+                                            enabledString = enabledString + "Learn, "
+                                            botsEnabled = True
+                                        if flashcards == True:
+                                            enabledString = enabledString + "Flashcards, "
+                                            botsEnabled = True
+                                        if write == True:
+                                            enabledString = enabledString + "Write, "
+                                            botsEnabled = True
+                                        if spell == True:
+                                            enabledString = enabledString + "Spell, "
+                                            botsEnabled = True
+                                        if test == True:
+                                            enabledString = enabledString + "Test, "
+                                            botsEnabled = True
+                                        if botsEnabled == False:
+                                            print("You have not enabled any bot.")
+                                        else:
+                                            enabledString = enabledString[:-2]
+                                            enabledString = enabledString + "."
+                                            print(enabledString)
+                                        print("Type in each bot you would like to toggle: Match, Gravity, Learn, Flashcards, Write, Spell, Test Or Quit.")
+                                        windowsBotPick = input("I pick: >>> ")
+                                        windowsBotPick = windowsBotPick.upper()
+                                        if windowsBotPick == "MATCH":
+                                            if match:
+                                                match = False
+                                                ran = True
+                                            if not match and not ran:
+                                                match = True
+                                            ran = False
+                                        if windowsBotPick == "GRAVITY":
+                                            if gravity:
+                                                gravity = False
+                                                ran = True
+                                            if not gravity and not ran:
+                                                gravity = True
+                                            ran = False
+                                        if windowsBotPick == "LEARN":
+                                            if learn:
+                                                learn = False
+                                                ran = True
+                                            if not learn and not ran:
+                                                learn = True
+                                            ran = False
+                                        if windowsBotPick == "FLASHCARDS":
+                                            if flashcards:
+                                                flashcards = False
+                                            if not flashcards and not ran:
+                                                flashcards = True
+                                            ran = False
+                                        if windowsBotPick == "WRITE":
+                                            if write:
+                                                write = False
+                                            if not write and not ran:
+                                                write = True
+                                            ran = False
+                                        if windowsBotPick == "SPELL":
+                                            if spell:
+                                                spell = False
+                                            if not spell and not ran:
+                                                spell = True
+                                            ran = False
+                                        if windowsBotPick == "TEST":
+                                            if test:
+                                                test = False
+                                            if not test and not ran:
+                                                test = True
+                                            ran = False
+                                        if windowsBotPick == "QUIT":
+                                            break
+                                elif not osis == 1:
+                                   enabledString = "You have enabled: "
+                                   botsEnabled = False
+                                   if match == True:
+                                       enabledString = enabledString + "Match, "
+                                       botsEnabled = True
+                                   if gravity == True:
+                                       enabledString = enabledString + "Gravity, "
+                                       botsEnabled = True
+                                   if learn == True:
+                                       enabledString = enabledString + "Learn, "
+                                       botsEnabled = True
+                                   if flashcards == True:
+                                       enabledString = enabledString + "Flashcards, "
+                                       botsEnabled = True
+                                   if write == True:
+                                       enabledString = enabledString + "Write, "
+                                       botsEnabled = True
+                                   if spell == True:
+                                       enabledString = enabledString + "Spell, "
+                                       botsEnabled = True
+                                   if test == True:
+                                       enabledString = enabledString + "Test, "
+                                       botsEnabled = True
+                                   if botsEnabled == False:
+                                       print("You have not picked which bots to run.")
+                                   else:
+                                       enabledString = enabledString[:-2]
+                                       enabledString = enabledString + "."
+                                       print(enabledString)
+                                   input("Press Enter to continue...")
+                                   title = 'Choose bots to run (press SPACE to mark and ENTER to continue):'
+                                   options = ['Match', 'Gravity', 'Learn', 'Flashcards', 'Write', 'Spell', 'Test']
+                                   selected = pick(options, title, multi_select=True, min_selection_count=1)
+                                   if "Match" in str(selected):
+                                      match = True
+                                   else:
+                                       match = False
+                                   if "Gravity" in str(selected):
+                                      gravity = True
+                                   else:
+                                       gravity = False
+                                   if "Learn" in str(selected):
+                                      learn = True
+                                   else:
+                                       learn = False
+                                   if "Flashcards" in str(selected):
+                                      flashcards = True
+                                   else:
+                                       flashcards = False
+                                   if "Write" in str(selected):
+                                      write = True
+                                   else:
+                                       write = False
+                                   if "Spell" in str(selected):
+                                      spell = True
+                                   else:
+                                       spell = False
+                                   if "Test" in str(selected):
+                                       test = True
+                                   else:
+                                       test = False
                             elif generalChoose == "TIMES TO RUN OQBRTA":
                                 while True:
                                     if timesQuizlet == "dw":
@@ -1538,7 +1738,7 @@ try:
                                             break
                                         try:
                                             asteroidText = browser.find_element_by_xpath("((//div[@class='GravityTerm-content'])/div/span)[1]").text
-                                        except:                                      
+                                        except:
                                             try:
                                                 sleep(0.8)
                                                 cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
@@ -1598,7 +1798,7 @@ try:
                                 browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
                                 tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
                                 sleep(0.2)
-                                tileNumber = 0 
+                                tileNumber = 0
                             except:
                                 pass
                             while len(tiles) > 0:
@@ -1659,7 +1859,7 @@ try:
                                 browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
                                 successes = successes + 1
                             except:
-                                failures = failures + 1   
+                                failures = failures + 1
                     if learn and not failed:
                        try:
                            checkBrowser = browser.current_url
@@ -1682,7 +1882,7 @@ try:
                                browser.find_element_by_xpath('(//div[@class="AssistantLearnIntroView-getStartedButton"])/button').click()
                                sleep(0.6)
                                browser.find_element_by_xpath('(//div[@class="AssistantLearnQuestionInfoView-gotItButton"])/button').click()
-                               sleep(0.8) 
+                               sleep(0.8)
                            except:
                                 pass
                            while True:
@@ -2116,7 +2316,7 @@ try:
                                             break
                                         try:
                                             asteroidText = browser.find_element_by_xpath("((//div[@class='GravityTerm-content'])/div/span)[1]").text
-                                        except:                                      
+                                        except:
                                             try:
                                                 sleep(0.8)
                                                 cardtext = browser.find_element_by_xpath("(//div[@class='GravityCopyTermView-definitionText'])/span").text
@@ -2176,7 +2376,7 @@ try:
                                 browser.find_element_by_xpath("//div[@class='MatchModeInstructionsModal-button']").click()
                                 tiles = browser.find_elements_by_xpath("//div[@class='MatchModeQuestionGridTile']")
                                 sleep(0.2)
-                                tileNumber = 0 
+                                tileNumber = 0
                             except:
                                 pass
                             while len(tiles) > 0:
@@ -2237,7 +2437,7 @@ try:
                                 browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
                                 successes = successes + 1
                             except:
-                                failures = failures + 1   
+                                failures = failures + 1
                     if learn and not failed:
                        try:
                            checkBrowser = browser.current_url
@@ -2260,7 +2460,7 @@ try:
                                browser.find_element_by_xpath('(//div[@class="AssistantLearnIntroView-getStartedButton"])/button').click()
                                sleep(0.6)
                                browser.find_element_by_xpath('(//div[@class="AssistantLearnQuestionInfoView-gotItButton"])/button').click()
-                               sleep(0.8) 
+                               sleep(0.8)
                            except:
                                 pass
                            while True:
