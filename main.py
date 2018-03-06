@@ -1,5 +1,5 @@
-issueRead = False
-def checkForUpdatesC(self):
+﻿issueRead = False
+def checkForUpdatesC():
     import requests, os
     titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
     pasteV = titleget.text
@@ -20,7 +20,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
     import sys
     from time import sleep
     try:
-        updateNeeded = update.checkForUpdatesC()
+        updateNeeded = checkForUpdatesC()
     except:
         updateNeeded = False
     import platform
@@ -138,18 +138,23 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.15
+    version = 6.16
     imported = False
     while imported == False:
         import inspect
         from time import sleep
         import sys
+        if sys.version_info[0] == 2:
+            print("Please use python 3 to run this script. Thank you.")
+            sleep(1)
+            sys.exit()
         import json
         import urllib
         import re
         import shutil
         import platform
         import pip
+        from zipfile import ZipFile, ZipInfo
         from urllib import request as request
         computerName = platform.node()
         if computerName == "atomicsystem.lan":
@@ -235,6 +240,7 @@ try:
                                     install('tldextract')
                                     install('requests')
                                     install('pick')
+                                    install('lxml')
                                 else:
                                     # Re-run the program with admin rights
                                     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, "-m import pip, sys; pip.main(['install', 'selenium']); pip.main(['install', 'tldextract']); pip.main(['install', 'requests']); pip.main(['install', 'pick']); sys.exit()", None, 1)
@@ -245,8 +251,8 @@ try:
                             errors = errors.upper()
                             if errors == "Y":
                                 print("Running install commands as sudo...")
-                                os.system("sudo pip install tldextract requests selenium pick")
-                                os.system("sudo pip3 install tldextract requests selenium pick")
+                                os.system("sudo pip install tldextract requests selenium pick lxml")
+                                os.system("sudo pip3 install tldextract requests selenium pick lxml")
                                 print("If there were two sets of errors above, something is most likely wrong with your python enviroment. Otherwise, re-run the script.")
                                 break
                             elif errors == "N":
@@ -291,6 +297,8 @@ try:
             code = reply.text
             with codecs.open(fname, "w", "utf-8-sig") as f:
                 f.write(code)
+            print("Update Installed! Restart the script!")
+            sleep(1)
             sys.exit()
     try:
         with open('issue.txt', 'r') as myfile:
@@ -506,7 +514,7 @@ try:
         def reset():
             os.remove("info.json")
         if path == "ns":
-            if (osis == 1):
+            if osis == 1:
                 my_file = directory+"/"+"chromedriver.exe"
             else:
                 my_file = directory+"/"+"chromedriver"
@@ -532,9 +540,8 @@ try:
                     chromeinstalled = input("Would you like the script to install it for you (Y or N)? >>> ")
                     if (chromeinstalled == "y" or chromeinstalled == "Y"):
                         while (osSelected == False):
-                            from zipfile import ZipFile, ZipInfo
                             class Zip(ZipFile):
-                                def extract(self, member, path=None, pwd=None):
+                                def extract(self, member, osis, path=None, pwd=None):
                                     if not isinstance(member, ZipInfo):
                                         member = self.getinfo(member)
 
@@ -543,7 +550,8 @@ try:
 
                                     ret_val = self._extract_member(member, path, pwd)
                                     attr = member.external_attr >> 16
-                                    os.chmod(ret_val, attr)
+                                    if not osis == 1:
+                                        os.chmod(ret_val, attr)
 
                                     return ret_val
                             osSelected = True
@@ -568,13 +576,18 @@ try:
                                 shutil.copyfileobj(response, out_file)
                             if not osis == 1:
                                 with Zip(file_name) as file:
-                                    file.extract('chromedriver')
+                                    file.extract('chromedriver', osis)
+                            elif osis == 1:
+                                 with Zip(file_name) as file:
+                                    file.extract('chromedriver.exe', osis)
+                            print("Downloaded and Installed!")
                             if osis == 1:
-                                print("Downloaded! Please extract the file to the script's directory and restart the script.")
+                                my_file = directory+"/"+"chromedriver.exe"
                             else:
-                                print("Downloaded and Installed! Restart the script!")
-                            sleep(1)
-                            sys.exit()
+                                my_file = directory+"/"+"chromedriver"
+                            if os.path.exists(my_file):
+                                path = my_file
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                     if (chromeinstalled == "n" or chromeinstalled == "N"):
                             print("Goodbye!")
                             sleep(1)
@@ -619,9 +632,7 @@ try:
                 USERUSERNAME = "dw"
                 USERPASSWORD = "dw"
                 save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
-        runTypeSelected = False
-        while runTypeSelected == False:
-            runTypeSelected = True
+        while True:
             update = Updater()
             updateNeeded = update.checkForUpdates()
             gitPassword = len(USERPASSWORD) * "*"
@@ -951,12 +962,19 @@ try:
                             save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
                             break
                         IDError = False
-                if timesQuizlet == "dw":
-                    started = True
-                    oneQuiz = False
-                if not timesQuizlet == "dw" and not timesQuizlet == "ns":
-                    started = True
-                    oneQuiz = True
+                if not os.path.exists(path):
+                   print("Chromedriver not found! If you deleted the file called, chromedriver or chromedriver.exe, please re-download it from settings in \"Path to Chromedriver\".")
+                   started = False
+                   oneQuiz = False
+                else:
+                    if timesQuizlet == "dw":
+                        started = True
+                        oneQuiz = False
+                        break
+                    if not timesQuizlet == "dw" and not timesQuizlet == "ns":
+                        started = True
+                        oneQuiz = True
+                        break
             if runTypeInput == "SETTINGS":
                 doneChanging = False
                 while doneChanging == False:
@@ -1333,17 +1351,73 @@ try:
                                         break
                                     IDError = False
                             elif generalChoose == "PATH TO CHROMEDRIVER":
-                                if path == "ns":
-                                    print("The path to ChromeDriver has not been set.")
-                                else:
-                                    print("The path to ChromeDriver is set to:", path)
-                                    checkedforchrome = False
-                                    while (checkedforchrome == False):
-                                            checkedforchrome = True
-                                            path = input("I would like to set the path to ChromeDriver to: >>> ")
-                                            if not os.path.exists(path):
-                                                print("Invalid Path!")
-                                                checkedforchrome = False
+                                while True:
+                                    if path == "ns":
+                                        print("The path to ChromeDriver has not been set.")
+                                    else:
+                                        print("The path to ChromeDriver is set to:", path)
+                                    pathChoose = input("What would you like to do? Re-Download Chromedriver, Manually set Chromedriver Path or Quit: >>> ")
+                                    pathChoose = pathChoose.upper()
+                                    if pathChoose == "QUIT":
+                                        break
+                                    if pathChoose == "MANUALLY SET CHROMEDRIVER PATH":
+                                        checkedforchrome = False
+                                        while (checkedforchrome == False):
+                                                checkedforchrome = True
+                                                path = input("I would like to set the path to ChromeDriver to: >>> ")
+                                                if not os.path.exists(path):
+                                                    print("Invalid Path!")
+                                                    checkedforchrome = False
+                                    if pathChoose == "RE-DOWNLOAD CHROMEDRIVER":
+                                        class Zip(ZipFile):
+                                            def extract(self, member, osis, path=None, pwd=None):
+                                                if not isinstance(member, ZipInfo):
+                                                    member = self.getinfo(member)
+
+                                                if path is None:
+                                                    path = os.getcwd()
+
+                                                ret_val = self._extract_member(member, path, pwd)
+                                                attr = member.external_attr >> 16
+                                                if not osis == 1:
+                                                    os.chmod(ret_val, attr)
+
+                                                return ret_val
+                                        osSelected = True
+                                        tree = etree.parse(request.urlopen("https://sites.google.com/a/chromium.org/chromedriver/downloads", timeout=1), etree.HTMLParser())
+                                        download = tree.xpath("((//b)/a)[1]")
+                                        download = str(download[0].text)
+                                        versionnumber = re.findall("\d+\.\d+", download)
+                                        print("Downloading...")
+                                        if (userplatform == "WIN32" or userplatform == "WINDOWS"):
+                                            downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_win32.zip"
+                                            file_name = "chromedriver_win32.zip"
+                                        if (userplatform == "DARWIN" or userplatform == "MAC"):
+                                            downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_mac64.zip"
+                                            file_name = "chromedriver_mac64.zip"
+                                        if (userplatform == "LINUX"):
+                                            downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_linux64.zip"
+                                            file_name = "chromedriver_linux64.zip"
+                                        if (userplatform == "LINUX32"):
+                                            downloadurl = "https://chromedriver.storage.googleapis.com/"+str(versionnumber[0])+"/chromedriver_linux32.zip"
+                                            file_name = "chromedriver_linux32.zip"
+                                        with urllib.request.urlopen(downloadurl) as response, open(file_name, 'wb') as out_file:
+                                            shutil.copyfileobj(response, out_file)
+                                        if not osis == 1:
+                                            with Zip(file_name) as file:
+                                                file.extract('chromedriver', osis)
+                                        elif osis == 1:
+                                             with Zip(file_name) as file:
+                                                file.extract('chromedriver.exe', osis)
+                                        if (osis == 1):
+                                            my_file = directory+"/"+"chromedriver.exe"
+                                        else:
+                                            my_file = directory+"/"+"chromedriver"
+                                        if os.path.exists(my_file):
+                                            path = my_file
+                                            save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                        else:
+                                            complain("Was not able ot find extracted file, "+str(file_name)+" "+str(my_file)+" "+str(userplatform))
                             elif generalChoose == "BOTS TO RUN":
                                 if osis == 1:
                                      ran = False
@@ -1530,12 +1604,6 @@ try:
                 print("Goodbye!")
                 sleep(1)
                 sys.exit()
-            if updateNeeded == True:
-                if not runTypeInput == "UPDATE" and not runTypeInput == "EXPIRMENT" and not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
-                    runTypeSelected = False
-            else:
-                if not runTypeInput == "EXPIRMENT" and not runTypeInput == "START" and not runTypeInput == "QUIT" and not runTypeInput == "SETTINGS":
-                    runTypeSelected = False
         if started == True:
             def login():
                 try:
