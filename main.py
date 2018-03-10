@@ -1,6 +1,6 @@
 ﻿issueRead = False
 def checkForUpdatesC():
-    import requests, os
+    import requests, os, codecs
     titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
     pasteV = titleget.text
     pasteV = float(pasteV)
@@ -8,7 +8,7 @@ def checkForUpdatesC():
         fname = os.path.basename(__file__)
         reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
         code = reply.text
-        with open(fname, 'r') as f1:
+        with codecs.open(fname, "r", "utf-8") as f1:
             oldcode = f1.read()
         if not oldcode == code:
             return True
@@ -138,12 +138,13 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.16
+    version = 6.17
     imported = False
     while imported == False:
         import inspect
         from time import sleep
         import sys
+        import codecs
         if sys.version_info[0] == 2:
             print("Please use python 3 to run this script. Thank you.")
             sleep(1)
@@ -279,7 +280,7 @@ try:
                 fname = os.path.basename(__file__)
                 reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
                 code = reply.text
-                with open(fname, 'r') as f1:
+                with codecs.open(fname, "r", "utf-8") as f1:
                     oldcode = f1.read()
                 if not oldcode == code:
                     return True
@@ -288,14 +289,13 @@ try:
             else:
                 return False
         def update(self):
-            import codecs
             fname = os.path.basename(__file__)
             titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
             title = titleget.text
             print("Updating to V.",title+"...")
             reply = requests.get('https://raw.githubusercontent.com/AtomicCoding/Quizlet-Bot/master/main.py')
             code = reply.text
-            with codecs.open(fname, "w", "utf-8-sig") as f:
+            with codecs.open(fname, "w", "utf-8") as f:
                 f.write(code)
             print("Update Installed! Restart the script!")
             sleep(1)
@@ -715,7 +715,7 @@ try:
                 if uploadable == True:
                     print("Code checks complete! All code seems good!")
                     fname = os.path.basename(__file__)
-                    with open(fname, 'r') as f1:
+                    with codecs.open(fname, "r", "utf-8") as f1:
                         updatedcode = f1.read()
                     titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
                     title = titleget.text
@@ -905,7 +905,9 @@ try:
                             infinite = input("Would you like to run the Gravity Bot until it fails (Y or N)? >>> ")
                             infinite = infinite.upper()
                             if infinite == "Y":
-                                maxScore == "dw"
+                                maxScore = "dw"
+                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                break
                             elif infinite == "N":
                                 maxScore = input("What should be the target score for the Gravity Bot? >>> ")
                                 try:
