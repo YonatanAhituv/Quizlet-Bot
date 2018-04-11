@@ -1,4 +1,9 @@
 ﻿issueRead = False
+def findnth(haystack, needle, n):
+    parts= haystack.split(needle, n+1)
+    if len(parts)<=n+1:
+        return -1
+    return len(haystack)-len(parts[-1])-len(needle)
 def checkForUpdatesC():
     import requests, os, codecs
     titleget = requests.get('https://pastebin.com/raw/hHLndhTS')
@@ -138,7 +143,7 @@ def complain(error, body=None, assignee=None, milestone=None, labels=["bug"]):
                 sleep(1)
                 sys.exit()
 try:
-    version = 6.17
+    version = 6.2
     imported = False
     while imported == False:
         import inspect
@@ -1666,12 +1671,36 @@ try:
                         failed = False
                         sleep(1)
                         elements1 = browser.find_elements_by_class_name("SetPageTerm-content")
+                        try:
+                            temprepi = browser.find_elements_by_xpath('(//div[@class="SetPageTerm-side SetPageTerm-largeSide"])//a[contains(@class, "image")]')[0].get_attribute('style')
+                        except:
+                            pass
+                        try:
+                            tempansi = browser.find_element_by_xpath('(//div[@class="SetPageTerm-side"])//a[contains(@class, "image")]').get_attribute('style')
+                        except:
+                            pass
                         ans = []
                         rep = []
+                        ansi = []
+                        repi = []
                         for element in elements1:
-                            pair = element.find_elements_by_tag_name('span')
-                            ans.append(pair[0].text)
-                            rep.append(pair[1].text)
+                            try:
+                                pair = element.find_elements_by_tag_name('span')
+                                ans.append(pair[0].text)
+                                rep.append(pair[1].text)
+                            except:
+                                try:
+                                    currentrepi = temprepi[0]
+                                    repi.append(currentrepi[findnth(currentrepi, '"', 0) + 1:findnth(currentrepi, '"', 1)])
+                                    temprepi[0].pop()
+                                except:
+                                    pass
+                                try:
+                                    currentansi = tempansi[0]
+                                    ansi.append(currentansi[findnth(currentansi, '"', 0) + 1:findnth(currentansi, '"', 1)])
+                                    temprepi[0].pop()
+                                except:
+                                    pass
                     except:
                         failed = True
                     if gravity and not failed:
@@ -1913,7 +1942,7 @@ try:
                                             tiles.pop(pairIndex)
                                             break
                                         pairIndex += 1
-                                if currentTerm in rep:
+                                elif currentTerm in rep:
                                     index = rep.index(currentTerm)
                                     myPairText = ans[index]
                                     pairIndex = 1
@@ -1932,7 +1961,30 @@ try:
                                             tiles.pop(pairIndex)
                                             break
                                         pairIndex += 1
-                                tiles.pop(0)
+                                else:
+                                    temprepi = browser.find_elements_by_xpath('(//div[@class="SetPageTerm-side SetPageTerm-largeSide"])//a[contains(@class, "image")]')[0].get_attribute('style')
+                                    repi.append(currentrepi[findnth(currentrepi, '"', 0) + 1:findnth(currentrepi, '"', 1)])
+                                    if currentTerm in ansi:
+                                        index = ans.index(currentTerm)
+                                        myPairText = ans[index]
+                                        pairIndex = 1
+                                        while pairIndex < len(tiles):
+                                            try:
+                                                checkBrowser = browser.current_url
+                                                chromeOpen = True
+                                            except:
+                                                chromeOpen = False
+                                            if chromeOpen == False:
+                                                save(info, pageID, successes, failures, path, timesQuizlet, username, password, USERUSERNAME, USERPASSWORD, maxScore, successesG, failuresG, match, gravity, learn, flashcards, write, spell, test, diff)
+                                                restart = True
+                                                break
+                                            if tiles[pairIndex].text == myPairText:
+                                                tiles[pairIndex].click()
+                                                tiles.pop(pairIndex)
+                                                break
+                                            pairIndex += 1
+                                    if currentTerm in repi:
+                                        tiles.pop(0)
                             sleep(0.5)
                             try:
                                 browser.find_element_by_xpath('//button[@class="UIButton UIButton--hero"]')
@@ -2791,7 +2843,8 @@ try:
                                     browser.find_element_by_xpath('(//div[@class="UIDiv TestModePage-button"])/button').click()
                                     break
                     extracted = False
-                    timesRan = timesRan + 1
+                    if not failed:
+                        timesRan = timesRan + 1
                     if not timesRan == timesQuizlet and chromeOpen:
                         pageID = pageID + 1
                 if timesRan == timesQuizlet:
