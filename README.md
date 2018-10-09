@@ -1,6 +1,5 @@
 # OQBRTA (One Quizlet Bot to Rule them All)
-## Currently Functional on Latest Quizlet
-### DISCLAIMER: This is some terribly written code. It is completely unmaintainable and will no longer recieve any updates.
+### DISCLAIMER: This is some terribly written code. It is completely unmaintainable and will no longer recieve any updates. 
 
 ![](http://i.imgur.com/Hx4O16u.gif)
 
